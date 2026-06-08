@@ -10,11 +10,13 @@
 # without prior written permission from the author.
 #
 # ❤️ Made with dedication and love by ItzShukla
-# -----------------------------------------------
+# -------------------------------------
+
 import math
-from pyrogram.types import InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from SHUKLAMUSIC import app
 import config
+from pyrogram.enums import ButtonStyle
 from SHUKLAMUSIC.utils.formatters import time_to_seconds
 
 
@@ -43,54 +45,62 @@ def track_markup(_, videoid, user_id, channel, fplay):
 def stream_markup_timer(_, chat_id, played, dur):
     played_sec = time_to_seconds(played)
     duration_sec = time_to_seconds(dur)
-
-    remaining_sec = duration_sec - played_sec
-    if remaining_sec < 0:
-        remaining_sec = 0
-
-    rem_min = remaining_sec // 60
-    rem_sec = remaining_sec % 60
-    remaining = f"{rem_min:02d}:{rem_sec:02d}"
-
-    percentage = (played_sec / duration_sec) * 100 if duration_sec else 0
+    percentage = (played_sec / duration_sec) * 100
+    
     umm = math.floor(percentage)
-
     if 0 < umm <= 10:
-        bar = "|♬—————————|-"
+        bar = "▣—————————"
     elif 10 < umm < 20:
-        bar = "|—♬————————|-"
+        bar = "—▣————————"
     elif 20 <= umm < 30:
-        bar = "|——♬———————|-"
+        bar = "—▣———————"
     elif 30 <= umm < 40:
-        bar = "|———♬——————|-"
+        bar = "——▣——————"
     elif 40 <= umm < 50:
-        bar = "|————♬—————|-"
+        bar = "———▣—————"
     elif 50 <= umm < 60:
-        bar = "|—————♬————|-"
+        bar = "————▣————"
     elif 60 <= umm < 70:
-        bar = "|——————♬———|-"
+        bar = "—————▣———"
     elif 70 <= umm < 80:
-        bar = "|———————♬——|-"
+        bar = "——————▣——"
     elif 80 <= umm < 95:
-        bar = "|————————♬—|-"
+        bar = "———————▣—"
     else:
-        bar = "|—————————♬|-"
-
+        bar = "————————▣"
     buttons = [
-        [
+                [
             InlineKeyboardButton(
-                text=f"{played} {bar} {remaining}",
-                url=f"https://t.me/{app.username}?startgroup=true",
+                text=f"{played} {bar} {dur}",
+                callback_data="GetTimer",
+                style=ButtonStyle.PRIMARY,
+                icon_custom_emoji_id=5204046146955153467
             )
         ],
         [
-            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
+            InlineKeyboardButton(text="", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068),
+            InlineKeyboardButton(text="", callback_data=f"ADMIN Pause|{chat_id}", icon_custom_emoji_id=5409042015415448331),
+            InlineKeyboardButton(text="", callback_data=f"ADMIN Stop|{chat_id}", icon_custom_emoji_id=5408832111773757273),
         ],
+        [
+            InlineKeyboardButton(
+                text="ᴜᴘᴅᴀᴛᴇ",
+                url="https://t.me/+Imyf3M9TO5k1ODRl",
+                icon_custom_emoji_id=5409025823388741707,
+                style=ButtonStyle.PRIMARY
+                
+            ),
+            InlineKeyboardButton(
+                text="ʜᴏϻє",
+                url="https://t.me/+dv_rcq5uIXhmMWM1",
+                icon_custom_emoji_id=5409194306365829029,
+                style=ButtonStyle.PRIMARY
+            
+            )
+        ],
+            
 
-        [InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close")],
+        [InlineKeyboardButton(text=" ᴄʟᴏsᴇ ▣", callback_data="close", style=ButtonStyle.DANGER, icon_custom_emoji_id=5408832111773757273)],
     ]
     return buttons
 
@@ -98,16 +108,31 @@ def stream_markup_timer(_, chat_id, played, dur):
 def stream_markup(_, chat_id):
     buttons = [
         [
-            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
+            InlineKeyboardButton(text="", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068),
+            InlineKeyboardButton(text="", callback_data=f"ADMIN Pause|{chat_id}", icon_custom_emoji_id=5409042015415448331),
+            InlineKeyboardButton(text="", callback_data=f"ADMIN Stop|{chat_id}", icon_custom_emoji_id=5408832111773757273),
         ],
+        [
+            InlineKeyboardButton(
+                text="ᴜᴘᴅᴀᴛᴇ",
+                url="https://t.me/+UMo3Ugi68FFkYzVl",
+                 icon_custom_emoji_id=5409025823388741707,
+                style=ButtonStyle.PRIMARY
+                
+            ),
+            InlineKeyboardButton(
+                text="ʜᴏϻє",
+                url="https://t.me/ll_YOUR_ANIMExWORLD_ll",
+                icon_custom_emoji_id=5409194306365829029,
+                style=ButtonStyle.PRIMARY
+            
+            )
+        ],
+            
 
-        [InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close")],
+        [InlineKeyboardButton(text=" ᴄʟᴏsᴇ ▣", callback_data="close", style=ButtonStyle.DANGER, icon_custom_emoji_id=5408832111773757273)],
     ]
     return buttons
-
 
 def playlist_markup(_, videoid, user_id, ptype, channel, fplay):
     buttons = [
