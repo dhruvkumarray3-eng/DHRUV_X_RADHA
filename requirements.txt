@@ -10,59 +10,71 @@
 # without prior written permission from the author.
 #
 # ❤️ Made with dedication and love by ItzShukla
-# -----------------------------------------------
+# -----------------------------
 
 aiofiles
+aiogram
 aiohttp
 apscheduler
 asyncio
-bard 
+bard
+stripe==10.7.0
+mysql-connector-python==9.0.0
+telebot
+bing_image_downloader
 beautifulsoup4
-bs4
+rapidfuzz
+cloudscraper
+deepai
 dnspython
 emojis
 ffmpeg-python
+Faker
 gitpython
 gpytranslate
 gtts
+groq
+tgcrypto>=1.2.5
 hachoir
 heroku3
 httpx
+img2pdf
 instaloader
+kurigram
 lexica-api
-motor 
+motor
 numpy
+openai
 opencv-python
-pillow==9.5.0
+pillow
 psutil
+pymongo
 pickledb
 pycountry
 pycryptodome
 pydub
 pyfiglet
 pykeyboard
+pyrotgfork >= 2.2.20
 python-dotenv
+python-telegram-bot>=22.6
 python-whois
 pyshorteners
 pyttsx3
 pytz
-pyrofork
-py-tgcalls
-pyrofork
+pytube
+py-tgcalls==0.9.7
 pyyaml
-py-yt-search
 qrcode
 requests
-SafoneAPI
+search_engine_parser
 speedtest-cli
 SpeechRecognition
-search_engine_parser
 spotipy
 telegraph
-tgcrypto
 unidecode
-uvloop==0.21.0; sys_platform != "win32"
 wget
+yt-dlp
 youtube-search
 youtube-search-python
-yt-dlp
+py-yt-search
