@@ -13,22 +13,23 @@
 # -----------------------------------------------
 from typing import Union
 from pyrogram.types import InlineKeyboardButton
+from pyrogram.enums import ButtonStyle
 
 
 def setting_markup(_):
     buttons = [
         [
-            InlineKeyboardButton(text=_["ST_B_1"], callback_data="AU"),
-            InlineKeyboardButton(text=_["ST_B_3"], callback_data="LG"),
+            InlineKeyboardButton(text=_["ST_B_1"], callback_data="AU", style=ButtonStyle.PRIMARY),
+            InlineKeyboardButton(text=_["ST_B_3"], callback_data="LG", style=ButtonStyle.SUCCESS),
         ],
         [
-            InlineKeyboardButton(text=_["ST_B_2"], callback_data="PM"),
+            InlineKeyboardButton(text=_["ST_B_2"], callback_data="PM", style=ButtonStyle.PRIMARY),
         ],
         [
-            InlineKeyboardButton(text=_["ST_B_4"], callback_data="VM"),
+            InlineKeyboardButton(text=_["ST_B_4"], callback_data="VM", style=ButtonStyle.SUCCESS),
         ],
         [
-            InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close"),
+            InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close", style=ButtonStyle.DANGER),
         ],
     ]
     return buttons
