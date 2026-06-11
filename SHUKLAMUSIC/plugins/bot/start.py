@@ -98,6 +98,25 @@ async def set_welcome_msg(client, message):
     
     await message.reply_text(f"✅ <b>{msg_type.replace('_', ' ').upper()} message has been set!</b>")
 
+
+@app.on_message(filters.command(["resetwelcome"]) & filters.user(7553434931))
+async def reset_welcome_msg(client, message):
+    cmd_args = message.command
+    msg_type = "welcome_dm"
+    if len(cmd_args) > 1 and cmd_args[1].lower() in ("grp", "group"):
+        msg_type = "welcome_group"
+    result = await welcome_db.delete_one({"_id": msg_type})
+    if result.deleted_count:
+        await message.reply_text(
+            f"✅ <b>{msg_type.replace('_', ' ').upper()} reset!</b>\n"
+            "<i>Bot will now use the default start message from en.yml (with new Crypto & UPI features).</i>"
+        )
+    else:
+        await message.reply_text(
+            f"ℹ️ <b>No custom {msg_type.replace('_', ' ')} was saved.</b>\n"
+            "<i>Already using the default message.</i>"
+        )
+
 # Helper to get welcome text
 async def get_welcome_caption(msg_type, default_text, user, bot, chat=None):
     data = await welcome_db.find_one({"_id": msg_type})

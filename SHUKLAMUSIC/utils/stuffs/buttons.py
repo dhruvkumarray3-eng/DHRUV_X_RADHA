@@ -71,6 +71,10 @@ class BUTTONS(object):
             InlineKeyboardButton("ǫᴜᴏᴛʟʏ",         callback_data="mplus HELP_Q",       style=ButtonStyle.DANGER,   icon_custom_emoji_id=_E_MEGA),
         ],
         [
+            InlineKeyboardButton("💰 ᴄʀʏᴘᴛᴏ",      callback_data="mplus HELP_Crypto",  style=ButtonStyle.PRIMARY,  icon_custom_emoji_id=_E_CHART),
+            InlineKeyboardButton("💸 ᴜᴘɪ ᴛᴏᴏʟs",   callback_data="mplus HELP_UPI",     style=ButtonStyle.SUCCESS,  icon_custom_emoji_id=_E_BOLT),
+        ],
+        [
             InlineKeyboardButton("◁", callback_data="settings_back_helper",            style=ButtonStyle.SUCCESS,  icon_custom_emoji_id=_E_BACK),
             InlineKeyboardButton("▷", callback_data="managebot123 settings_back_helper",style=ButtonStyle.PRIMARY, icon_custom_emoji_id=_E_PLAY),
         ],
