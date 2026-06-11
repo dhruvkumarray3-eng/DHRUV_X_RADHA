@@ -149,9 +149,17 @@ async def start_pm(client, message: Message, _):
     # --- REACTION END ---
 
     # --- ANIMATION START ---
+    # Step 1 — Send 2 premium emojis from radhamusicbot1_by_TgEmojis_bot
+    emoji_splash = await message.reply_text(
+        '<emoji id=5857427272448876539>🤩</emoji>  <emoji id=5854711294044677474>🤩</emoji>'
+    )
+    await asyncio.sleep(0.5)
+    await emoji_splash.delete()
+
+    # Step 2 — Writing animation
     loading_1 = await message.reply_text(random.choice(GREET))
     await add_served_user(message.from_user.id)
-    
+
     await asyncio.sleep(0.1)
     await loading_1.edit_text("<b>ᴅɪηɢ ᴅᴏηɢ.❤️‍🔥</b>")
     await asyncio.sleep(0.1)
