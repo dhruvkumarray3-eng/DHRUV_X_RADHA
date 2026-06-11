@@ -15,6 +15,7 @@
 from pyrogram.types import InlineKeyboardButton
 
 import config
+from pyrogram.enums import ButtonStyle
 from SHUKLAMUSIC import app
 
 # ── Premium emoji IDs (Emoji_fan37_by_TgEmodziBot pack) ──
@@ -38,11 +39,13 @@ def start_panel(_):
             InlineKeyboardButton(
                 text=_["S_B_1"],
                 url=f"https://t.me/{app.username}?startgroup=true",
+                style=ButtonStyle.PRIMARY,
                 icon_custom_emoji_id=_E_SPARK
             ),
             InlineKeyboardButton(
                 text=_["S_B_2"],
                 url=config.SUPPORT_CHAT,
+                style=ButtonStyle.DANGER,
                 icon_custom_emoji_id=_E_SUPPORT
             ),
         ],
@@ -50,6 +53,7 @@ def start_panel(_):
             InlineKeyboardButton(
                 text=_["S_B_4"],
                 url=f"https://t.me/{app.username}?start=help",
+                style=ButtonStyle.SUCCESS,
                 icon_custom_emoji_id=_E_BULB
             ),
         ],
@@ -63,6 +67,7 @@ def private_panel(_):
             InlineKeyboardButton(
                 text=_["S_B_3"],
                 url=f"https://t.me/{app.username}?startgroup=true",
+                style=ButtonStyle.PRIMARY,
                 icon_custom_emoji_id=_E_SPARK
             )
         ],
@@ -70,11 +75,13 @@ def private_panel(_):
             InlineKeyboardButton(
                 text=_["S_B_6"],
                 url=config.SUPPORT_CHANNEL,
+                style=ButtonStyle.SUCCESS,
                 icon_custom_emoji_id=_E_UPDATE
             ),
             InlineKeyboardButton(
                 text=_["S_B_2"],
                 url=config.SUPPORT_CHAT,
+                style=ButtonStyle.DANGER,
                 icon_custom_emoji_id=_E_SUPPORT
             ),
         ],
@@ -82,6 +89,7 @@ def private_panel(_):
             InlineKeyboardButton(
                 text=_["S_B_4"],
                 callback_data="settings_back_helper",
+                style=ButtonStyle.SUCCESS,
                 icon_custom_emoji_id=_E_BULB
             ),
         ],
@@ -89,6 +97,7 @@ def private_panel(_):
             InlineKeyboardButton(
                 text=_["S_B_5"],
                 url=f"https://t.me/{_clean_username(config.OWNER_USERNAME)}",
+                style=ButtonStyle.DANGER,
                 icon_custom_emoji_id=_E_CROWN
             ),
         ],
