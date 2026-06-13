@@ -12,7 +12,7 @@ from typing import Union
 import yt_dlp
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Message
-from youtubesearchpython import VideosSearch, Playlist
+from py_yt import VideosSearch, Playlist
 import aiohttp
 
 API_URL = os.environ.get("API_URL", "https://api.shrutibots.site")
