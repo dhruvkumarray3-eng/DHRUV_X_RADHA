@@ -68,4 +68,4 @@ wget
 yt-dlp
 py-yt
 uvloop
-youtube-search-python
+
