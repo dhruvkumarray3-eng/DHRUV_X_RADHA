@@ -7,24 +7,85 @@
 
 import asyncio
 import os
+import random
 import re
 from typing import Union
 import yt_dlp
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Message
 from py_yt import VideosSearch, Playlist
-import aiohttp
-
-API_URL = os.environ.get("API_URL", "https://api.shrutibots.site")
-
-API_KEY = os.environ.get("API_KEY", "ShrutiBotskETPIMNljdHR0VKMIgbz") ## Get This API KEY FROM: @SHRUTIAPIBOT 
 
 DOWNLOAD_DIR = "downloads"
+COOKIES_FILE = os.path.join(os.getcwd(), "SHUKLAMUSIC", "assets", "cookies.txt")
+
+import time as _time
+_SEARCH_CACHE: dict = {}
+_SEARCH_CACHE_TTL = 300
+
+
+def _cookiefile():
+    return COOKIES_FILE if os.path.isfile(COOKIES_FILE) else None
 
 
 def time_to_seconds(time):
     stringt = str(time)
     return sum(int(x) * 60 ** i for i, x in enumerate(reversed(stringt.split(":"))))
+
+
+def _base_opts():
+    return {
+        "quiet": True,
+        "no_warnings": True,
+        "geo_bypass": True,
+        "nocheckcertificate": True,
+        "cookiefile": _cookiefile(),
+        "noplaylist": True,
+    }
+
+
+def _download_song_sync(video_id: str) -> str:
+    outtmpl = os.path.join(DOWNLOAD_DIR, f"{video_id}.%(ext)s")
+    ydl_opts = {
+        **_base_opts(),
+        "format": "bestaudio[ext=m4a]/bestaudio[ext=webm]/bestaudio/best",
+        "outtmpl": outtmpl,
+        "concurrent_fragment_downloads": 8,
+        "socket_timeout": 10,
+        "retries": 3,
+        "fragment_retries": 3,
+        "skip_unavailable_fragments": True,
+        "prefer_free_formats": True,
+        "throttledratelimit": None,
+        "buffersize": 1024 * 16,
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(f"https://www.youtube.com/watch?v={video_id}", download=True)
+        filename = ydl.prepare_filename(info)
+    if os.path.exists(filename) and os.path.getsize(filename) > 0:
+        return filename
+    return None
+
+
+def _download_video_sync(video_id: str, file_path: str) -> bool:
+    outtmpl = os.path.join(DOWNLOAD_DIR, f"{video_id}.%(ext)s")
+    ydl_opts = {
+        **_base_opts(),
+        "format": "bestvideo[height<=?720][ext=mp4]+bestaudio[ext=m4a]/best[height<=?720]",
+        "outtmpl": outtmpl,
+        "merge_output_format": "mp4",
+        "concurrent_fragment_downloads": 4,
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([f"https://www.youtube.com/watch?v={video_id}"])
+    return os.path.exists(file_path) and os.path.getsize(file_path) > 0
+
+
+def _find_cached(video_id: str) -> str:
+    import glob
+    for f in glob.glob(os.path.join(DOWNLOAD_DIR, f"{video_id}.*")):
+        if os.path.getsize(f) > 0 and not f.endswith((".part", ".ytdl")):
+            return f
+    return None
 
 
 async def download_song(link: str) -> str:
@@ -33,31 +94,14 @@ async def download_song(link: str) -> str:
         return None
 
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
-    file_path = os.path.join(DOWNLOAD_DIR, f"{video_id}.mp3")
-    if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
-        return file_path
+    cached = _find_cached(video_id)
+    if cached:
+        return cached
 
+    loop = asyncio.get_event_loop()
     try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(
-                f"{API_URL}/download",
-                params={"url": video_id, "type": "audio", "api_key": API_KEY},
-                timeout=aiohttp.ClientTimeout(total=300)
-            ) as resp:
-                if resp.status != 200:
-                    return None
-                with open(file_path, "wb") as f:
-                    async for chunk in resp.content.iter_chunked(131072):
-                        f.write(chunk)
-        if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
-            return file_path
-        return None
+        return await loop.run_in_executor(None, _download_song_sync, video_id)
     except Exception:
-        if os.path.exists(file_path):
-            try:
-                os.remove(file_path)
-            except Exception:
-                pass
         return None
 
 
@@ -71,21 +115,10 @@ async def download_video(link: str) -> str:
     if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
         return file_path
 
+    loop = asyncio.get_event_loop()
     try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(
-                f"{API_URL}/download",
-                params={"url": video_id, "type": "video", "api_key": API_KEY},
-                timeout=aiohttp.ClientTimeout(total=600)
-            ) as resp:
-                if resp.status != 200:
-                    return None
-                with open(file_path, "wb") as f:
-                    async for chunk in resp.content.iter_chunked(131072):
-                        f.write(chunk)
-        if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
-            return file_path
-        return None
+        ok = await loop.run_in_executor(None, _download_video_sync, video_id, file_path)
+        return file_path if ok else None
     except Exception:
         if os.path.exists(file_path):
             try:
@@ -93,6 +126,34 @@ async def download_video(link: str) -> str:
             except Exception:
                 pass
         return None
+
+
+def _extract_related_sync(videoid: str):
+    url = f"https://www.youtube.com/watch?v={videoid}&list=RD{videoid}"
+    ydl_opts = {
+        **_base_opts(),
+        "extract_flat": True,
+        "skip_download": True,
+        "noplaylist": False,
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=False)
+    entries = info.get("entries") or []
+    results = []
+    for entry in entries:
+        if not entry:
+            continue
+        vid = entry.get("id")
+        if not vid or vid == videoid:
+            continue
+        results.append(
+            {
+                "id": vid,
+                "title": entry.get("title") or "Unknown",
+                "duration": entry.get("duration"),
+            }
+        )
+    return results
 
 
 class YouTubeAPI:
@@ -129,6 +190,10 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
+        cache_key = f"details:{link}"
+        cached = _SEARCH_CACHE.get(cache_key)
+        if cached and _time.time() - cached[0] < _SEARCH_CACHE_TTL:
+            return cached[1]
         results = VideosSearch(link, limit=1)
         for result in (await results.next())["result"]:
             title = result["title"]
@@ -136,7 +201,9 @@ class YouTubeAPI:
             thumbnail = result["thumbnails"][0]["url"].split("?")[0]
             vidid = result["id"]
             duration_sec = int(time_to_seconds(duration_min)) if duration_min else 0
-        return title, duration_min, duration_sec, thumbnail, vidid
+        ret = (title, duration_min, duration_sec, thumbnail, vidid)
+        _SEARCH_CACHE[cache_key] = (_time.time(), ret)
+        return ret
 
     async def title(self, link: str, videoid: Union[bool, str] = None):
         if videoid:
@@ -203,6 +270,10 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
+        cache_key = f"track:{link}"
+        cached = _SEARCH_CACHE.get(cache_key)
+        if cached and _time.time() - cached[0] < _SEARCH_CACHE_TTL:
+            return cached[1]
         results = VideosSearch(link, limit=1)
         for result in (await results.next())["result"]:
             title = result["title"]
@@ -217,14 +288,16 @@ class YouTubeAPI:
             "duration_min": duration_min,
             "thumb": thumbnail,
         }
-        return track_details, vidid
+        ret = (track_details, vidid)
+        _SEARCH_CACHE[cache_key] = (_time.time(), ret)
+        return ret
 
     async def formats(self, link: str, videoid: Union[bool, str] = None):
         if videoid:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
-        ytdl_opts = {"quiet": True}
+        ytdl_opts = {**_base_opts()}
         ydl = yt_dlp.YoutubeDL(ytdl_opts)
         with ydl:
             formats_available = []
@@ -258,6 +331,16 @@ class YouTubeAPI:
         vidid = result[query_type]["id"]
         thumbnail = result[query_type]["thumbnails"][0]["url"].split("?")[0]
         return title, duration_min, thumbnail, vidid
+
+    async def related(self, videoid: str):
+        """Fetch related videos (YouTube Mix) for autoplay. No external API used."""
+        loop = asyncio.get_event_loop()
+        try:
+            results = await loop.run_in_executor(None, _extract_related_sync, videoid)
+            random.shuffle(results)
+            return results
+        except Exception:
+            return []
 
     async def download(
         self,
