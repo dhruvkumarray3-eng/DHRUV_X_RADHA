@@ -84,6 +84,14 @@ def stream_markup_timer(_, chat_id, played, dur):
         ],
         [
             InlineKeyboardButton(
+                text="ᴀᴜᴛᴏᴘʟᴀʏ",
+                callback_data=f"ADMIN Autoplay|{chat_id}",
+                icon_custom_emoji_id=6271653280187684816,
+                style=ButtonStyle.PRIMARY,
+            ),
+        ],
+        [
+            InlineKeyboardButton(
                 text="ᴜᴘᴅᴀᴛᴇ",
                 url=config.SUPPORT_CHANNEL,
                 icon_custom_emoji_id=5409025823388741707,
@@ -107,6 +115,14 @@ def stream_markup(_, chat_id):
             InlineKeyboardButton(text="", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068, style=ButtonStyle.SUCCESS),
             InlineKeyboardButton(text="", callback_data=f"ADMIN Pause|{chat_id}", icon_custom_emoji_id=5409042015415448331, style=ButtonStyle.PRIMARY),
             InlineKeyboardButton(text="", callback_data=f"ADMIN Stop|{chat_id}", icon_custom_emoji_id=5408832111773757273, style=ButtonStyle.DANGER),
+        ],
+        [
+            InlineKeyboardButton(
+                text="ᴀᴜᴛᴏᴘʟᴀʏ",
+                callback_data=f"ADMIN Autoplay|{chat_id}",
+                icon_custom_emoji_id=6271653280187684816,
+                style=ButtonStyle.PRIMARY,
+            ),
         ],
         [
             InlineKeyboardButton(
