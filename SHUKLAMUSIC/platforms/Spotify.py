@@ -14,7 +14,7 @@
 import re
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-from SHUKLAMUSIC.platforms.Youtube import _ytdlp_search
+from py_yt import VideosSearch
 import config
 
 
@@ -46,18 +46,21 @@ class SpotifyAPI:
             fetched = f' {artist["name"]}'
             if "Various Artists" not in fetched:
                 info += fetched
-        results = await _ytdlp_search(info, limit=1)
-        if not results:
-            raise ValueError(f"No YouTube result for: {info}")
-        r = results[0]
+        results = VideosSearch(info, limit=1)
+        for result in (await results.next())["result"]:
+            ytlink = result["link"]
+            title = result["title"]
+            vidid = result["id"]
+            duration_min = result["duration"]
+            thumbnail = result["thumbnails"][0]["url"].split("?")[0]
         track_details = {
-            "title": r["title"],
-            "link": r["link"],
-            "vidid": r["id"],
-            "duration_min": r["duration"],
-            "thumb": r["thumbnail"],
+            "title": title,
+            "link": ytlink,
+            "vidid": vidid,
+            "duration_min": duration_min,
+            "thumb": thumbnail,
         }
-        return track_details, r["id"]
+        return track_details, vidid
 
     async def playlist(self, url):
         playlist = self.spotify.playlist(url)
