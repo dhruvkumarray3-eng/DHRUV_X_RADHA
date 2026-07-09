@@ -36,6 +36,7 @@ _E_PARTY   = 4956308456182121758   # 🎉  Fun
 _E_MEGA    = 4958686613933655185   # 📣  Quotly
 _E_BACK    = 4956282853882069908   # ➡️  Back nav
 _E_PLAY    = 4956250031741993892   # ▶️  Forward nav
+_E_KEY     = 5978869985299142389   # 🦚  String Gen
 
 
 class BUTTONS(object):
@@ -71,8 +72,11 @@ class BUTTONS(object):
             InlineKeyboardButton("ǫᴜᴏᴛʟʏ",         callback_data="mplus HELP_Q",       style=ButtonStyle.DANGER,   icon_custom_emoji_id=_E_MEGA),
         ],
         [
-            InlineKeyboardButton("💰 ᴄʀʏᴘᴛᴏ",      callback_data="mplus HELP_Crypto",  style=ButtonStyle.PRIMARY,  icon_custom_emoji_id=_E_CHART),
-            InlineKeyboardButton("💸 ᴜᴘɪ ᴛᴏᴏʟs",   callback_data="mplus HELP_UPI",     style=ButtonStyle.SUCCESS,  icon_custom_emoji_id=_E_BOLT),
+            InlineKeyboardButton("💰 ᴄʀʏᴘᴛᴏ",      callback_data="mplus HELP_Crypto",    style=ButtonStyle.PRIMARY,  icon_custom_emoji_id=_E_CHART),
+            InlineKeyboardButton("💸 ᴜᴘɪ ᴛᴏᴏʟs",   callback_data="mplus HELP_UPI",       style=ButtonStyle.SUCCESS,  icon_custom_emoji_id=_E_BOLT),
+        ],
+        [
+            InlineKeyboardButton("🔑 sᴛʀɪɴɢ ɢᴇɴ",  callback_data="mplus HELP_StringGen", style=ButtonStyle.DANGER,   icon_custom_emoji_id=_E_KEY),
         ],
         [
             InlineKeyboardButton("◁", callback_data="settings_back_helper",            style=ButtonStyle.SUCCESS,  icon_custom_emoji_id=_E_BACK),

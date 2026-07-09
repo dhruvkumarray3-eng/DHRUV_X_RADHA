@@ -13,7 +13,7 @@ from pyrogram import filters
 from pyrogram.types import Message
 from SHUKLAMUSIC import app
 from SHUKLAMUSIC.core.mongo import mongodb
-from config import BANNED_USERS
+from config import BANNED_USERS, BOT_USERNAME
 
 gh_tokens_db = mongodb.github_tokens
 
@@ -90,8 +90,16 @@ async def gh_help_cmd(client, message: Message):
     await message.reply_text(GH_HELP, disable_web_page_preview=True)
 
 
-@app.on_message(filters.command("setghtoken") & filters.private & ~BANNED_USERS)
+@app.on_message(filters.command("setghtoken") & ~BANNED_USERS)
 async def set_gh_token(client, message: Message):
+    # Hard-reject in group chats — token must never be exposed in group history
+    if message.chat.id != message.from_user.id:
+        return await message.reply_text(
+            f"{e(_E_ERR,'🚩')} <b>ᴅᴍ ᴏɴʟʏ ᴄᴏᴍᴍᴀɴᴅ!</b>\n\n"
+            f"ᴜsɪɴɢ /setghtoken ɪɴ ᴀ ɢʀᴏᴜᴘ ᴄᴏᴜʟᴅ ᴇxᴩᴏsᴇ ʏᴏᴜʀ ɢɪᴛʜᴜʙ ᴛᴏᴋᴇɴ.\n\n"
+            f"👉 <a href='https://t.me/{BOT_USERNAME}?start=setghtoken'>ᴄʟɪᴄᴋ ʜᴇʀᴇ ᴛᴏ ᴏᴘᴇɴ ᴅᴍ →</a>",
+            disable_web_page_preview=True,
+        )
     if len(message.command) != 2:
         return await message.reply_text(f"{e(_E_ERR,'🚩')} Usage: <code>/setghtoken &lt;your_github_token&gt;</code>")
     token = message.command[1].strip()
@@ -99,13 +107,14 @@ async def set_gh_token(client, message: Message):
         await message.delete()
     except Exception:
         pass
+    mystic = await message.reply_text(f"{e(_E_CAL,'🗓')} Verifying your token with GitHub...")
     async with aiohttp.ClientSession() as session:
         async with session.get(f"{GITHUB_API}/user", headers=_auth_headers(token)) as resp:
             if resp.status != 200:
-                return await message.reply_text(f"{e(_E_ERR,'🚩')} Invalid token, GitHub rejected it.")
+                return await mystic.edit_text(f"{e(_E_ERR,'🚩')} Invalid token — GitHub rejected it. Make sure you copied the full token correctly.")
             data = await resp.json()
     await save_token(message.from_user.id, token)
-    await message.reply_text(f"{e(_E_OK,'✅')} Token saved for GitHub account <b>{data.get('login')}</b>.\nYour message with the token has been deleted for safety.")
+    await mystic.edit_text(f"{e(_E_OK,'✅')} Token saved for GitHub account <b>{data.get('login')}</b>.\n<i>Your message with the token has been deleted for safety.</i>")
 
 
 @app.on_message(filters.command("mytoken") & ~BANNED_USERS)

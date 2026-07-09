@@ -326,26 +326,42 @@ async def guess_game_callback(client, callback_query):
         return await callback_query.answer(smallcaps("Invalid game interaction!"), show_alert=True)
 
     if selected_option == game_data["answer"]:
-        time_taken = round(time.time() - game_data["start_time"], 1)
+        # Atomically remove the game so only the first correct clicker wins
+        won_game = active_games.pop(chat_id, None)
+        if won_game is None:
+            # Game was claimed by someone else between the check and now
+            return await callback_query.answer(
+                f"😔 {smallcaps('Someone else claimed it first! Next game coming up...')}",
+                show_alert=True
+            )
+
+        time_taken = round(time.time() - won_game["start_time"], 1)
         points_won = 3 if game_type == "emg" else 5
-        game_name_str = "emoji" if game_type == "emg" else game_data["name"]
+        game_name_str = "emoji" if game_type == "emg" else won_game.get("name", "flag")
 
         success_text = (
             f"🎉 **{smallcaps(f'The {game_name_str} was guessed correctly by')} {user.mention} "
-            f"{smallcaps(f'in {time_taken} seconds!')}**\n*+{points_won} {smallcaps('points')}*"
+            f"{smallcaps(f'in {time_taken} seconds!')}**\n*+{points_won} {smallcaps('coins')}*"
         )
-
-        del active_games[chat_id]
-        user_data = await game_db.find_one({"user_id": user.id})
-        if user_data:
-            await game_db.update_one({"user_id": user.id}, {"$set": {"points": user_data["points"] + points_won, "name": user.first_name}})
-        else:
-            await game_db.insert_one({"user_id": user.id, "name": user.first_name, "points": points_won})
 
         try:
             await callback_query.message.delete()
         except Exception:
             pass
+
+        try:
+            user_data = await game_db.find_one({"user_id": user.id})
+            if user_data:
+                await game_db.update_one(
+                    {"user_id": user.id},
+                    {"$set": {"points": user_data["points"] + points_won, "name": user.first_name}}
+                )
+            else:
+                await game_db.insert_one({"user_id": user.id, "name": user.first_name, "points": points_won})
+        except Exception:
+            pass
+
+        await callback_query.answer(f"✅ {smallcaps(f'Correct! +{points_won} coins!')}", show_alert=True)
         await send_claim(client, chat_id, success_text)
     else:
         user_cooldowns[user.id] = time.time()

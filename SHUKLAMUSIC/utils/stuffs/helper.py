@@ -242,6 +242,21 @@ Example:
 '''
     
     
+    HELP_StringGen = '''<u><b>🔑 sᴛʀɪɴɢ sᴇssɪᴏɴ ɢᴇɴᴇʀᴀᴛᴏʀ :</u></b>
+
+ɢᴇɴᴇʀᴀᴛᴇ ʏᴏᴜʀ sᴇssɪᴏɴ sᴛʀɪɴɢ sᴀꜰᴇʟʏ ᴅɪʀᴇᴄᴛʟʏ ꜰʀᴏᴍ ᴛᴇʟᴇɢʀᴀᴍ ᴅᴍ.
+
+• /genstring : sᴛᴀʀᴛ ɪɴᴛᴇʀᴀᴄᴛɪᴠᴇ sᴇssɪᴏɴ ɢᴇɴᴇʀᴀᴛᴏʀ
+
+sᴜᴩᴩᴏʀᴛᴇᴅ ᴛʏᴩᴇs :
+  ⭐ Pyrogram v1  — ʟᴇɢᴀᴄʏ ꜰᴏʀᴍᴀᴛ
+  ✨ Pyrogram v2  — ᴍᴏᴅᴇʀɴ ꜰᴏʀᴍᴀᴛ
+  ⚡ Telethon     — ᴛᴇʟᴇᴛʜᴏɴ ꜱᴇꜱꜱɪᴏɴ
+  🤖 Bot Session  — ꜰᴏʀ ʙᴏᴛ ᴀᴄᴄᴏᴜɴᴛs
+
+🔒 ʏᴏᴜʀ ᴄʀᴇᴅᴇɴᴛɪᴀʟs ᴀʀᴇ ɴᴇᴠᴇʀ ꜱᴛᴏʀᴇᴅ.
+'''
+
     fullpromote = {
     'can_change_info': True,
     'can_post_messages': True,

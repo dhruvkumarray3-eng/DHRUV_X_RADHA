@@ -224,7 +224,22 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
-        ytdl_opts = {"quiet": True}
+        ytdl_opts = {
+            "quiet": True,
+            "extractor_args": {
+                "youtube": {
+                    "player_client": ["android_embedded", "web_creator"],
+                    "player_skip": ["webpage"],
+                }
+            },
+            "http_headers": {
+                "User-Agent": (
+                    "Mozilla/5.0 (Linux; Android 11; Pixel 5) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/90.0.4430.91 Mobile Safari/537.36"
+                ),
+            },
+        }
         ydl = yt_dlp.YoutubeDL(ytdl_opts)
         with ydl:
             formats_available = []

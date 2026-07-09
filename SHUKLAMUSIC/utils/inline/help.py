@@ -36,11 +36,12 @@ _E_CLOSE   = 4958526153955476488   # ❌  Close
 _E_BACK    = 4956282853882069908   # ➡️  Back
 _E_BULB    = 4958665796227171144   # 💡  Help DM
 
-# ── New feature buttons (row 6) ──
+# ── New feature buttons (row 6+) ──
 _E_FIGHT   = 5978869985299142389   # 🦚  ChatFight
 _E_GITHUB  = 5208748315805499400   # ✅  GitHub Management
 _E_CHATBOT = 6073117703965511893   # 💐  ChatBot
 _E_GAMES   = 6271653280187684816   # 🌟  Games
+_E_KEY     = 6269140848873574815   # ❤️  String Gen
 
 
 def help_pannel(_, START: Union[bool, int] = None):
@@ -197,6 +198,12 @@ def help_pannel(_, START: Union[bool, int] = None):
                     callback_data="help_callback hb19",
                     style=ButtonStyle.SUCCESS,
                     icon_custom_emoji_id=_E_GAMES,
+                ),
+                InlineKeyboardButton(
+                    text="🔑 sᴛʀɪɴɢ ɢᴇɴ",
+                    callback_data="help_callback hb20",
+                    style=ButtonStyle.DANGER,
+                    icon_custom_emoji_id=_E_KEY,
                 ),
             ],
             mark,
