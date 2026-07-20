@@ -34,6 +34,25 @@ EFFECT_IDS = [
     5159385139981059251,
 ]
 
+@app.on_callback_query(filters.regex("^show_help_private$") & ~BANNED_USERS)
+async def show_help_private_cb(client, CallbackQuery):
+    """Help & Commands button from the start/home panel — show the actual help panel."""
+    try:
+        await CallbackQuery.answer()
+    except:
+        pass
+    language = await get_lang(CallbackQuery.message.chat.id)
+    _ = get_string(language)
+    keyboard = help_pannel(_)
+    await CallbackQuery.message.delete()
+    await client.send_photo(
+        chat_id=CallbackQuery.message.chat.id,
+        photo=random.choice(SHASHANK_IMG),
+        caption=_["help_1"].format(SUPPORT_CHAT),
+        reply_markup=keyboard,
+    )
+
+
 @app.on_message(filters.command(["help"]) & filters.private & ~BANNED_USERS)
 @app.on_callback_query(filters.regex("settings_back_helper") & ~BANNED_USERS)
 async def helper_private(
@@ -165,7 +184,8 @@ async def on_back_button(client, CallbackQuery):
 async def mb_plugin_button(client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     cb = callback_data.split(None, 1)[1]
-    keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("ʙᴀᴄᴋ", callback_data=f"mbot_cb")]])
+    from pyrogram.enums import ButtonStyle
+    keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("ʙᴀᴄᴋ", callback_data="mbot_cb", style=ButtonStyle.PRIMARY)]])
     if cb == "Okieeeeee":
         await CallbackQuery.edit_message_text(f"`something errors`",reply_markup=keyboard,parse_mode=enums.ParseMode.MARKDOWN)
     else:

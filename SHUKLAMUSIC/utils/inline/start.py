@@ -88,7 +88,7 @@ def private_panel(_):
         [
             InlineKeyboardButton(
                 text=_["S_B_4"],
-                callback_data="settings_back_helper",
+                callback_data="show_help_private",
                 style=ButtonStyle.SUCCESS,
                 icon_custom_emoji_id=_E_BULB
             ),
