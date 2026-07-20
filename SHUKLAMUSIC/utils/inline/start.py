@@ -12,7 +12,7 @@
 # ❤️ Made with dedication and love by ItzShukla
 # -----------------------------------------------
 
-from pyrogram.types import InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, WebAppInfo
 
 import config
 from pyrogram.enums import ButtonStyle
@@ -99,6 +99,14 @@ def private_panel(_):
                 url=f"https://t.me/{_clean_username(config.OWNER_USERNAME)}",
                 style=ButtonStyle.DANGER,
                 icon_custom_emoji_id=_E_CROWN
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text=_["S_B_10"],
+                web_app=WebAppInfo(url="https://appmusucvitech--daredevildefaul.replit.app"),
+                style=ButtonStyle.PRIMARY,
+                icon_custom_emoji_id=_E_DIAMOND
             ),
         ],
     ]
