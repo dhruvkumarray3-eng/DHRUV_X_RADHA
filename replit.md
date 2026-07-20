@@ -1,14 +1,14 @@
-# SHUKLAMUSIC — Telegram Music Bot
+# SHUKLA MUSIC — Telegram Music Bot
 
-A Telegram group voice-chat music streaming bot built with Pyrogram and py-tgcalls.
+A feature-rich Telegram Music Bot built with Pyrogram + PyTgCalls. Streams audio/video in Telegram group voice chats, supports YouTube, Spotify, Apple Music, SoundCloud, and more.
 
 ## How to run
-
-The workflow **"Start application"** runs the bot:
 
 ```
 python3 -m SHUKLAMUSIC
 ```
+
+The workflow **"Start application"** is already configured and runs this command automatically.
 
 ## Required secrets (set in Replit Secrets)
 
@@ -16,25 +16,21 @@ python3 -m SHUKLAMUSIC
 |---|---|
 | `BOT_TOKEN` | Telegram bot token from @BotFather |
 | `MONGO_DB_URI` | MongoDB connection string |
-| `STRING_SESSION` | Pyrogram user session string (assistant account) |
-| `GIT_TOKEN` | GitHub personal access token (for git push) |
-
-## Required env vars (set in .replit userenv)
-
-| Variable | Description |
-|---|---|
-| `LOGGER_ID` | Telegram group/channel ID for bot logs |
+| `LOGGER_ID` | Telegram group/channel ID for bot logs (bot must be admin there) |
+| `STRING_SESSION` | Pyrogram string session for the assistant account |
 | `OWNER_ID` | Your Telegram user ID |
+| `GIT_TOKEN` | GitHub personal access token (for pushing to GitHub) |
 
 ## Stack
 
-- Python 3.12
-- [Pyrogram](https://pyrogram.org/) — Telegram MTProto client
-- [py-tgcalls](https://pytgcalls.github.io/) / ntgcalls — Voice chat streaming
-- MongoDB / Motor — async database
-- yt-dlp — YouTube audio/video download
-- APScheduler — scheduled jobs (night mode, etc.)
+- **Python 3.11**
+- **Pyrogram 2.x** — Telegram MTProto client
+- **PyTgCalls** — Voice chat streaming
+- **MongoDB / Motor** — Async database
+- **APScheduler** — Night mode scheduler
+- **yt-dlp** — YouTube downloading
+- **Spotipy** — Spotify API
 
 ## User preferences
 
-- Credentials stored securely as Replit Secrets, never hardcoded
+- Keep the existing project structure unchanged.
