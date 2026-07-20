@@ -911,3 +911,164 @@ client_session: <aiohttp.client.ClientSession object at 0x7f365c288710>
 [20-Jul-26 10:18:44 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
   ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
 ╚═════ஜ۩۞۩ஜ════╝
+[20-Jul-26 10:20:14 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1732, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1867, in __extract_info
+    ie_result = ie.extract(url)
+                ^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/extractor/common.py", line 765, in extract
+    ie_result = self._real_extract(url)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/extractor/youtube/_video.py", line 4063, in _real_extract
+    self.raise_no_formats(reason, expected=True)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/extractor/common.py", line 1272, in raise_no_formats
+    raise ExtractorError(msg, expected=expected, video_id=video_id)
+yt_dlp.utils.ExtractorError: [youtube] -2RAq5o5pwc: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/decorators/language.py", line 67, in wrapper
+    return await mystic(_, message, language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/bot/start.py", line 213, in start_pm
+    info = await loop.run_in_executor(None, _fetch_yt_info)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/iizfzmqjdfvbyx82gqw92glb5zl6m4my-python3-3.12.12/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/bot/start.py", line 211, in _fetch_yt_info
+    return ydl.extract_info(video_url, download=False) or {}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1721, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1750, in wrapper
+    self.report_error(str(e), e.format_traceback())
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1166, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1104, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] -2RAq5o5pwc: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+[20-Jul-26 10:20:56 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1732, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1867, in __extract_info
+    ie_result = ie.extract(url)
+                ^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/extractor/common.py", line 765, in extract
+    ie_result = self._real_extract(url)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/extractor/youtube/_video.py", line 4063, in _real_extract
+    self.raise_no_formats(reason, expected=True)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/extractor/common.py", line 1272, in raise_no_formats
+    raise ExtractorError(msg, expected=expected, video_id=video_id)
+yt_dlp.utils.ExtractorError: [youtube] -2RAq5o5pwc: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/decorators/language.py", line 67, in wrapper
+    return await mystic(_, message, language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/bot/start.py", line 213, in start_pm
+    info = await loop.run_in_executor(None, _fetch_yt_info)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/iizfzmqjdfvbyx82gqw92glb5zl6m4my-python3-3.12.12/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/bot/start.py", line 211, in _fetch_yt_info
+    return ydl.extract_info(video_url, download=False) or {}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1721, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1750, in wrapper
+    self.report_error(str(e), e.format_traceback())
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1166, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1104, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] -2RAq5o5pwc: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+[20-Jul-26 10:21:20 - INFO] - SHUKLAMUSIC.core.bot - Stopping Bot...
+[20-Jul-26 10:21:20 - INFO] - SHUKLAMUSIC.core.userbot - Stopping Assistants...
+[20-Jul-26 10:21:20 - INFO] - SHUKLAMUSIC - 𝗦𝗧𝗢𝗣 𝗦𝗧𝗥𝗔𝗡𝗚𝗘𝗥 𝗠𝗨𝗦𝗜𝗖🎻 𝗕𝗢𝗧..
+[20-Jul-26 10:21:21 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f62dc158920>
+[20-Jul-26 10:21:21 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f628b8cb830>
+[20-Jul-26 10:21:22 - INFO] - SHUKLAMUSIC.core.mongo - Connecting to your Mongo Database...
+[20-Jul-26 10:21:22 - INFO] - SHUKLAMUSIC.core.mongo - Connected to your Mongo Database.
+[20-Jul-26 10:21:22 - INFO] - SHUKLAMUSIC.core.dir - Directories Updated.
+[20-Jul-26 10:21:22 - INFO] - SHUKLAMUSIC.core.git - Git Client Found [VPS DEPLOYER]
+[20-Jul-26 10:21:22 - INFO] - SHUKLAMUSIC.misc - 𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗟𝗢𝗔𝗗 𝗕𝗔𝗕𝗬🍫........
+[20-Jul-26 10:21:22 - INFO] - SHUKLAMUSIC.core.bot - Starting Bot...
+[20-Jul-26 10:21:23 - INFO] - SHUKLAMUSIC.misc - 𝗦𝗨𝗗𝗢 𝗨𝗦𝗘𝗥 𝗗𝗢𝗡𝗘✨🎋.
+[20-Jul-26 10:21:28 - INFO] - SHUKLAMUSIC.core.bot - Music Bot Started Successfully as Music
+[20-Jul-26 10:21:28 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[20-Jul-26 10:21:28 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[20-Jul-26 10:21:28 - INFO] - apscheduler.scheduler - Added job "start_nightmode" to job store "default"
+[20-Jul-26 10:21:28 - INFO] - apscheduler.scheduler - Added job "close_nightmode" to job store "default"
+[20-Jul-26 10:21:28 - INFO] - apscheduler.scheduler - Scheduler started
+[20-Jul-26 10:21:29 - INFO] - SHUKLAMUSIC.plugins - 𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...
+[20-Jul-26 10:21:29 - INFO] - SHUKLAMUSIC.core.userbot - Starting Assistants...
+[20-Jul-26 10:21:30 - INFO] - SHUKLAMUSIC.core.userbot - Assistant Started as <a href=tg://user?id=7161571562>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>
+[20-Jul-26 10:21:30 - INFO] - SHUKLAMUSIC.core.call - Starting PyTgCalls Client...
+
+[20-Jul-26 10:21:34 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1732, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1867, in __extract_info
+    ie_result = ie.extract(url)
+                ^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/extractor/common.py", line 765, in extract
+    ie_result = self._real_extract(url)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/extractor/youtube/_video.py", line 4063, in _real_extract
+    self.raise_no_formats(reason, expected=True)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/extractor/common.py", line 1272, in raise_no_formats
+    raise ExtractorError(msg, expected=expected, video_id=video_id)
+yt_dlp.utils.ExtractorError: [youtube] -2RAq5o5pwc: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/decorators/language.py", line 67, in wrapper
+    return await mystic(_, message, language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/bot/start.py", line 213, in start_pm
+    info = await loop.run_in_executor(None, _fetch_yt_info)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/iizfzmqjdfvbyx82gqw92glb5zl6m4my-python3-3.12.12/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/bot/start.py", line 211, in _fetch_yt_info
+    return ydl.extract_info(video_url, download=False) or {}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1721, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1750, in wrapper
+    self.report_error(str(e), e.format_traceback())
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1166, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/yt_dlp/YoutubeDL.py", line 1104, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] -2RAq5o5pwc: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+[20-Jul-26 10:21:39 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: loaded settings for 1 chats (monitoring starts when music plays)
+[20-Jul-26 10:21:39 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
+  ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
+╚═════ஜ۩۞۩ஜ════╝
