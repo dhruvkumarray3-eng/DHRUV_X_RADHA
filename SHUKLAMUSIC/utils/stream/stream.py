@@ -115,7 +115,7 @@ async def stream(
                     original_chat_id,
                     photo=img,
                     caption=_["stream_1"].format(
-                        f"https://t.me/{app.username}?start=info_{vidid}",
+                        f"https://t.me/{app.username}?start=dl_{vidid}_{'v' if video else 'a'}",
                         title[:23],
                         duration_min,
                         user_name,
@@ -201,7 +201,7 @@ async def stream(
                 original_chat_id,
                 photo=img,
                 caption=_["stream_1"].format(
-                    f"https://t.me/{app.username}?start=info_{vidid}",
+                    f"https://t.me/{app.username}?start=dl_{vidid}_{'v' if video else 'a'}",
                     title[:23],
                     duration_min,
                     user_name,
@@ -369,7 +369,7 @@ async def stream(
                 original_chat_id,
                 photo=img,
                 caption=_["stream_1"].format(
-                    f"https://t.me/{app.username}?start=info_{vidid}",
+                    f"https://t.me/{app.username}?start=dl_{vidid}_{'v' if video else 'a'}",
                     title[:23],
                     duration_min,
                     user_name,

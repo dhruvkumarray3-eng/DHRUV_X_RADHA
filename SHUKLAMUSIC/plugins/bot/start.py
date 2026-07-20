@@ -1,4 +1,5 @@
 import asyncio
+import os
 import random
 import html
 import time
@@ -252,6 +253,84 @@ async def start_pm(client, message: Message, _):
                 caption=searched_text,
                 reply_markup=key,
             )
+    elif name.startswith("dl_"):
+        # ── Download handler: dl_{vidid}_{a|v} ──
+        m = await message.reply_text("⏬ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ʏᴏᴜʀ sᴏɴɢ, ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ... ❤️‍🔥")
+        try:
+            parts = name[3:].rsplit("_", 1)
+            vidid = parts[0]
+            dl_type = parts[1] if len(parts) == 2 else "a"
+            video_url = f"https://www.youtube.com/watch?v={vidid}"
+            os.makedirs("downloads", exist_ok=True)
+            loop = asyncio.get_event_loop()
+            powered = "✦ ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href='https://t.me/II_NOBITA_X_PRIME_II'>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a>"
+            if dl_type == "v":
+                out_file = f"downloads/{vidid}_hd.mp4"
+                def _dl_video():
+                    opts = {
+                        "format": "bestvideo[ext=mp4][height<=1080]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+                        "outtmpl": out_file,
+                        "quiet": True,
+                        "merge_output_format": "mp4",
+                        "no_warnings": True,
+                        "noplaylist": True,
+                    }
+                    with yt_dlp.YoutubeDL(opts) as ydl:
+                        ydl.download([video_url])
+                    return out_file if os.path.exists(out_file) and os.path.getsize(out_file) > 0 else None
+                file_path = await loop.run_in_executor(None, _dl_video)
+                if file_path:
+                    await m.delete()
+                    await app.send_video(
+                        chat_id=message.chat.id,
+                        video=file_path,
+                        caption=f"🎬 <b>HD ᴠɪᴅᴇᴏ — ɴᴏʙɪᴛᴀ 𝗫 ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ</b>\n\n{powered}",
+                        supports_streaming=True,
+                    )
+                    try:
+                        os.remove(file_path)
+                    except Exception:
+                        pass
+                else:
+                    await m.edit_text("❌ ᴠɪᴅᴇᴏ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ.")
+            else:
+                out_file = f"downloads/{vidid}_audio.%(ext)s"
+                final_file = f"downloads/{vidid}_audio.mp3"
+                def _dl_audio():
+                    opts = {
+                        "format": "bestaudio/best",
+                        "outtmpl": out_file,
+                        "quiet": True,
+                        "no_warnings": True,
+                        "noplaylist": True,
+                        "postprocessors": [{
+                            "key": "FFmpegExtractAudio",
+                            "preferredcodec": "mp3",
+                            "preferredquality": "320",
+                        }],
+                    }
+                    with yt_dlp.YoutubeDL(opts) as ydl:
+                        ydl.download([video_url])
+                    return final_file if os.path.exists(final_file) and os.path.getsize(final_file) > 0 else None
+                file_path = await loop.run_in_executor(None, _dl_audio)
+                if file_path:
+                    await m.delete()
+                    await app.send_audio(
+                        chat_id=message.chat.id,
+                        audio=file_path,
+                        caption=f"🎵 <b>HD ᴀᴜᴅɪᴏ 320kbps — ɴᴏʙɪᴛᴀ 𝗫 ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ</b>\n\n{powered}",
+                    )
+                    try:
+                        os.remove(file_path)
+                    except Exception:
+                        pass
+                else:
+                    await m.edit_text("❌ ᴀᴜᴅɪᴏ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ.")
+        except Exception:
+            try:
+                await m.edit_text("❌ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.")
+            except Exception:
+                pass
     else:
         out = private_panel(_)
         served_chats = len(await get_served_chats())
