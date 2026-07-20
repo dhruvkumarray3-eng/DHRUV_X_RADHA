@@ -160,25 +160,23 @@ async def start_pm(client, message: Message, _):
     await asyncio.sleep(0.5)
     await emoji_splash.delete()
 
-    # Step 2 — Writing animation
+    # Step 2 — Word-flip animation (each word alone, disappears, next takes its spot)
     loading_1 = await message.reply_text(random.choice(GREET))
     await add_served_user(message.from_user.id)
 
-    await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ᴅɪηɢ ᴅᴏηɢ.❤️‍🔥</b>")
-    await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ᴅɪηɢ ᴅᴏηɢ..❤️‍🔥</b>")
-    await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ᴅɪηɢ ᴅᴏηɢ...❤️‍🔥</b>")
-    await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ʀᴀᴅʜᴀ</b>")
-    await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ʀᴀᴅʜᴀ ꭙ</b>")
-    await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ʀᴀᴅʜᴀ ꭙ ϻᴜsɪᴄ ♪</b>")
-    await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>sᴛᴧʀᴛed!🥀</b>")
-    await asyncio.sleep(0.1)
+    flip_words = [
+        "<b>ɴᴏʙɪᴛᴀ</b>",
+        "<b>𝗫</b>",
+        "<b>ᴘʀɪᴍᴇ</b>",
+        "<b>❤️‍🔥</b>",
+        "<b>ꜱᴛᴀʀᴛᴇᴅ ✨</b>",
+    ]
+    for i, word in enumerate(flip_words):
+        await loading_1.edit_text(word)
+        await asyncio.sleep(0.35)
+        if i < len(flip_words) - 1:
+            await loading_1.edit_text("⠀")   # braille blank — visually empty
+            await asyncio.sleep(0.2)
     await loading_1.delete()
     # --- ANIMATION END ---
 

@@ -149,7 +149,7 @@ async def get_thumb(videoid: str) -> str:
         brand_font = ImageFont.truetype("SHUKLAMUSIC/assets/assets/font2.ttf", 22)
     except OSError:
         brand_font = regular_font
-    brand_text = "MADE BY-NOBITAXPRIME"
+    brand_text = "MADE BY-NOBITAXPRIME\u2764\ufe0f\u200d\U0001f525"
     brand_w = int(brand_font.getlength(brand_text)) if hasattr(brand_font, 'getlength') else 220
     brand_x = 1280 - brand_w - 18
     brand_y = 720 - 42
