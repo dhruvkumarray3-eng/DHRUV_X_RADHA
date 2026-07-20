@@ -1,218 +1,181 @@
-````markdown
 <div align="center">
 
-<img src="assets/radha.jpg" width="100%" alt="Radha Music Banner">
+<img src="https://capsule-render.vercel.app/api?type=waving&height=200&color=gradient&customColorList=6,12,16,20,24&text=ɴᴏʙɪᴛᴀ%20𝗫%20ᴘʀɪᴍᴇ%20ᴍᴜsɪᴄ%20ʙᴏᴛ&fontColor=ffffff&fontSize=36&fontAlignY=38&desc=Premium%20Telegram%20Music%20Bot&descAlignY=60&descSize=16"/>
 
-# ✨ 𝐑ᴀᴅʜᴀ ✕ 𝐌ᴜsɪᴄ ♪
+<img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=700&size=22&duration=2800&pause=900&color=FF6B9D&center=true&vCenter=true&width=900&lines=❤️‍🔥+ɴᴏʙɪᴛᴀ+𝗫+ᴘʀɪᴍᴇ+ᴍᴜsɪᴄ+ʙᴏᴛ+❤️‍🔥;Premium+Telegram+Music+Streaming;Crystal+Clear+Audio+%26+Video;Powered+by+@II_NOBITA_X_PRIME_II" />
 
-### ᴘʀᴇᴍɪᴜᴍ • ꜰᴀꜱᴛ • ꜱᴛᴀʙʟᴇ • ᴇʟᴇɢᴀɴᴛ
+<br/>
 
-<img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=700&size=25&duration=3000&pause=1000&color=F7C873&center=true&vCenter=true&width=900&lines=Premium+Telegram+Music+Bot;Crystal+Clear+Music+Streaming;Video+Streaming+%26+Voice+Chat;Modern+Premium+Experience;Made+With+❤+By+Madara" />
+<a href="https://t.me/II_NOBITA_X_PRIME_II">
+  <img src="https://img.shields.io/badge/Owner-%40II__NOBITA__X__PRIME__II-FF6B9D?style=for-the-badge&logo=telegram&logoColor=white">
+</a>
+<a href="https://t.me/fragmentiic">
+  <img src="https://img.shields.io/badge/Support-Channel-26A5E4?style=for-the-badge&logo=telegram&logoColor=white">
+</a>
+<img src="https://img.shields.io/badge/Python-3.11-FFD700?style=for-the-badge&logo=python&logoColor=white">
+<img src="https://img.shields.io/badge/Pyrogram-2.x-E76F51?style=for-the-badge&logo=python&logoColor=white">
+<img src="https://img.shields.io/badge/License-MIT-2A9D8F?style=for-the-badge">
 
-<p align="center">
+<br/><br/>
 
-<img src="https://img.shields.io/github/stars/USERNAME/Radha-Music?style=for-the-badge&logo=github&color=FFD700">
-
-<img src="https://img.shields.io/github/forks/USERNAME/Radha-Music?style=for-the-badge&logo=github&color=F4A261">
-
-<img src="https://img.shields.io/github/issues/USERNAME/Radha-Music?style=for-the-badge&color=E76F51">
-
-<img src="https://img.shields.io/github/license/USERNAME/Radha-Music?style=for-the-badge&color=2A9D8F">
-
-<img src="https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python">
-
-<img src="https://img.shields.io/badge/Telegram-Bot-26A5E4?style=for-the-badge&logo=telegram">
-
-</p>
-
-<img src="https://capsule-render.vercel.app/api?type=waving&height=140&color=gradient&customColorList=17,18,19,20"/>
+<img src="https://capsule-render.vercel.app/api?type=rect&height=4&color=gradient&customColorList=6,12,16,20,24"/>
 
 </div>
 
-# 🌸 About Radha Music
+---
 
-Radha Music is a next-generation Telegram Music Bot built for speed, beauty and reliability.
+## 🌟 ᴀʙᴏᴜᴛ
 
-Enjoy lag-free playback, premium buttons, crystal-clear audio, beautiful interface and powerful management features.
+**ɴᴏʙɪᴛᴀ 𝗫 ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ** is a next-generation Telegram Music Bot built for speed, beauty, and reliability.
 
-Designed to provide one of the smoothest music experiences on Telegram.
+Enjoy lag-free playback, premium buttons, crystal-clear audio, beautiful interface, and powerful group management features.
+
+> ✦ ᴘᴏᴡᴇʀᴇᴅ ʙʏ » [@II_NOBITA_X_PRIME_II](https://t.me/II_NOBITA_X_PRIME_II)
 
 ---
 
-# 🎥 Demo Video
+## ✨ ғᴇᴀᴛᴜʀᴇs
 
-> **If GitHub doesn't display the video player, click the link below.**
-
-https://files.catbox.moe/n9qfuo.mp4
-
-<video src="https://files.catbox.moe/n9qfuo.mp4" controls autoplay muted loop width="100%"></video>
-
----
-
-# ✨ Features
-
-### 🎵 Music
-
-- HQ Audio Streaming
-- Video Streaming
-- Live Stream
-- Queue System
-- Loop Playback
-- Playlist Support
-- Shuffle Queue
-- Volume Control
-- Seek Music
-- Auto Resume
-
-### 🎬 Videos
-
-- HD Video Playback
-- Stream from YouTube
-- Live Video Chat
-- Smooth Buffering
-
-### 🤖 Smart
-
-- Lyrics
-- Song Download
-- Artist Information
-- Auto Playlist
-- Recommendation System
-
-### 🛡 Security
-
-- Anti Spam
-- Anti Flood
-- Group Protection
-- Secure Environment
-- Fast Recovery
-
-### 💎 Premium
-
-- Premium Buttons
-- Premium Emojis
-- Beautiful UI
-- Lightning Fast
-- Optimized Performance
+| Feature | Description |
+|---|---|
+| 🎵 **Music Streaming** | Play any song from YouTube, Spotify, Apple Music |
+| 🎞 **Video Streaming** | Full HD video streaming in voice chats |
+| 📻 **Live Stream** | Stream live radio & live URLs |
+| 📋 **Queue System** | Multi-track queuing with skip, pause, resume |
+| 🔊 **Audio Effects** | Bass boost, reverb, nightcore, and more |
+| 👑 **Admin Controls** | Full group admin management |
+| 🌐 **Multi-language** | Support for multiple languages |
+| 💰 **Crypto Tools** | Live TON/USDT price, wallet balance |
+| 💸 **UPI Tools** | Save UPI ID, generate payment QR |
+| 📊 **Bot Stats** | Live uptime, CPU, RAM, storage stats |
+| 🔔 **Scheduler** | Night mode auto on/off |
+| 🎮 **Games** | Dice, battle, roulette and more |
 
 ---
 
-# 📸 Preview
+## 🎵 ᴍᴜsɪᴄ ᴄᴏᴍᴍᴀɴᴅs
 
-<p align="center">
-
-<img src="assets/radha.jpg" width="450">
-
-</p>
-
----
-
-# 🚀 Installation
-
-```bash
-git clone https://github.com/USERNAME/Radha-Music
-
-cd Radha-Music
-
-pip install -r requirements.txt
-
-python3 -m Radha
+```
+/play     — Play audio from YouTube / by name
+/vplay    — Play video in voice chat
+/stream   — Stream from a live URL
+/pause    — Pause current track
+/resume   — Resume paused track
+/skip     — Skip to next track
+/stop     — Stop streaming & clear queue
+/queue    — View current queue
+/shuffle  — Shuffle the queue
+/loop     — Loop current track / full queue
+/volume   — Adjust volume (1–200)
+/seek     — Seek to a position in track
+/end      — End voice chat
 ```
 
 ---
 
-# ⚙ Environment Variables
+## 🛠 ᴀᴅᴍɪɴ ᴄᴏᴍᴍᴀɴᴅs
+
+```
+/ban /unban /kick /mute /unmute
+/promote /demote /pin /unpin
+/ban /tban /dban
+/warn /rmwarn /warnings
+/del /purge /purgeme
+/lock /unlock
+/nightmode
+/auth /unauth
+```
+
+---
+
+## 💰 ᴛᴏᴏʟ ᴄᴏᴍᴍᴀɴᴅs
+
+```
+/ton      — Live TON coin price
+/usdt     — Live USDT price
+/balance  — TON wallet balance checker
+/setupi   — Save your UPI ID
+/gen      — Generate UPI payment QR code
+/ping     — Bot ping & response time
+/stats    — Live bot statistics
+/id       — Get user / chat ID
+/info     — User information
+```
+
+---
+
+## 🚀 ᴅᴇᴘʟᴏʏ
+
+### Requirements
+- Python 3.10+
+- MongoDB URI
+- Telegram Bot Token
+- Telegram API ID & API Hash
+- String Session (Pyrogram)
+
+### Quick Deploy
+
+```bash
+# Clone
+git clone https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA
+cd DHRUV_X_RADHA
+
+# Install dependencies
+pip3 install -r requirements.txt
+
+# Configure .env (see below)
+cp sample.env .env
+nano .env
+
+# Run
+python3 -m SHUKLAMUSIC
+```
+
+### Environment Variables
 
 | Variable | Description |
-|----------|-------------|
-| API_ID | Telegram API ID |
-| API_HASH | Telegram API HASH |
-| BOT_TOKEN | Telegram Bot Token |
-| STRING_SESSION | Assistant String |
-| MONGO_DB_URI | Mongo Database |
-| OWNER_ID | Owner ID |
-| LOG_GROUP_ID | Logger Group |
-| SUPPORT_CHAT | Support Group |
+|---|---|
+| `BOT_TOKEN` | Your Telegram Bot Token from @BotFather |
+| `MONGO_DB_URI` | MongoDB connection string |
+| `STRING_SESSION` | Pyrogram String Session for assistant |
+| `API_ID` | Telegram API ID from my.telegram.org |
+| `API_HASH` | Telegram API Hash from my.telegram.org |
+| `OWNER_ID` | Your Telegram User ID |
+| `LOGGER_ID` | Log group/channel ID |
+| `SUPPORT_CHAT` | Support group link |
 
 ---
 
-# 🎵 Commands
+## 💎 ᴡʜʏ ᴄʜᴏᴏsᴇ ɴᴏʙɪᴛᴀ 𝗫 ᴘʀɪᴍᴇ?
 
-| Command | Description |
-|---------|-------------|
-| /play | Play Music |
-| /vplay | Play Video |
-| /pause | Pause |
-| /resume | Resume |
-| /skip | Skip Song |
-| /queue | Queue List |
-| /end | Stop Playback |
-| /lyrics | Lyrics |
-| /song | Download Song |
-| /ping | Ping |
-| /stats | Statistics |
-| /alive | Bot Status |
+- ⚡ **Blazing Fast** — Instant response, no lag
+- 🎨 **Premium UI** — Beautiful buttons & thumbnails
+- 🔒 **Secure** — Protected against spam & abuse
+- 🛡 **Stable** — 24/7 uptime with auto-restart
+- 🧠 **Smart Queue** — Intelligent playback management
+- 🌍 **Multi-Platform** — YouTube, Spotify, SoundCloud & more
+- 🎭 **Custom Thumbnails** — Dynamic play card with watermark
+- 💬 **Full Admin Suite** — Complete group management
 
 ---
 
-# 💎 Why Choose Radha Music?
+## 📞 sᴜᴘᴘᴏʀᴛ
 
-⭐ Crystal Clear Audio
-
-⭐ Fastest Playback
-
-⭐ Elegant UI
-
-⭐ Video Streaming
-
-⭐ Playlist Support
-
-⭐ Queue Management
-
-⭐ Secure & Stable
-
-⭐ Open Source
-
-⭐ Easy Deployment
-
-⭐ Premium Experience
-
----
-
-# 🌍 Deploy
-
-- VPS
-- Railway
-- Render
-- Docker
-- Local Machine
-
----
-
-# 📊 Repository Stats
-
-⭐ Star the Repository
-
-🍴 Fork the Repository
-
-🐞 Report Bugs
-
-💡 Suggest Features
-
-❤️ Contribute
+| Platform | Link |
+|---|---|
+| 👤 Owner | [@II_NOBITA_X_PRIME_II](https://t.me/II_NOBITA_X_PRIME_II) |
+| 📢 Channel | [@fragmentiic](https://t.me/fragmentiic) |
 
 ---
 
 <div align="center">
 
-## 💖 Support The Project
+<img src="https://capsule-render.vercel.app/api?type=waving&height=120&color=gradient&customColorList=6,12,16,20,24&section=footer"/>
 
-If you like **Radha Music**, please give this repository a ⭐.
+**ᴊαʏ ѕнʀєє ʀαм 🚩**
 
-Made with ❤️ by **Madara**
+✦ ᴍᴀᴅᴇ ᴡɪᴛʜ ❤️‍🔥 ʙʏ [@II_NOBITA_X_PRIME_II](https://t.me/II_NOBITA_X_PRIME_II)
 
-<img src="https://capsule-render.vercel.app/api?type=waving&section=footer&height=140&color=gradient&customColorList=17,18,19,20"/>
+*If you like this project, please give it a ⭐*
 
 </div>
-````
-
