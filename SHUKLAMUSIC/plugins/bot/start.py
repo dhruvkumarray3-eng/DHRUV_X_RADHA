@@ -45,10 +45,14 @@ from strings import get_string
 welcome_db = db.welcome_config 
 
 YUMI_PICS = [
-"https://files.catbox.moe/5go4t6.jpg",
-"https://files.catbox.moe/vbdda6.jpg",
-"https://files.catbox.moe/l2id2z.jpg",  
-
+    "https://files.catbox.moe/ky6ln3.jpg",
+    "https://files.catbox.moe/booqz5.jpg",
+    "https://files.catbox.moe/qlq89x.jpg",
+    "https://files.catbox.moe/ifgkkl.jpg",
+    "https://files.catbox.moe/qm6b0n.jpg",
+    "https://files.catbox.moe/ap3m1t.png",
+    "https://files.catbox.moe/0k863e.png",
+    "https://files.catbox.moe/vp5hg5.png",
 ]
 
 GREET = [

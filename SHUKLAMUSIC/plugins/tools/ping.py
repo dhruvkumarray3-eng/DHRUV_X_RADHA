@@ -21,7 +21,7 @@ from SHUKLAMUSIC.core.call import SHUKLA
 from SHUKLAMUSIC.utils import bot_sys_stats
 from SHUKLAMUSIC.utils.decorators.language import language
 from SHUKLAMUSIC.utils.inline import supp_markup
-from config import BANNED_USERS, SHASHANK_IMG
+from config import BANNED_USERS, PING_VIDEO_URL
 import random
 
 
@@ -29,8 +29,8 @@ import random
 @language
 async def ping_com(client, message: Message, _):
     start = datetime.now()
-    response = await message.reply_photo(
-        random.choice(SHASHANK_IMG),
+    response = await message.reply_animation(
+        PING_VIDEO_URL,
         caption=_["ping_1"].format(app.mention),
     )
     pytgping = await SHUKLA.ping()

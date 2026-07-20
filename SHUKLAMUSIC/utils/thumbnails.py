@@ -144,15 +144,18 @@ async def get_thumb(videoid: str) -> str:
     draw.text((TITLE_X, TITLE_Y), trim_to_width(title, title_font, MAX_TITLE_WIDTH), fill="black", font=title_font)
     draw.text((META_X, META_Y), f"YouTube | {views}", fill="black", font=regular_font)
 
-    # NOBITA X PRIME branding on play card
+    # MADE BY-NOBITAXPRIME watermark — right bottom corner
     try:
         brand_font = ImageFont.truetype("SHUKLAMUSIC/assets/assets/font2.ttf", 22)
     except OSError:
         brand_font = regular_font
-    brand_text = "𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄 ❤️‍🔥"
-    brand_w = brand_font.getlength(brand_text) if hasattr(brand_font, 'getlength') else 200
-    brand_x = TITLE_X + (MAX_TITLE_WIDTH - brand_w) // 2
-    draw.text((brand_x, META_Y + 24), brand_text, fill=(220, 20, 60), font=brand_font)
+    brand_text = "MADE BY-NOBITAXPRIME"
+    brand_w = int(brand_font.getlength(brand_text)) if hasattr(brand_font, 'getlength') else 220
+    brand_x = 1280 - brand_w - 18
+    brand_y = 720 - 42
+    # Shadow for readability
+    draw.text((brand_x + 2, brand_y + 2), brand_text, fill=(0, 0, 0, 180), font=brand_font)
+    draw.text((brand_x, brand_y), brand_text, fill=(255, 255, 255), font=brand_font)
 
     # Progress bar
     draw.line([(BAR_X, BAR_Y), (BAR_X + BAR_RED_LEN, BAR_Y)], fill="red", width=6)
