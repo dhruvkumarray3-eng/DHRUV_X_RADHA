@@ -147,7 +147,7 @@ async def start_pm(client, message: Message, _):
     
     # --- REACTION START ---
     try:
-        await message.react(emoji="😘")
+        await message.react(emoji="❤️‍🔥")
     except Exception:
         pass
     # --- REACTION END ---
@@ -166,9 +166,8 @@ async def start_pm(client, message: Message, _):
 
     flip_words = [
         "<b>ɴᴏʙɪᴛᴀ</b>",
-        "<b>𝗫</b>",
-        "<b>ᴘʀɪᴍᴇ</b>",
-        "<b>❤️‍🔥</b>",
+        "<b>ꭙ</b>",
+        "<b>ϻᴜsɪᴄ ♪</b>",
         "<b>ꜱᴛᴀʀᴛᴇᴅ ✨</b>",
     ]
     for i, word in enumerate(flip_words):
@@ -290,7 +289,7 @@ async def start_pm(client, message: Message, _):
 async def start_gp(client, message: Message, _):
     # --- REACTION START ---
     try:
-        await message.react(emoji="😘")
+        await message.react(emoji="❤️‍🔥")
     except Exception:
         pass
     # --- REACTION END ---

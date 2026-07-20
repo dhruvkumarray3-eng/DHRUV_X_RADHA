@@ -16,7 +16,7 @@ import asyncio
 import time
 from pyrogram import Client, filters
 from pyrogram import filters
-from pyrogram.enums import ChatMembersFilter
+from pyrogram.enums import ChatMembersFilter, ChatType
 from pyrogram.types import CallbackQuery, Message
 import re
 from os import getenv
@@ -31,7 +31,12 @@ from SHUKLAMUSIC import app
 from SHUKLAMUSIC.core.call import SHUKLA
 from SHUKLAMUSIC.misc import db
 from SHUKLAMUSIC.mongo.afkdb import PROCESS
-from SHUKLAMUSIC.utils.database import get_assistant, get_authuser_names, get_cmode
+from SHUKLAMUSIC.utils.database import get_assistant, get_authuser_names, get_cmode, get_lang, get_served_chats, get_served_users
+from SHUKLAMUSIC.utils import bot_sys_stats
+from SHUKLAMUSIC.utils.inline.start import private_panel
+from strings import get_string
+import random
+from config import START_PICS
 from SHUKLAMUSIC.utils.decorators import ActualAdminCB, AdminActual, language
 from SHUKLAMUSIC.utils.formatters import alpha_to_int, get_readable_time
 from config import BANNED_USERS, adminlist, lyrical
@@ -136,15 +141,35 @@ async def help(client: Client, message: Message):
 ##########
 
 @app.on_callback_query(filters.regex("close") & ~BANNED_USERS)
-async def close_menu(_, query: CallbackQuery):
+async def close_menu(client, query: CallbackQuery):
     try:
         await query.answer()
-        await query.message.delete()
-        umm = await query.message.reply_text(
-            f"ᴄʟᴏꜱᴇ ʙʏ : {query.from_user.mention}"
-        )
-        await asyncio.sleep(2)
-        await umm.delete()
+        if query.message.chat.type == ChatType.PRIVATE:
+            language = await get_lang(query.message.chat.id)
+            _ = get_string(language)
+            UP, CPU, RAM, DISK = await bot_sys_stats()
+            served_chats = len(await get_served_chats())
+            served_users = len(await get_served_users())
+            caption = _["start_2"].format(
+                query.from_user.mention, app.mention,
+                UP, DISK, CPU, RAM, served_users, served_chats,
+            )
+            await query.message.delete()
+            await client.send_photo(
+                chat_id=query.message.chat.id,
+                photo=random.choice(START_PICS),
+                has_spoiler=True,
+                caption=caption,
+                reply_markup=InlineKeyboardMarkup(private_panel(_)),
+            )
+        else:
+            await query.message.delete()
+            umm = await client.send_message(
+                chat_id=query.message.chat.id,
+                text=f"ᴄʟᴏꜱᴇ ʙʏ : {query.from_user.mention}",
+            )
+            await asyncio.sleep(2)
+            await umm.delete()
     except:
         pass
 

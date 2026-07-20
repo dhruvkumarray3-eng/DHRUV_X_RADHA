@@ -102,6 +102,18 @@ SUPPORT_GROUP = getenv("SUPPORT_GROUP", SUPPORT_CHAT)
 # Image URLs
 SHASHANK_IMG = getenv("SHASHANK_IMG", "https://files.catbox.moe/ky6ln3.jpg").split(",") if "," in getenv("SHASHANK_IMG", "") else [getenv("SHASHANK_IMG", "https://files.catbox.moe/ky6ln3.jpg")]
 
+# Rotating start photos (used by start command and home callbacks)
+START_PICS = [
+    "https://files.catbox.moe/ky6ln3.jpg",
+    "https://files.catbox.moe/booqz5.jpg",
+    "https://files.catbox.moe/qlq89x.jpg",
+    "https://files.catbox.moe/ifgkkl.jpg",
+    "https://files.catbox.moe/qm6b0n.jpg",
+    "https://files.catbox.moe/ap3m1t.png",
+    "https://files.catbox.moe/0k863e.png",
+    "https://files.catbox.moe/vp5hg5.png",
+]
+
 PING_VIDEO_URL = getenv("PING_VIDEO_URL", "https://files.catbox.moe/lltsdr.mp4")
 
 START_IMG_URL = getenv("START_IMG_URL", "https://files.catbox.moe/ky6ln3.jpg")

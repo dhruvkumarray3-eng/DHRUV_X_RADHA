@@ -14,13 +14,15 @@
 import random
 from typing import Union
 from pyrogram import filters, types
+from pyrogram.enums import ChatType
 from pyrogram.types import InlineKeyboardMarkup, Message, InlineKeyboardButton
 from SHUKLAMUSIC import app
-from SHUKLAMUSIC.utils import help_pannel
-from SHUKLAMUSIC.utils.database import get_lang
+from SHUKLAMUSIC.utils import help_pannel, bot_sys_stats
+from SHUKLAMUSIC.utils.database import get_lang, get_served_chats, get_served_users
 from SHUKLAMUSIC.utils.decorators.language import LanguageStart, languageCB
 from SHUKLAMUSIC.utils.inline.help import help_back_markup, private_help_panel
-from config import BANNED_USERS, START_IMG_URL, SUPPORT_CHAT, SHASHANK_IMG
+from SHUKLAMUSIC.utils.inline.start import private_panel
+from config import BANNED_USERS, START_IMG_URL, SUPPORT_CHAT, SHASHANK_IMG, START_PICS
 from strings import get_string, helpers
 from SHUKLAMUSIC.utils.stuffs.buttons import BUTTONS
 from SHUKLAMUSIC.utils.stuffs.helper import Helper
@@ -35,7 +37,7 @@ EFFECT_IDS = [
 @app.on_message(filters.command(["help"]) & filters.private & ~BANNED_USERS)
 @app.on_callback_query(filters.regex("settings_back_helper") & ~BANNED_USERS)
 async def helper_private(
-    client: app, update: Union[types.Message, types.CallbackQuery]
+    client, update: Union[types.Message, types.CallbackQuery]
 ):
     is_callback = isinstance(update, types.CallbackQuery)
     if is_callback:
@@ -46,10 +48,28 @@ async def helper_private(
         chat_id = update.message.chat.id
         language = await get_lang(chat_id)
         _ = get_string(language)
-        keyboard = help_pannel(_, True)
-        await update.edit_message_text(
-            _["help_1"].format(SUPPORT_CHAT), reply_markup=keyboard
-        )
+        # DM → go back to home page
+        if update.message.chat.type == ChatType.PRIVATE:
+            UP, CPU, RAM, DISK = await bot_sys_stats()
+            served_chats = len(await get_served_chats())
+            served_users = len(await get_served_users())
+            caption = _["start_2"].format(
+                update.from_user.mention, app.mention,
+                UP, DISK, CPU, RAM, served_users, served_chats,
+            )
+            await update.message.delete()
+            await client.send_photo(
+                chat_id=chat_id,
+                photo=random.choice(START_PICS),
+                has_spoiler=True,
+                caption=caption,
+                reply_markup=InlineKeyboardMarkup(private_panel(_)),
+            )
+        else:
+            keyboard = help_pannel(_, True)
+            await update.edit_message_text(
+                _["help_1"].format(SUPPORT_CHAT), reply_markup=keyboard
+            )
     else:
         try:
             await update.delete()
