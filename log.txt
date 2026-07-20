@@ -620,3 +620,24 @@ client_session: <aiohttp.client.ClientSession object at 0x7fb63d54cdd0>
 [20-Jul-26 08:51:33 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
   ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
 ╚═════ஜ۩۞۩ஜ════╝
+[20-Jul-26 09:18:47 - INFO] - SHUKLAMUSIC.core.mongo - Connecting to your Mongo Database...
+[20-Jul-26 09:18:47 - INFO] - SHUKLAMUSIC.core.mongo - Connected to your Mongo Database.
+[20-Jul-26 09:18:47 - INFO] - SHUKLAMUSIC.core.dir - Directories Updated.
+[20-Jul-26 09:18:47 - INFO] - SHUKLAMUSIC.core.git - Git Client Found [VPS DEPLOYER]
+[20-Jul-26 09:18:47 - INFO] - SHUKLAMUSIC.misc - 𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗟𝗢𝗔𝗗 𝗕𝗔𝗕𝗬🍫........
+[20-Jul-26 09:18:47 - INFO] - SHUKLAMUSIC.core.bot - Starting Bot...
+[20-Jul-26 09:18:48 - INFO] - SHUKLAMUSIC.misc - 𝗦𝗨𝗗𝗢 𝗨𝗦𝗘𝗥 𝗗𝗢𝗡𝗘✨🎋.
+[20-Jul-26 09:18:54 - INFO] - SHUKLAMUSIC.core.bot - Music Bot Started Successfully as Music
+[20-Jul-26 09:18:54 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[20-Jul-26 09:18:54 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[20-Jul-26 09:18:54 - INFO] - apscheduler.scheduler - Added job "start_nightmode" to job store "default"
+[20-Jul-26 09:18:54 - INFO] - apscheduler.scheduler - Added job "close_nightmode" to job store "default"
+[20-Jul-26 09:18:54 - INFO] - apscheduler.scheduler - Scheduler started
+[20-Jul-26 09:18:55 - INFO] - SHUKLAMUSIC.plugins - 𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...
+[20-Jul-26 09:18:55 - INFO] - SHUKLAMUSIC.core.userbot - Starting Assistants...
+[20-Jul-26 09:18:56 - INFO] - SHUKLAMUSIC.core.userbot - Assistant Started as <a href=tg://user?id=7161571562>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>
+[20-Jul-26 09:18:56 - INFO] - SHUKLAMUSIC.core.call - Starting PyTgCalls Client...
+
+[20-Jul-26 09:19:10 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
+  ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
+╚═════ஜ۩۞۩ஜ════╝
