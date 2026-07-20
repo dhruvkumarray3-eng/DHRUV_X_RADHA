@@ -50,8 +50,8 @@ UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
 GIT_TOKEN = getenv("GIT_TOKEN", None)
 
 # Support
-SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/xvilucifer")
-SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/xvilucifer")
+SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/fragmentiic")
+SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/fragmentiic")
 
 # Assistant settings
 AUTO_LEAVING_ASSISTANT = getenv("AUTO_LEAVING_ASSISTANT", "True")
