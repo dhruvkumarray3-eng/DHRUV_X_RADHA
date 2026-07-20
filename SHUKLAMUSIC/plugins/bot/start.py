@@ -206,6 +206,7 @@ async def start_pm(client, message: Message, _):
                     "no_warnings": True,
                     "skip_download": True,
                     "noplaylist": True,
+                    "extractor_args": {"youtube": {"player_client": ["android_vr"]}},
                 }
                 with yt_dlp.YoutubeDL(opts) as ydl:
                     return ydl.extract_info(video_url, download=False) or {}
