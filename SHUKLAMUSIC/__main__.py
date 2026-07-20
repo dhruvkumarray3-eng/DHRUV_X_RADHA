@@ -21,6 +21,7 @@ from SHUKLAMUSIC.core.call import SHUKLA
 from SHUKLAMUSIC.misc import sudo
 from SHUKLAMUSIC.plugins import ALL_MODULES
 from SHUKLAMUSIC.utils.database import get_banned_users, get_gbanned
+from SHUKLAMUSIC.plugins.tools.vclogger import initialize_vc_logger
 
 async def init():
     if (
@@ -58,6 +59,7 @@ async def init():
     except:
         pass
     await SHUKLA.decorators()
+    await initialize_vc_logger()
     LOGGER("SHUKLAMUSIC").info(
         "╔═════ஜ۩۞۩ஜ════╗\n  ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛\n╚═════ஜ۩۞۩ஜ════╝"
     )

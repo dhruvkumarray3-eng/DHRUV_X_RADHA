@@ -13,6 +13,7 @@
 # -----------------------------------------------
 from typing import Union
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.enums import ButtonStyle
 from SHUKLAMUSIC import app
 
 def queue_markup(
@@ -81,15 +82,15 @@ def aq_markup(_, chat_id):
             InlineKeyboardButton(text=_["S_B_3"], url=f"https://t.me/{app.username}?startgroup=true",)
         ],
         [
-            InlineKeyboardButton(text="• ʀᴇsᴜᴍᴇ •", callback_data=f"ADMIN Resume|{chat_id}"),
-            InlineKeyboardButton(text="• ᴘᴀᴜsᴇ •", callback_data=f"ADMIN Pause|{chat_id}"),
+            InlineKeyboardButton(text="ʀᴇsᴜᴍᴇ", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068, style=ButtonStyle.SUCCESS),
+            InlineKeyboardButton(text="ᴘᴀᴜsᴇ", callback_data=f"ADMIN Pause|{chat_id}", icon_custom_emoji_id=5409042015415448331, style=ButtonStyle.PRIMARY),
         ],
         [
-            InlineKeyboardButton(text="• sᴋɪᴘ •", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="• sᴛᴏᴘ •", callback_data=f"ADMIN Stop|{chat_id}"),
+            InlineKeyboardButton(text="sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}", icon_custom_emoji_id=5409025823388741707, style=ButtonStyle.PRIMARY),
+            InlineKeyboardButton(text="sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}", icon_custom_emoji_id=5408832111773757273, style=ButtonStyle.DANGER),
         ],
         [
-            InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close")
+            InlineKeyboardButton(text=" ᴄʟᴏsᴇ ▣", callback_data="close", icon_custom_emoji_id=5408832111773757273, style=ButtonStyle.DANGER)
         ],
     ]
     return buttons

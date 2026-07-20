@@ -525,7 +525,10 @@ class Call(PyTgCalls):
             @client.on_update()
             async def _update_handler(_, update: types.Update, _client=client):
                 if isinstance(update, types.StreamEnded):
-                    if update.stream_type == types.StreamEnded.Type.AUDIO:
+                    if update.stream_type in [
+                        types.StreamEnded.Type.AUDIO,
+                        types.StreamEnded.Type.VIDEO,
+                    ]:
                         await self.change_stream(_client, update.chat_id)
                 elif isinstance(update, types.ChatUpdate):
                     if update.status in [
