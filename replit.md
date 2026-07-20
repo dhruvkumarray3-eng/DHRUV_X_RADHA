@@ -1,30 +1,40 @@
-# SHUKLAMUSIC (Stranger Music Bot)
+# SHUKLAMUSIC — Telegram Music Bot
 
-A Telegram Music Player bot that plays music in Telegram voice chats. Built with Python using Pyrogram and Py-Tgcalls.
+A Telegram group voice-chat music streaming bot built with Pyrogram and py-tgcalls.
 
-## Setup
+## How to run
 
-This is a background worker bot — it has no web frontend.
+The workflow **"Start application"** runs the bot:
 
-### Required Environment Variables
-Set these in the Secrets/Environment Variables panel:
-- `API_ID` — Telegram API ID
-- `API_HASH` — Telegram API Hash
-- `BOT_TOKEN` — Telegram Bot Token
-- `MONGO_DB_URI` — MongoDB connection URI
-- `OWNER_ID` — Telegram user ID of the bot owner
-- `LOGGER_ID` — Telegram group/channel ID for logging
-- `STRING_SESSION` — Pyrogram session string for the userbot assistant
-
-### Optional
-- `STRING_SESSION2` through `STRING_SESSION7` — additional session strings
-- `HEROKU_APP_NAME`, `HEROKU_API_KEY` — for Heroku deployments
-- `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` — for Spotify support
-
-## Running
-
-```bash
+```
 python3 -m SHUKLAMUSIC
 ```
 
-## User Preferences
+## Required secrets (set in Replit Secrets)
+
+| Secret | Description |
+|---|---|
+| `BOT_TOKEN` | Telegram bot token from @BotFather |
+| `MONGO_DB_URI` | MongoDB connection string |
+| `STRING_SESSION` | Pyrogram user session string (assistant account) |
+| `GIT_TOKEN` | GitHub personal access token (for git push) |
+
+## Required env vars (set in .replit userenv)
+
+| Variable | Description |
+|---|---|
+| `LOGGER_ID` | Telegram group/channel ID for bot logs |
+| `OWNER_ID` | Your Telegram user ID |
+
+## Stack
+
+- Python 3.12
+- [Pyrogram](https://pyrogram.org/) — Telegram MTProto client
+- [py-tgcalls](https://pytgcalls.github.io/) / ntgcalls — Voice chat streaming
+- MongoDB / Motor — async database
+- yt-dlp — YouTube audio/video download
+- APScheduler — scheduled jobs (night mode, etc.)
+
+## User preferences
+
+- Credentials stored securely as Replit Secrets, never hardcoded
