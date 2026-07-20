@@ -3,6 +3,9 @@ import os
 import random
 import html
 import time
+import json as _json
+import urllib.request
+import aiohttp
 from pyrogram import filters, enums
 from pyrogram.enums import ChatType
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
@@ -202,143 +205,96 @@ async def start_pm(client, message: Message, _):
         elif name[0:3] == "sud":
             await sudoers_list(client=client, message=message, _=_)
         elif name[0:3] == "inf":
+            # ── Info handler: uses oEmbed (no auth needed) ──
             m = await message.reply_text("🔎")
-            query = str(name).replace("info_", "", 1)
-            query = f"https://www.youtube.com/watch?v={query}"
-            video_url = query
-            def _fetch_yt_info():
-                opts = {
-                    "quiet": True,
-                    "no_warnings": True,
-                    "skip_download": True,
-                    "noplaylist": True,
-                    "extractor_args": {"youtube": {"player_client": ["android_vr"]}},
-                }
-                with yt_dlp.YoutubeDL(opts) as ydl:
-                    return ydl.extract_info(video_url, download=False) or {}
-            loop = asyncio.get_event_loop()
-            info = await loop.run_in_executor(None, _fetch_yt_info)
-            title = info.get("title") or "Unknown"
-            dur_sec = int(info.get("duration") or 0)
-            hh, rem = divmod(dur_sec, 3600)
-            mm, ss = divmod(rem, 60)
-            duration = f"{hh}:{mm:02d}:{ss:02d}" if hh else f"{mm}:{ss:02d}"
-            vc = int(info.get("view_count") or 0)
-            if vc >= 1_000_000_000:
-                views = f"{vc / 1_000_000_000:.1f}B views"
-            elif vc >= 1_000_000:
-                views = f"{vc / 1_000_000:.1f}M views"
-            elif vc >= 1_000:
-                views = f"{vc / 1_000:.1f}K views"
-            else:
-                views = f"{vc} views" if vc else "Unknown Views"
-            thumbnail = info.get("thumbnail") or ""
-            channellink = info.get("channel_url") or info.get("uploader_url") or ""
-            channel = info.get("uploader") or info.get("channel") or "Unknown"
-            link = video_url
-            ud = info.get("upload_date") or ""
-            if len(ud) == 8:
-                months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-                published = f"{ud[6:]} {months[int(ud[4:6])-1]} {ud[:4]}"
-            else:
-                published = ud or "Unknown"
-            searched_text = _["start_6"].format(
-                title, duration, views, published, channellink, channel, app.mention
-            )
-            key = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(text=_["S_B_8"], url=link),
-                        InlineKeyboardButton(text=_["S_B_9"], url=config.SUPPORT_CHAT),
-                    ],
-                ]
-            )
-            await m.delete()
-            await app.send_video(
-                chat_id=message.chat.id,
-                video=thumbnail,
-                caption=searched_text,
-                reply_markup=key,
-            )
+            vidid = str(name).replace("info_", "", 1)
+            video_url = f"https://www.youtube.com/watch?v={vidid}"
+            try:
+                loop = asyncio.get_event_loop()
+                def _oembed_fetch():
+                    oe_url = f"https://www.youtube.com/oembed?url={video_url}&format=json"
+                    with urllib.request.urlopen(oe_url, timeout=8) as r:
+                        return _json.loads(r.read())
+                oembed = await loop.run_in_executor(None, _oembed_fetch)
+                title     = oembed.get("title") or "Unknown"
+                channel   = oembed.get("author_name") or "Unknown"
+                thumbnail = oembed.get("thumbnail_url") or ""
+                channellink = f"https://www.youtube.com/results?search_query={vidid}"
+                duration  = "N/A"
+                views     = "N/A"
+                published = "N/A"
+                searched_text = _["start_6"].format(
+                    title, duration, views, published, channellink, channel, app.mention
+                )
+                key = InlineKeyboardMarkup([[
+                    InlineKeyboardButton(text=_["S_B_8"], url=video_url),
+                    InlineKeyboardButton(text=_["S_B_9"], url=config.SUPPORT_CHAT),
+                ]])
+                await m.delete()
+                try:
+                    await app.send_photo(
+                        chat_id=message.chat.id,
+                        photo=thumbnail,
+                        caption=searched_text,
+                        reply_markup=key,
+                    )
+                except Exception:
+                    await message.reply_text(searched_text, reply_markup=key, disable_web_page_preview=True)
+            except Exception:
+                await m.edit_text("❌ Song info nahi mili. Dobara try karo.")
         elif name.startswith("dl_"):
-            # ── Download handler: dl_{vidid}_{a|v} ──
+            # ── Download handler via ShrutiAPI (bypasses YouTube bot-check) ──
             m = await message.reply_text("⏬ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ʏᴏᴜʀ sᴏɴɢ, ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ... ❤️‍🔥")
             try:
-                parts = name[3:].rsplit("_", 1)
-                vidid = parts[0]
+                parts   = name[3:].rsplit("_", 1)
+                vidid   = parts[0]
                 dl_type = parts[1] if len(parts) == 2 else "a"
-                video_url = f"https://www.youtube.com/watch?v={vidid}"
                 os.makedirs("downloads", exist_ok=True)
-                loop = asyncio.get_event_loop()
-                powered = "✦ ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href='https://t.me/II_NOBITA_X_PRIME_II'>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a>"
-                _cookies = os.path.join(os.path.dirname(__file__), "..", "..", "assets", "cookies.txt")
-                _cookies = os.path.abspath(_cookies)
+                powered  = "✦ ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href='https://t.me/II_NOBITA_X_PRIME_II'>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a>"
+                api_url  = "https://api01.shrutibots.site"
+                api_key  = "ShrutiBots2knm7tCsnIVesZt50Lwb"
+                api_type = "video" if dl_type == "v" else "audio"
+                ext      = "mp4" if dl_type == "v" else "mp3"
+                out_file = f"downloads/{vidid}_dl_{dl_type}.{ext}"
+                tmp_file = out_file + ".tmp"
+
+                # Download from ShrutiAPI
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(
+                        f"{api_url}/download",
+                        params={"url": vidid, "type": api_type, "api_key": api_key},
+                        timeout=aiohttp.ClientTimeout(total=300),
+                    ) as resp:
+                        if resp.status != 200:
+                            await m.edit_text("❌ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.")
+                            return
+                        with open(tmp_file, "wb") as f:
+                            async for chunk in resp.content.iter_chunked(131072):
+                                f.write(chunk)
+
+                if not (os.path.exists(tmp_file) and os.path.getsize(tmp_file) > 0):
+                    await m.edit_text("❌ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.")
+                    return
+                os.replace(tmp_file, out_file)
+
+                await m.delete()
                 if dl_type == "v":
-                    out_file = f"downloads/{vidid}_hd.mp4"
-                    def _dl_video():
-                        opts = {
-                            "format": "bestvideo[ext=mp4][height<=1080]+bestaudio[ext=m4a]/best[ext=mp4]/best",
-                            "outtmpl": out_file,
-                            "quiet": True,
-                            "merge_output_format": "mp4",
-                            "no_warnings": True,
-                            "noplaylist": True,
-                            "cookiefile": _cookies,
-                            "extractor_args": {"youtube": {"player_client": ["android_vr"]}},
-                        }
-                        with yt_dlp.YoutubeDL(opts) as ydl:
-                            ydl.download([video_url])
-                        return out_file if os.path.exists(out_file) and os.path.getsize(out_file) > 0 else None
-                    file_path = await loop.run_in_executor(None, _dl_video)
-                    if file_path:
-                        await m.delete()
-                        await app.send_video(
-                            chat_id=message.chat.id,
-                            video=file_path,
-                            caption=f"🎬 <b>HD ᴠɪᴅᴇᴏ — ɴᴏʙɪᴛᴀ 𝗫 ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ</b>\n\n{powered}",
-                            supports_streaming=True,
-                        )
-                        try:
-                            os.remove(file_path)
-                        except Exception:
-                            pass
-                    else:
-                        await m.edit_text("❌ ᴠɪᴅᴇᴏ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ.")
+                    await app.send_video(
+                        chat_id=message.chat.id,
+                        video=out_file,
+                        caption=f"🎬 <b>HD ᴠɪᴅᴇᴏ — ɴᴏʙɪᴛᴀ 𝗫 ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ</b>\n\n{powered}",
+                        supports_streaming=True,
+                    )
                 else:
-                    out_file = f"downloads/{vidid}_audio.%(ext)s"
-                    final_file = f"downloads/{vidid}_audio.mp3"
-                    def _dl_audio():
-                        opts = {
-                            "format": "bestaudio/best",
-                            "outtmpl": out_file,
-                            "quiet": True,
-                            "no_warnings": True,
-                            "noplaylist": True,
-                            "cookiefile": _cookies,
-                            "extractor_args": {"youtube": {"player_client": ["android_vr"]}},
-                            "postprocessors": [{
-                                "key": "FFmpegExtractAudio",
-                                "preferredcodec": "mp3",
-                                "preferredquality": "320",
-                            }],
-                        }
-                        with yt_dlp.YoutubeDL(opts) as ydl:
-                            ydl.download([video_url])
-                        return final_file if os.path.exists(final_file) and os.path.getsize(final_file) > 0 else None
-                    file_path = await loop.run_in_executor(None, _dl_audio)
-                    if file_path:
-                        await m.delete()
-                        await app.send_audio(
-                            chat_id=message.chat.id,
-                            audio=file_path,
-                            caption=f"🎵 <b>HD ᴀᴜᴅɪᴏ 320kbps — ɴᴏʙɪᴛᴀ 𝗫 ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ</b>\n\n{powered}",
-                        )
-                        try:
-                            os.remove(file_path)
-                        except Exception:
-                            pass
-                    else:
-                        await m.edit_text("❌ ᴀᴜᴅɪᴏ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ.")
+                    await app.send_audio(
+                        chat_id=message.chat.id,
+                        audio=out_file,
+                        caption=f"🎵 <b>HD ᴀᴜᴅɪᴏ 320kbps — ɴᴏʙɪᴛᴀ 𝗫 ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ</b>\n\n{powered}",
+                    )
+                try:
+                    os.remove(out_file)
+                except Exception:
+                    pass
             except Exception:
                 try:
                     await m.edit_text("❌ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.")
