@@ -33,3 +33,9 @@ outputType = "console"
 [deployment]
 deploymentTarget = "vm"
 run = ["python3", "-m", "SHUKLAMUSIC"]
+
+[userenv]
+
+[userenv.shared]
+LOGGER_ID = "-1004458016685"
+OWNER_ID = "8245258112"
