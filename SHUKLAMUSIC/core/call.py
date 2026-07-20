@@ -153,6 +153,12 @@ class Call(PyTgCalls):
             await assistant.leave_call(chat_id, close=False)
         except Exception:
             pass
+        # Stop VC participant notifications
+        try:
+            from SHUKLAMUSIC.plugins.tools.vclogger import stop_vc_monitoring
+            await stop_vc_monitoring(chat_id)
+        except Exception:
+            pass
 
     async def stop_stream_force(self, chat_id: int):
         for string, client in [
@@ -303,6 +309,12 @@ class Call(PyTgCalls):
         await music_on(chat_id)
         if video:
             await add_active_video_chat(chat_id)
+        # Start VC participant notifications
+        try:
+            from SHUKLAMUSIC.plugins.tools.vclogger import start_vc_monitoring
+            asyncio.create_task(start_vc_monitoring(chat_id))
+        except Exception:
+            pass
         if await is_autoend():
             counter[chat_id] = {}
             users = len(await assistant.get_participants(chat_id))

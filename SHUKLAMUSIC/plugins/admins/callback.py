@@ -13,6 +13,7 @@
 # -----------------------------------------------
 import asyncio
 from pyrogram import filters
+from pyrogram.enums import ButtonStyle
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from SHUKLAMUSIC import YouTube, app
 from SHUKLAMUSIC.core.call import SHUKLA
@@ -140,14 +141,13 @@ async def del_back_playlist(client, CallbackQuery, _):
             else:
                 await CallbackQuery.answer(_["admin_39"], show_alert=True)
             upl = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text=f"👍 {get_upvotes}",
-                            callback_data=f"ADMIN  UpVote|{chat_id}_{counter}",
-                        )
-                    ]
-                ]
+                [[
+                    InlineKeyboardButton(
+                        text=f"👍 {get_upvotes}",
+                        callback_data=f"ADMIN  UpVote|{chat_id}_{counter}",
+                        style=ButtonStyle.SUCCESS,
+                    )
+                ]]
             )
             await CallbackQuery.answer(_["admin_40"], show_alert=True)
             return await CallbackQuery.edit_message_reply_markup(reply_markup=upl)

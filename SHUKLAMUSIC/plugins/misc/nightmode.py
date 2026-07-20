@@ -13,6 +13,7 @@
 # -----------------------------------------------
 import random 
 from pyrogram import filters, Client, enums
+from pyrogram.enums import ButtonStyle
 from SHUKLAMUSIC import app
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -42,8 +43,8 @@ OPEN_CHAT = ChatPermissions(
 
 buttons = InlineKeyboardMarkup(
     [[
-        InlineKeyboardButton("๏ ᴇɴᴀʙʟᴇ ๏", callback_data="add_night"),
-        InlineKeyboardButton("๏ ᴅɪsᴀʙʟᴇ ๏", callback_data="rm_night")
+        InlineKeyboardButton("๏ ᴇɴᴀʙʟᴇ ๏", callback_data="add_night", style=ButtonStyle.SUCCESS),
+        InlineKeyboardButton("๏ ᴅɪsᴀʙʟᴇ ๏", callback_data="rm_night", style=ButtonStyle.DANGER),
     ]]
 )
 

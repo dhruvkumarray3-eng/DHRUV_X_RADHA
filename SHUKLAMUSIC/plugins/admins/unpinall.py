@@ -12,6 +12,7 @@
 # ❤️ Made with dedication and love by ItzShukla
 # -----------------------------------------------
 from pyrogram import filters, enums
+from pyrogram.enums import ButtonStyle
 from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -65,9 +66,7 @@ async def unpin_callbacc(client, CallbackQuery):
         await CallbackQuery.message.edit_caption(
             textt,
             reply_markup=InlineKeyboardMarkup(
-                [
-                    [InlineKeyboardButton(text="Delete", callback_data="delete_btn=admin")]
-                ]
+                [[InlineKeyboardButton(text="🗑 Delete", callback_data="delete_btn=admin", style=ButtonStyle.DANGER)]]
             )
         )
         return
@@ -76,9 +75,7 @@ async def unpin_callbacc(client, CallbackQuery):
     await CallbackQuery.message.edit_caption(
         "unpinned!!", 
         reply_markup=InlineKeyboardMarkup(
-            [
-                [InlineKeyboardButton(text="Delete", callback_data="delete_btn=admin")]
-            ]
+            [[InlineKeyboardButton(text="🗑 Delete", callback_data="delete_btn=admin", style=ButtonStyle.DANGER)]]
         )
     )
 
@@ -100,11 +97,9 @@ async def unpin_command_handler(client, message):
     await message.reply_text(
         f"{ke(_KE_WARN,'⚠️')} {ke(_KE_FIRE,'🔥')} <b>ᴀʀᴇ ʏᴏᴜ sᴜʀᴇ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴜɴᴘɪɴ ᴀʟʟ ᴛʜᴇ ᴘɪɴɴᴇᴅ ᴍᴇssᴀɢᴇs ɪɴ ᴛʜɪs ᴄʜᴀᴛ?</b>",
         reply_markup=InlineKeyboardMarkup(
-            [   
-                [
-                    InlineKeyboardButton(text="𝗬𝗘𝗦", callback_data="unpinall=yes"),
-                    InlineKeyboardButton(text="𝗡𝗢", callback_data="unpinall=no")
-                ]
-            ]
+            [[
+                InlineKeyboardButton(text="✅ 𝗬𝗘𝗦", callback_data="unpinall=yes", style=ButtonStyle.SUCCESS),
+                InlineKeyboardButton(text="❌ 𝗡𝗢",  callback_data="unpinall=no",  style=ButtonStyle.DANGER),
+            ]]
         )
     )

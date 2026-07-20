@@ -19,6 +19,7 @@ from SHUKLAMUSIC.mongo.notesdb import *
 from SHUKLAMUSIC.utils.notes_func import GetNoteMessage, exceNoteMessageSender, privateNote_and_admin_checker
 from SHUKLAMUSIC.utils.shivdb import user_admin
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup , Message , CallbackQuery
+from pyrogram.enums import ButtonStyle
 from pyrogram.enums import ChatMemberStatus
 
 
@@ -150,10 +151,10 @@ async def ClearAll_Note(client, message):
         )
     keyboard = InlineKeyboardMarkup(
         [[
-            InlineKeyboardButton(text='Delete all notes', callback_data=f'clearallnotes_clear_{owner_id}_{chat_id}')
+            InlineKeyboardButton(text='🗑 Delete all notes', callback_data=f'clearallnotes_clear_{owner_id}_{chat_id}', style=ButtonStyle.DANGER)
         ],
         [
-            InlineKeyboardButton(text='Cancel', callback_data=f'clearallnotes_cancel_{owner_id}')
+            InlineKeyboardButton(text='❌ Cancel', callback_data=f'clearallnotes_cancel_{owner_id}', style=ButtonStyle.PRIMARY)
         ]]
     )
     await message.reply(
