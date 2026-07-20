@@ -376,3 +376,45 @@ pymongo.errors.OperationFailure: cannot create a new collection -- already using
 [20-Jul-26 07:45:06 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
   ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
 ╚═════ஜ۩۞۩ஜ════╝
+[20-Jul-26 07:47:56 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in CallbackQueryHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/decorators/language.py", line 55, in wrapper
+    return await mystic(_, CallbackQuery, language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/bot/settings.py", line 97, in settings_back_markup
+    _["start_2"].format(CallbackQuery.from_user.mention, app.mention),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Replacement index 2 out of range for positional args tuple
+[20-Jul-26 07:47:59 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in CallbackQueryHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/decorators/language.py", line 55, in wrapper
+    return await mystic(_, CallbackQuery, language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/bot/settings.py", line 97, in settings_back_markup
+    _["start_2"].format(CallbackQuery.from_user.mention, app.mention),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Replacement index 2 out of range for positional args tuple
+[20-Jul-26 07:52:11 - INFO] - SHUKLAMUSIC.core.bot - Stopping Bot...
+[20-Jul-26 07:52:11 - INFO] - SHUKLAMUSIC.core.userbot - Stopping Assistants...
+[20-Jul-26 07:52:11 - INFO] - SHUKLAMUSIC - 𝗦𝗧𝗢𝗣 𝗦𝗧𝗥𝗔𝗡𝗚𝗘𝗥 𝗠𝗨𝗦𝗜𝗖🎻 𝗕𝗢𝗧..
+[20-Jul-26 07:52:12 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f866a4eb320>
+[20-Jul-26 07:52:12 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f865c7368a0>
+[20-Jul-26 07:52:18 - INFO] - SHUKLAMUSIC.core.mongo - Connecting to your Mongo Database...
+[20-Jul-26 07:52:18 - INFO] - SHUKLAMUSIC.core.mongo - Connected to your Mongo Database.
+[20-Jul-26 07:52:18 - INFO] - SHUKLAMUSIC.core.dir - Directories Updated.
+[20-Jul-26 07:52:18 - INFO] - SHUKLAMUSIC.core.git - Git Client Found [VPS DEPLOYER]
+[20-Jul-26 07:52:18 - INFO] - SHUKLAMUSIC.misc - 𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗟𝗢𝗔𝗗 𝗕𝗔𝗕𝗬🍫........
+[20-Jul-26 07:52:18 - INFO] - SHUKLAMUSIC.core.bot - Starting Bot...
+[20-Jul-26 07:52:22 - INFO] - SHUKLAMUSIC.misc - 𝗦𝗨𝗗𝗢 𝗨𝗦𝗘𝗥 𝗗𝗢𝗡𝗘✨🎋.
+[20-Jul-26 07:52:28 - INFO] - SHUKLAMUSIC.core.bot - Music Bot Started Successfully as Music
+[20-Jul-26 07:52:28 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[20-Jul-26 07:52:28 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[20-Jul-26 07:52:28 - INFO] - apscheduler.scheduler - Added job "start_nightmode" to job store "default"
+[20-Jul-26 07:52:28 - INFO] - apscheduler.scheduler - Added job "close_nightmode" to job store "default"
+[20-Jul-26 07:52:28 - INFO] - apscheduler.scheduler - Scheduler started
