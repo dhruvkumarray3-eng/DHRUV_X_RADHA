@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime
 from logging import getLogger
 from typing import Dict, Set
 import random
@@ -14,9 +15,24 @@ LOGGER = getLogger(__name__)
 vc_active_users: Dict[int, Set[int]] = {}
 active_vc_chats: Set[int] = set()
 vc_logging_status: Dict[int, bool] = {}
+vc_join_times: Dict[int, Dict[int, datetime]] = {}   # chat_id → {user_id → join_time}
 
 vcloggerdb = mongodb.vclogger
 prefixes = [".", "!", "/", "@", "?", "'"]
+
+
+def _format_duration(seconds: int) -> str:
+    """Format seconds into a human-readable string like 2m 35s or 1h 4m."""
+    if seconds < 60:
+        return f"{seconds}s"
+    elif seconds < 3600:
+        m, s = divmod(seconds, 60)
+        return f"{m}m {s}s" if s else f"{m}m"
+    else:
+        h, rem = divmod(seconds, 3600)
+        m, s = divmod(rem, 60)
+        return f"{h}h {m}m" if m else f"{h}h"
+
 
 async def load_vc_logger_status():
     try:
@@ -37,6 +53,7 @@ async def load_vc_logger_status():
     except Exception as e:
         LOGGER.error(f"Error loading VC logger status: {e}")
 
+
 async def save_vc_logger_status(chat_id: int, status: bool):
     try:
         await vcloggerdb.update_one(
@@ -47,6 +64,7 @@ async def save_vc_logger_status(chat_id: int, status: bool):
         LOGGER.info(f"Saved VC logger status for chat {chat_id}: {status}")
     except Exception as e:
         LOGGER.error(f"Error saving VC logger status: {e}")
+
 
 async def get_vc_logger_status(chat_id: int) -> bool:
     if chat_id in vc_logging_status:
@@ -61,13 +79,13 @@ async def get_vc_logger_status(chat_id: int) -> bool:
     except Exception as e:
         LOGGER.error(f"Error getting VC logger status: {e}")
 
-    # ----------------------------
-    # DEFAULT: Always ON (IMPORTANT FIX)
-    # ----------------------------
+    # DEFAULT: Always ON
     return True
+
 
 def generate_vclogger_filters():
     return filters.command("vclogger", prefixes=prefixes) & filters.group
+
 
 @app.on_message(generate_vclogger_filters())
 async def vclogger_command(_, message: Message):
@@ -103,11 +121,13 @@ async def vclogger_command(_, message: Message):
             )
             active_vc_chats.discard(chat_id)
             vc_active_users.pop(chat_id, None)
+            vc_join_times.pop(chat_id, None)
         else:
             await message.reply(
                 f"❌ Invalid argument! Use <b>[on/enable/yes | off/disable/no]</b>",
                 disable_web_page_preview=True
             )
+
 
 async def get_group_call_participants(userbot, peer):
     try:
@@ -130,6 +150,7 @@ async def get_group_call_participants(userbot, peer):
             return []
         LOGGER.error(f"Error fetching participants: {e}")
         return []
+
 
 async def monitor_vc_chat(chat_id):
     userbot = await get_assistant(chat_id)
@@ -165,6 +186,7 @@ async def monitor_vc_chat(chat_id):
 
         await asyncio.sleep(5)
 
+
 async def check_and_monitor_vc(chat_id):
     if not await get_vc_logger_status(chat_id):
         return
@@ -178,37 +200,64 @@ async def check_and_monitor_vc(chat_id):
     except Exception as e:
         LOGGER.error(f"Error in check_and_monitor_vc: {e}")
 
+
 async def handle_user_join(chat_id, user_id, userbot):
     try:
+        # Record join time
+        if chat_id not in vc_join_times:
+            vc_join_times[chat_id] = {}
+        vc_join_times[chat_id][user_id] = datetime.now()
+
         user = await userbot.get_users(user_id)
         name = user.first_name or "Someone"
         mention = f'<a href="tg://user?id={user_id}"><b>{to_small_caps(name)}</b></a>'
         messages = [
-            f"🎤 {mention} <b>ᴊᴜsᴛ ᴊᴏɪɴᴇᴅ ᴛʜᴇ ᴠᴄ – ʟᴇᴛ's ᴍᴀᴋᴇ ɪᴛ ʟɪᴠᴇʟʏ! 🎶</b>",
-            f"✨ {mention} <b>ɪs ɴᴏᴡ ɪɴ ᴛʜᴇ ᴠᴄ – ᴡᴇʟᴄᴏᴍᴇ ᴀʙᴏᴀʀᴅ! 💫</b>",
-            f"🎵 {mention} <b>ʜᴀs ᴊᴏɪɴᴇᴅ – ʟᴇᴛ's ʀᴏᴄᴋ ᴛʜɪs ᴠɪʙᴇ! 🔥</b>",
+            f"🎤 {mention} ᴊᴜsᴛ ᴊᴏɪɴᴇᴅ ᴛʜᴇ ᴠᴄ! ʟᴇᴛ's ᴍᴀᴋᴇ ɪᴛ ʟɪᴠᴇʟʏ 🎶",
+            f"✨ {mention} ɪs ɴᴏᴡ ɪɴ ᴛʜᴇ ᴠᴄ — ᴡᴇʟᴄᴏᴍᴇ ᴀʙᴏᴀʀᴅ! 💫",
+            f"🔥 {mention} ʜᴀs ᴇɴᴛᴇʀᴇᴅ ᴛʜᴇ ᴠɪʙᴇ — ʟᴇᴛ's ʀᴏᴄᴋ! 🎵",
+            f"👑 {mention} ᴊᴏɪɴᴇᴅ ᴛʜᴇ ᴠᴄ — ᴛʜᴇ ᴘᴀʀᴛʏ ᴊᴜsᴛ ɢᴏᴛ ʙᴇᴛᴛᴇʀ! 🥳",
+            f"🌟 {mention} ɪs ʜᴇʀᴇ! ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ᴠᴄ ʙᴏss 😎",
         ]
         msg = random.choice(messages)
         sent_msg = await app.send_message(chat_id, msg)
-        asyncio.create_task(delete_after_delay(sent_msg, 10))
+        asyncio.create_task(delete_after_delay(sent_msg, 15))
     except Exception as e:
         LOGGER.error(f"Error sending join message for {user_id}: {e}")
 
+
 async def handle_user_leave(chat_id, user_id, userbot):
     try:
+        # Calculate how long they stayed
+        duration_str = None
+        join_time = vc_join_times.get(chat_id, {}).pop(user_id, None)
+        if join_time:
+            stayed_sec = int((datetime.now() - join_time).total_seconds())
+            duration_str = _format_duration(stayed_sec)
+
         user = await userbot.get_users(user_id)
         name = user.first_name or "Someone"
         mention = f'<a href="tg://user?id={user_id}"><b>{to_small_caps(name)}</b></a>'
-        messages = [
-            f"👋 {mention} <b>ʟᴇғᴛ ᴛʜᴇ ᴠᴄ – ʜᴏᴘᴇ ᴛᴏ sᴇᴇ ʏᴏᴜ ʙᴀᴄᴋ sᴏᴏɴ! 🌟</b>",
-            f"🚪 {mention} <b>sᴛᴇᴘᴘᴇᴅ ᴏᴜᴛ – ᴅᴏɴ'ᴛ ᴛᴀᴋᴇ ᴛᴏᴏ ʟᴏɴɢ, ᴡᴇ'ʟʟ ᴍɪss ʏᴏᴜ! 💖</b>",
-            f"✌️ {mention} <b>sᴀɪᴅ ɢᴏᴏᴅʙʏᴇ – ᴄᴏᴍᴇ ʙᴀᴄᴋ ᴀɴᴅ ᴊᴏɪɴ ᴛʜᴇ ғᴜɴ ᴀɢᴀɪɴ! 🎶</b>",
-        ]
+
+        if duration_str:
+            messages = [
+                f"👋 {mention} ʟᴇғᴛ ᴛʜᴇ ᴠᴄ ᴀғᴛᴇʀ <b>{duration_str}</b> — ʜᴏᴘᴇ ᴛᴏ sᴇᴇ ʏᴏᴜ ʙᴀᴄᴋ! 🌟",
+                f"🚪 {mention} sᴛᴇᴘᴘᴇᴅ ᴏᴜᴛ ᴀғᴛᴇʀ <b>{duration_str}</b> — ᴄᴏᴍᴇ ʙᴀᴄᴋ sᴏᴏɴ! 💖",
+                f"✌️ {mention} ᴡᴀs ʜᴇʀᴇ ғᴏʀ <b>{duration_str}</b> — ᴍɪssɪɴɢ ʏᴏᴜ ᴀʟʀᴇᴀᴅʏ 🎶",
+                f"☠️ {mention} ʟᴇғᴛ ᴀғᴛᴇʀ <b>{duration_str}</b> — ᴅᴏɴ'ᴛ ʙᴇ ᴀ sᴛʀᴀɴɢᴇʀ! 😇",
+            ]
+        else:
+            messages = [
+                f"👋 {mention} ʟᴇғᴛ ᴛʜᴇ ᴠᴄ — ʜᴏᴘᴇ ᴛᴏ sᴇᴇ ʏᴏᴜ ʙᴀᴄᴋ sᴏᴏɴ! 🌟",
+                f"🚪 {mention} sᴛᴇᴘᴘᴇᴅ ᴏᴜᴛ — ᴅᴏɴ'ᴛ ᴛᴀᴋᴇ ᴛᴏᴏ ʟᴏɴɢ, ᴡᴇ'ʟʟ ᴍɪss ʏᴏᴜ! 💖",
+                f"✌️ {mention} sᴀɪᴅ ɢᴏᴏᴅʙʏᴇ — ᴄᴏᴍᴇ ʙᴀᴄᴋ ᴀɴᴅ ᴊᴏɪɴ ᴛʜᴇ ғᴜɴ! 🎶",
+            ]
+
         msg = random.choice(messages)
         sent_msg = await app.send_message(chat_id, msg)
-        asyncio.create_task(delete_after_delay(sent_msg, 10))
+        asyncio.create_task(delete_after_delay(sent_msg, 15))
     except Exception as e:
         LOGGER.error(f"Error sending leave message for {user_id}: {e}")
+
 
 async def delete_after_delay(message, delay):
     try:
@@ -216,6 +265,7 @@ async def delete_after_delay(message, delay):
         await message.delete()
     except:
         pass
+
 
 def to_small_caps(text):
     mapping = {
@@ -226,7 +276,8 @@ def to_small_caps(text):
         "K":"ᴋ","L":"ʟ","M":"ᴍ","N":"ɴ","O":"ᴏ","P":"ᴘ","Q":"ǫ","R":"ʀ","S":"s","T":"ᴛ",
         "U":"ᴜ","V":"ᴠ","W":"ᴡ","X":"x","Y":"ʏ","Z":"ᴢ"
     }
-    return "".join(mapping.get(c,c) for c in text)
+    return "".join(mapping.get(c, c) for c in text)
+
 
 async def initialize_vc_logger():
     await load_vc_logger_status()
