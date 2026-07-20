@@ -264,6 +264,8 @@ async def start_pm(client, message: Message, _):
                 os.makedirs("downloads", exist_ok=True)
                 loop = asyncio.get_event_loop()
                 powered = "✦ ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href='https://t.me/II_NOBITA_X_PRIME_II'>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a>"
+                _cookies = os.path.join(os.path.dirname(__file__), "..", "..", "assets", "cookies.txt")
+                _cookies = os.path.abspath(_cookies)
                 if dl_type == "v":
                     out_file = f"downloads/{vidid}_hd.mp4"
                     def _dl_video():
@@ -274,6 +276,7 @@ async def start_pm(client, message: Message, _):
                             "merge_output_format": "mp4",
                             "no_warnings": True,
                             "noplaylist": True,
+                            "cookiefile": _cookies,
                         }
                         with yt_dlp.YoutubeDL(opts) as ydl:
                             ydl.download([video_url])
@@ -303,6 +306,7 @@ async def start_pm(client, message: Message, _):
                             "quiet": True,
                             "no_warnings": True,
                             "noplaylist": True,
+                            "cookiefile": _cookies,
                             "postprocessors": [{
                                 "key": "FFmpegExtractAudio",
                                 "preferredcodec": "mp3",
