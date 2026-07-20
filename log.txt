@@ -482,3 +482,85 @@ client_session: <aiohttp.client.ClientSession object at 0x7f3080770e60>
 [20-Jul-26 08:37:03 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
   ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
 ╚═════ஜ۩۞۩ஜ════╝
+[20-Jul-26 08:38:57 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/decorators/language.py", line 67, in wrapper
+    return await mystic(_, message, language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/bot/start.py", line 178, in start_pm
+    await loading_1.edit_text("⠀")   # braille blank — visually empty
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/types/messages_and_media/message.py", line 8369, in edit_text
+    return await self._client.edit_message_text(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/messages/edit_message_text.py", line 136, in edit_message_text
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/advanced/invoke.py", line 107, in invoke
+    r = await session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 551, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 514, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.MessageEmpty: Telegram says: [400 MESSAGE_EMPTY] - The message sent is empty or contains invalid characters. (caused by "messages.EditMessage")
+[20-Jul-26 08:39:26 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/decorators/language.py", line 67, in wrapper
+    return await mystic(_, message, language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/bot/start.py", line 178, in start_pm
+    await loading_1.edit_text("⠀")   # braille blank — visually empty
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/types/messages_and_media/message.py", line 8369, in edit_text
+    return await self._client.edit_message_text(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/messages/edit_message_text.py", line 136, in edit_message_text
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/advanced/invoke.py", line 107, in invoke
+    r = await session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 551, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 514, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.MessageEmpty: Telegram says: [400 MESSAGE_EMPTY] - The message sent is empty or contains invalid characters. (caused by "messages.EditMessage")
+[20-Jul-26 08:41:59 - INFO] - SHUKLAMUSIC.core.bot - Stopping Bot...
+[20-Jul-26 08:41:59 - INFO] - SHUKLAMUSIC.core.userbot - Stopping Assistants...
+[20-Jul-26 08:41:59 - INFO] - SHUKLAMUSIC - 𝗦𝗧𝗢𝗣 𝗦𝗧𝗥𝗔𝗡𝗚𝗘𝗥 𝗠𝗨𝗦𝗜𝗖🎻 𝗕𝗢𝗧..
+[20-Jul-26 08:41:59 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f33bc3d90d0>
+[20-Jul-26 08:41:59 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f3381174710>
+[20-Jul-26 08:42:06 - INFO] - SHUKLAMUSIC.core.mongo - Connecting to your Mongo Database...
+[20-Jul-26 08:42:06 - INFO] - SHUKLAMUSIC.core.mongo - Connected to your Mongo Database.
+[20-Jul-26 08:42:06 - INFO] - SHUKLAMUSIC.core.dir - Directories Updated.
+[20-Jul-26 08:42:06 - INFO] - SHUKLAMUSIC.core.git - Git Client Found [VPS DEPLOYER]
+[20-Jul-26 08:42:06 - INFO] - SHUKLAMUSIC.misc - 𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗟𝗢𝗔𝗗 𝗕𝗔𝗕𝗬🍫........
+[20-Jul-26 08:42:06 - INFO] - SHUKLAMUSIC.core.bot - Starting Bot...
+[20-Jul-26 08:42:08 - INFO] - SHUKLAMUSIC.misc - 𝗦𝗨𝗗𝗢 𝗨𝗦𝗘𝗥 𝗗𝗢𝗡𝗘✨🎋.
+[20-Jul-26 08:42:13 - INFO] - SHUKLAMUSIC.core.bot - Music Bot Started Successfully as Music
+[20-Jul-26 08:42:14 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[20-Jul-26 08:42:14 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[20-Jul-26 08:42:14 - INFO] - apscheduler.scheduler - Added job "start_nightmode" to job store "default"
+[20-Jul-26 08:42:14 - INFO] - apscheduler.scheduler - Added job "close_nightmode" to job store "default"
+[20-Jul-26 08:42:14 - INFO] - apscheduler.scheduler - Scheduler started
+[20-Jul-26 08:42:14 - INFO] - SHUKLAMUSIC.plugins - 𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...
+[20-Jul-26 08:42:14 - INFO] - SHUKLAMUSIC.core.userbot - Starting Assistants...
+[20-Jul-26 08:42:15 - INFO] - SHUKLAMUSIC.core.userbot - Assistant Started as <a href=tg://user?id=7161571562>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>
+[20-Jul-26 08:42:15 - INFO] - SHUKLAMUSIC.core.call - Starting PyTgCalls Client...
+
+[20-Jul-26 08:42:30 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
+  ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
+╚═════ஜ۩۞۩ஜ════╝
