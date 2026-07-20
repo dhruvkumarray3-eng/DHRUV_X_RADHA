@@ -277,6 +277,7 @@ async def start_pm(client, message: Message, _):
                             "no_warnings": True,
                             "noplaylist": True,
                             "cookiefile": _cookies,
+                            "extractor_args": {"youtube": {"player_client": ["android_vr"]}},
                         }
                         with yt_dlp.YoutubeDL(opts) as ydl:
                             ydl.download([video_url])
@@ -307,6 +308,7 @@ async def start_pm(client, message: Message, _):
                             "no_warnings": True,
                             "noplaylist": True,
                             "cookiefile": _cookies,
+                            "extractor_args": {"youtube": {"player_client": ["android_vr"]}},
                             "postprocessors": [{
                                 "key": "FFmpegExtractAudio",
                                 "preferredcodec": "mp3",
