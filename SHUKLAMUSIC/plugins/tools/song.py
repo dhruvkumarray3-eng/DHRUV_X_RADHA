@@ -15,12 +15,10 @@
 import os
 import re
 from pyrogram import filters
-from pyrogram.enums import ChatAction
+from pyrogram.enums import ButtonStyle, ChatAction
 from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    InputMediaAudio,
-    InputMediaVideo,
     Message,
 )
 
@@ -46,8 +44,11 @@ async def song_command_group(client, message: Message, lang):
     await message.reply_text(
         lang["song_1"],
         reply_markup=InlineKeyboardMarkup(
-            [[InlineKeyboardButton(lang["SG_B_1"],
-                                   url=f"https://t.me/{app.username}?start=song")]]
+            [[InlineKeyboardButton(
+                lang["SG_B_1"],
+                url=f"https://t.me/{app.username}?start=song",
+                style=ButtonStyle.PRIMARY,
+            )]]
         ),
     )
 
@@ -110,12 +111,21 @@ async def song_helper_cb(client, cq, lang):
 
     buttons = [
         [InlineKeyboardButton(
-            text="⬇️ Download",
+            text="⬇️ ᴅᴏᴡɴʟᴏᴀᴅ",
             callback_data=f"song_download {stype}|direct|{vidid}",
+            style=ButtonStyle.SUCCESS,
         )],
         [
-            InlineKeyboardButton(lang["BACK_BUTTON"], callback_data=f"song_back {stype}|{vidid}"),
-            InlineKeyboardButton(lang["CLOSE_BUTTON"], callback_data="close"),
+            InlineKeyboardButton(
+                lang["BACK_BUTTON"],
+                callback_data=f"song_back {stype}|{vidid}",
+                style=ButtonStyle.PRIMARY,
+            ),
+            InlineKeyboardButton(
+                lang["CLOSE_BUTTON"],
+                callback_data="close",
+                style=ButtonStyle.DANGER,
+            ),
         ],
     ]
     await cq.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(buttons))
@@ -126,62 +136,92 @@ async def song_helper_cb(client, cq, lang):
 @languageCB
 async def song_download_cb(client, cq, lang):
     try:
-        await cq.answer("Downloading…")
+        await cq.answer("⬇️ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ…")
     except Exception:
         pass
 
     _ignored, req = cq.data.split(None, 1)
     stype, fmt_id, vidid = req.split("|")
     yturl = f"https://www.youtube.com/watch?v={vidid}"
-    mystic = await cq.edit_message_text(lang["song_8"])
+
+    # Download the thumbnail from the photo FIRST before we touch the message
+    thumb = None
+    try:
+        thumb = await cq.message.download()
+    except Exception:
+        pass
+
+    # Update caption only (keep the photo intact)
+    try:
+        await cq.message.edit_caption(lang["song_8"])
+    except Exception:
+        pass
 
     file_path = None
     try:
         info, _v = await YouTube.track(yturl)
         title = re.sub(r"\W+", " ", info["title"])
-        thumb = await cq.message.download()
         duration_sec = time_to_seconds(info.get("duration_min")) if info.get("duration_min") else None
+        uploader = info.get("uploader", "YouTube")
 
         if stype == "audio":
             file_path = await download_song(yturl)
             if not file_path:
-                return await mystic.edit_text(lang["song_10"])
-            await mystic.edit_text(lang["song_11"])
+                try:
+                    await cq.message.edit_caption(lang["song_10"])
+                except Exception:
+                    pass
+                return
+
+            try:
+                await cq.message.edit_caption(lang["song_11"])
+            except Exception:
+                pass
             await app.send_chat_action(cq.message.chat.id, ChatAction.UPLOAD_AUDIO)
-            await cq.edit_message_media(
-                InputMediaAudio(
-                    media=file_path,
-                    caption=title,
-                    thumb=thumb,
-                    title=title,
-                    performer=info.get("uploader"),
-                )
+            await app.send_audio(
+                chat_id=cq.message.chat.id,
+                audio=file_path,
+                caption=f"🎵 <b>{title}</b>\n\n<emoji id=5409235997613372119>©</emoji> ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href=https://t.me/II_NOBITA_X_PRIME_II>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>",
+                title=title,
+                performer=uploader,
+                thumb=thumb,
+                reply_to_message_id=cq.message.id,
             )
         else:
             file_path = await download_video(yturl)
             if not file_path:
-                return await mystic.edit_text(lang["song_10"])
-            w, h = cq.message.photo.width, cq.message.photo.height
-            await mystic.edit_text(lang["song_11"])
+                try:
+                    await cq.message.edit_caption(lang["song_10"])
+                except Exception:
+                    pass
+                return
+
+            try:
+                await cq.message.edit_caption(lang["song_11"])
+            except Exception:
+                pass
             await app.send_chat_action(cq.message.chat.id, ChatAction.UPLOAD_VIDEO)
-            await cq.edit_message_media(
-                InputMediaVideo(
-                    media=file_path,
-                    duration=duration_sec,
-                    width=w,
-                    height=h,
-                    thumb=thumb,
-                    caption=title,
-                    supports_streaming=True,
-                )
+            await app.send_video(
+                chat_id=cq.message.chat.id,
+                video=file_path,
+                duration=duration_sec,
+                caption=f"🎬 <b>{title}</b>\n\n<emoji id=5409235997613372119>©</emoji> ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href=https://t.me/II_NOBITA_X_PRIME_II>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>",
+                thumb=thumb,
+                supports_streaming=True,
+                reply_to_message_id=cq.message.id,
             )
 
     except Exception as err:
-        print(f"[SONG] error: {err}")
-        await mystic.edit_text(lang["song_10"])
+        print(f"[SONG] download error: {err}")
+        try:
+            await cq.message.edit_caption(lang["song_10"])
+        except Exception:
+            pass
     finally:
-        if file_path and os.path.exists(file_path):
-            try:
-                os.remove(file_path)
-            except Exception as e:
-                print(f"[SONG] cleanup failed: {e}")
+        # Cleanup temp files
+        for f in [file_path, thumb]:
+            if f and os.path.exists(f):
+                try:
+                    os.remove(f)
+                except Exception:
+                    pass

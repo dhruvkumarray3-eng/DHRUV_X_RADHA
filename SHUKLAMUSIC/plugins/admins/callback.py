@@ -168,14 +168,47 @@ async def del_back_playlist(client, CallbackQuery, _):
         state = await get_autoplay(chat_id)
         new_state = not state
         await set_autoplay(chat_id, new_state)
+        try:
+            await CallbackQuery.answer()
+        except Exception:
+            pass
         if new_state:
             await set_autoplay_owner(chat_id, CallbackQuery.from_user.id)
-            await CallbackQuery.answer(
-                "🌟 Autoplay ON — I'll keep playing related songs automatically!",
-                show_alert=True,
+            text = (
+                "<blockquote>"
+                "<emoji id=5409025823388741707>🎵</emoji> <b>ᴀᴜᴛᴏᴘʟᴀʏ ᴇɴᴀʙʟᴇᴅ</b> ✨\n"
+                "│\n"
+                "├ <emoji id=5406690851533370477>✅</emoji> <b>sᴛᴀᴛᴜs :</b> <code>ᴏɴ</code>\n"
+                f"└ <emoji id=5408846628763217930>👤</emoji> <b>ʙʏ :</b> {mention}"
+                "</blockquote>\n\n"
+                "<blockquote expandable>"
+                "<emoji id=5409032416163540795>🔗</emoji> ɪ ᴡɪʟʟ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ǫᴜᴇᴜᴇ ʀᴇʟᴀᴛᴇᴅ sᴏɴɢs\n"
+                "ᴡʜᴇɴ ᴛʜᴇ ᴘʟᴀʏʟɪsᴛ ʀᴜɴs ᴏᴜᴛ — sɪᴛ ʙᴀᴄᴋ ᴀɴᴅ ᴇɴᴊᴏʏ 🎶"
+                "</blockquote>"
             )
         else:
-            await CallbackQuery.answer("⏹ Autoplay OFF for this chat.", show_alert=True)
+            text = (
+                "<blockquote>"
+                "<emoji id=5409025823388741707>🎵</emoji> <b>ᴀᴜᴛᴏᴘʟᴀʏ ᴅɪsᴀʙʟᴇᴅ</b> 🚫\n"
+                "│\n"
+                "├ <emoji id=5409280837071941659>✖️</emoji> <b>sᴛᴀᴛᴜs :</b> <code>ᴏꜰꜰ</code>\n"
+                f"└ <emoji id=5408846628763217930>👤</emoji> <b>ʙʏ :</b> {mention}"
+                "</blockquote>\n\n"
+                "<blockquote expandable>"
+                "<emoji id=5408943604829794451>⚠️</emoji> ᴀᴜᴛᴏᴘʟᴀʏ ɪs ɴᴏᴡ ᴏꜰꜰ.\n"
+                "ᴍᴜsɪᴄ ᴡɪʟʟ sᴛᴏᴘ ᴡʜᴇɴ ᴛʜᴇ ǫᴜᴇᴜᴇ ɪs ᴇᴍᴘᴛʏ."
+                "</blockquote>"
+            )
+        await CallbackQuery.message.reply_text(
+            text,
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton(
+                    "✧ ᴄʟᴏsᴇ ✧",
+                    callback_data="close",
+                    style=ButtonStyle.DANGER,
+                )
+            ]]),
+        )
     elif command == "Pause":
         if not await is_music_playing(chat_id):
             return await CallbackQuery.answer(_["admin_1"], show_alert=True)
