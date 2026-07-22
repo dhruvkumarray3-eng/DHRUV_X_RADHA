@@ -22,6 +22,7 @@ from SHUKLAMUSIC.misc import sudo
 from SHUKLAMUSIC.plugins import ALL_MODULES
 from SHUKLAMUSIC.utils.database import get_banned_users, get_gbanned
 from SHUKLAMUSIC.plugins.tools.vclogger import initialize_vc_logger
+from SHUKLAMUSIC.core.commands import register_bot_commands
 
 async def init():
     if (
@@ -47,6 +48,7 @@ async def init():
     for all_module in ALL_MODULES:
         importlib.import_module("SHUKLAMUSIC.plugins" + all_module)
     LOGGER("SHUKLAMUSIC.plugins").info("𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...")
+    await register_bot_commands()
     await userbot.start()
     await SHUKLA.start()
     try:
