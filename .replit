@@ -39,3 +39,6 @@ run = ["python3", "-m", "SHUKLAMUSIC"]
 [userenv.shared]
 LOGGER_ID = "-1004458016685"
 OWNER_ID = "8245258112"
+LOG_GROUP_ID = "-1004458016685"
+UPSTREAM_BRANCH = "main"
+UPSTREAM_REPO = "https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA"
