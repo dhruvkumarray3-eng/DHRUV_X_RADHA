@@ -52,7 +52,8 @@ def _extract_vid(raw: str) -> str | None:
     if "v=" in raw:
         return raw.split("v=")[-1].split("&")[0].strip()
     if "youtu.be/" in raw:
-        return raw.split("youtu.be/")[-1.split("?")[0].strip() if "?" in raw else -1].strip()
+        vid = raw.split("youtu.be/")[-1]
+        return vid.split("?")[0].strip()
 
     # Bare 11-char ID
     if raw and 8 <= len(raw) <= 12 and " " not in raw:
@@ -61,47 +62,114 @@ def _extract_vid(raw: str) -> str | None:
     return None
 
 
-async def _download_and_send(chat_id: int, vidid: str, status_msg):
-    """Download audio via ShrutiAPI and send to user."""
-    os.makedirs("downloads", exist_ok=True)
-    out_file = f"downloads/{vidid}_miniapp.mp3"
-    tmp_file = out_file + ".tmp"
-
+async def _shruti_download(vidid: str, out_file: str, tmp_file: str) -> bool:
+    """Try downloading via ShrutiAPI. Returns True on success."""
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"{_API_URL}/download",
                 params={"url": vidid, "type": "audio", "api_key": _API_KEY},
-                timeout=aiohttp.ClientTimeout(total=300),
+                timeout=aiohttp.ClientTimeout(total=120),
             ) as resp:
                 if resp.status != 200:
-                    await status_msg.edit_text("❌ Song download fail ho gayi. Dobara try karo.")
-                    return
+                    return False
                 with open(tmp_file, "wb") as f:
                     async for chunk in resp.content.iter_chunked(131072):
                         f.write(chunk)
+        if os.path.exists(tmp_file) and os.path.getsize(tmp_file) > 10_000:
+            os.replace(tmp_file, out_file)
+            return True
+    except Exception:
+        pass
+    finally:
+        if os.path.exists(tmp_file):
+            try:
+                os.remove(tmp_file)
+            except Exception:
+                pass
+    return False
 
-        if not (os.path.exists(tmp_file) and os.path.getsize(tmp_file) > 0):
-            await status_msg.edit_text("❌ Song download fail ho gayi. Dobara try karo.")
+
+async def _ytdlp_download(vidid: str, out_file: str) -> bool:
+    """Fallback: download via yt-dlp. Returns True on success."""
+    import asyncio
+    url = f"https://www.youtube.com/watch?v={vidid}"
+    tmp_out = out_file + ".ytdl"
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            "yt-dlp",
+            "-x", "--audio-format", "mp3",
+            "--audio-quality", "0",
+            "--no-playlist",
+            "-o", tmp_out,
+            url,
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+        await asyncio.wait_for(proc.wait(), timeout=300)
+        # yt-dlp appends .mp3 automatically
+        final = tmp_out if os.path.exists(tmp_out) else tmp_out + ".mp3"
+        if not os.path.exists(final):
+            # Search with glob pattern
+            import glob
+            matches = glob.glob(tmp_out + "*")
+            final = matches[0] if matches else None
+        if final and os.path.exists(final) and os.path.getsize(final) > 10_000:
+            os.replace(final, out_file)
+            return True
+    except Exception:
+        pass
+    # cleanup any partial files
+    import glob
+    for f in glob.glob(tmp_out + "*"):
+        try:
+            os.remove(f)
+        except Exception:
+            pass
+    return False
+
+
+async def _download_and_send(chat_id: int, vidid: str, status_msg):
+    """Download audio via ShrutiAPI (with yt-dlp fallback) and send to user."""
+    os.makedirs("downloads", exist_ok=True)
+    out_file = f"downloads/{vidid}_miniapp.mp3"
+    tmp_file = out_file + ".tmp"
+
+    try:
+        # Remove stale file if present
+        if os.path.exists(out_file):
+            os.remove(out_file)
+
+        # 1️⃣ Try ShrutiAPI first
+        success = await _shruti_download(vidid, out_file, tmp_file)
+
+        # 2️⃣ Fallback to yt-dlp if ShrutiAPI failed
+        if not success:
+            try:
+                await status_msg.edit_text("🔄 ᴀʟᴛᴇʀɴᴀᴛᴇ sᴏᴜʀᴄᴇ sᴇ ᴅᴏᴡɴʟᴏᴀᴅ ʜᴏ ʀʜɪ ʜᴀɪ...")
+            except Exception:
+                pass
+            success = await _ytdlp_download(vidid, out_file)
+
+        if not success or not (os.path.exists(out_file) and os.path.getsize(out_file) > 0):
+            await status_msg.edit_text("❌ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.")
             return
 
-        os.replace(tmp_file, out_file)
         await status_msg.delete()
         await app.send_audio(
             chat_id=chat_id,
             audio=out_file,
             caption=f"🎵 <b>ɴᴏʙɪᴛᴀ 𝗫 ᴘʀɪᴍᴇ ᴍᴜsɪᴄ — ᴍɪɴɪ ᴀᴘᴘ ᴅᴏᴡɴʟᴏᴀᴅ</b>\n\n{_POWERED}",
         )
-    except Exception as e:
+    except Exception:
         try:
-            await status_msg.edit_text("❌ Song download fail ho gayi. Dobara try karo.")
+            await status_msg.edit_text("❌ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.")
         except Exception:
             pass
     finally:
-        for f in (tmp_file, out_file):
+        if os.path.exists(out_file):
             try:
-                if os.path.exists(f):
-                    os.remove(f)
+                os.remove(out_file)
             except Exception:
                 pass
 

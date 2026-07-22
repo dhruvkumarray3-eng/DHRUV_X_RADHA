@@ -176,6 +176,39 @@ async def download_song(link: str) -> str:
                 if attempt == 0:
                     await asyncio.sleep(2)   # brief pause before retry
 
+        # ── 2b. Fallback to yt-dlp if ShrutiAPI failed ──
+        if not downloaded or not (os.path.exists(mp3_path) and os.path.getsize(mp3_path) > 0):
+            yt_url = f"https://www.youtube.com/watch?v={video_id}" if "youtube" not in link else link
+            tmp_ytdl = mp3_path + ".ytdl"
+            try:
+                proc = await asyncio.create_subprocess_exec(
+                    "yt-dlp",
+                    "-x", "--audio-format", "mp3",
+                    "--audio-quality", "0",
+                    "--no-playlist",
+                    "-o", tmp_ytdl,
+                    yt_url,
+                    stdout=asyncio.subprocess.DEVNULL,
+                    stderr=asyncio.subprocess.DEVNULL,
+                )
+                await asyncio.wait_for(proc.wait(), timeout=300)
+                # yt-dlp may append .mp3 extension
+                import glob as _glob
+                for candidate in [tmp_ytdl, tmp_ytdl + ".mp3"] + _glob.glob(tmp_ytdl + "*"):
+                    if os.path.exists(candidate) and os.path.getsize(candidate) > 10_000:
+                        os.replace(candidate, mp3_path)
+                        downloaded = True
+                        break
+            except Exception:
+                pass
+            finally:
+                import glob as _glob
+                for f in _glob.glob(tmp_ytdl + "*"):
+                    try:
+                        os.remove(f)
+                    except Exception:
+                        pass
+
         if not downloaded or not (os.path.exists(mp3_path) and os.path.getsize(mp3_path) > 0):
             return None
 
@@ -199,28 +232,69 @@ async def download_video(link: str) -> str:
     if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
         return file_path
 
+    yt_url = f"https://www.youtube.com/watch?v={video_id}" if "youtube" not in link else link
+    downloaded = False
+
+    # ── 1. Try ShrutiAPI ──
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"{API_URL}/download",
                 params={"url": video_id, "type": "video", "api_key": API_KEY},
-                timeout=aiohttp.ClientTimeout(total=600)
+                timeout=aiohttp.ClientTimeout(total=300),
             ) as resp:
-                if resp.status != 200:
-                    return None
-                with open(file_path, "wb") as f:
-                    async for chunk in resp.content.iter_chunked(131072):
-                        f.write(chunk)
-        if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
-            return file_path
-        return None
+                if resp.status == 200:
+                    tmp_dl = file_path + ".dl"
+                    with open(tmp_dl, "wb") as f:
+                        async for chunk in resp.content.iter_chunked(131072):
+                            f.write(chunk)
+                    if os.path.exists(tmp_dl) and os.path.getsize(tmp_dl) > 10_000:
+                        os.replace(tmp_dl, file_path)
+                        downloaded = True
+                    elif os.path.exists(tmp_dl):
+                        os.remove(tmp_dl)
     except Exception:
-        if os.path.exists(file_path):
-            try:
-                os.remove(file_path)
-            except Exception:
-                pass
-        return None
+        pass
+
+    # ── 2. Fallback to yt-dlp ──
+    if not downloaded:
+        tmp_ytdl = file_path + ".ytdl"
+        try:
+            proc = await asyncio.create_subprocess_exec(
+                "yt-dlp",
+                "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+                "--merge-output-format", "mp4",
+                "--no-playlist",
+                "-o", tmp_ytdl,
+                yt_url,
+                stdout=asyncio.subprocess.DEVNULL,
+                stderr=asyncio.subprocess.DEVNULL,
+            )
+            await asyncio.wait_for(proc.wait(), timeout=600)
+            import glob as _glob
+            for candidate in [tmp_ytdl, tmp_ytdl + ".mp4"] + _glob.glob(tmp_ytdl + "*"):
+                if os.path.exists(candidate) and os.path.getsize(candidate) > 10_000:
+                    os.replace(candidate, file_path)
+                    downloaded = True
+                    break
+        except Exception:
+            pass
+        finally:
+            import glob as _glob
+            for f in _glob.glob(tmp_ytdl + "*"):
+                try:
+                    os.remove(f)
+                except Exception:
+                    pass
+
+    if downloaded and os.path.exists(file_path) and os.path.getsize(file_path) > 0:
+        return file_path
+    if os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+        except Exception:
+            pass
+    return None
 
 
 class YouTubeAPI:
