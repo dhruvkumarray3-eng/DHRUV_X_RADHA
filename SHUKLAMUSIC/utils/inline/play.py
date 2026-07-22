@@ -88,7 +88,7 @@ def stream_markup_timer(_, chat_id, played, dur):
         ],
         [
             InlineKeyboardButton(
-                text="ᴀᴜᴛᴏᴘʟᴀʏ",
+                text="❤️‍🔥 ᴀᴜᴛᴏᴘʟᴀʏ",
                 callback_data=f"ADMIN Autoplay|{chat_id}",
                 icon_custom_emoji_id=6271653280187684816,
                 style=ButtonStyle.PRIMARY,
@@ -96,19 +96,19 @@ def stream_markup_timer(_, chat_id, played, dur):
         ],
         [
             InlineKeyboardButton(
-                text="ᴜᴘᴅᴀᴛᴇ",
+                text="✨ ᴜᴘᴅᴀᴛᴇ",
                 url=config.SUPPORT_CHANNEL,
                 icon_custom_emoji_id=5409025823388741707,
                 style=ButtonStyle.SUCCESS
             ),
             InlineKeyboardButton(
-                text="sᴜᴘᴘᴏꝛᴛ",
+                text="🌹 sᴜᴘᴘᴏꝛᴛ",
                 url=config.SUPPORT_CHAT,
                 icon_custom_emoji_id=5409194306365829029,
                 style=ButtonStyle.PRIMARY
             )
         ],
-        [InlineKeyboardButton(text=" ᴄʟᴏsᴇ ▣", callback_data="close", style=ButtonStyle.DANGER, icon_custom_emoji_id=5408832111773757273)],
+        [InlineKeyboardButton(text="❤️‍🩹 ᴄʟᴏsᴇ ❤️‍🩹", callback_data="close", style=ButtonStyle.DANGER, icon_custom_emoji_id=5408832111773757273)],
     ]
     return buttons
 
@@ -122,7 +122,7 @@ def stream_markup(_, chat_id):
         ],
         [
             InlineKeyboardButton(
-                text="ᴀᴜᴛᴏᴘʟᴀʏ",
+                text="❤️‍🔥 ᴀᴜᴛᴏᴘʟᴀʏ",
                 callback_data=f"ADMIN Autoplay|{chat_id}",
                 icon_custom_emoji_id=6271653280187684816,
                 style=ButtonStyle.PRIMARY,
@@ -130,19 +130,19 @@ def stream_markup(_, chat_id):
         ],
         [
             InlineKeyboardButton(
-                text="ᴜᴘᴅᴀᴛᴇ",
+                text="✨ ᴜᴘᴅᴀᴛᴇ",
                 url=config.SUPPORT_CHANNEL,
                 icon_custom_emoji_id=5409025823388741707,
                 style=ButtonStyle.SUCCESS
             ),
             InlineKeyboardButton(
-                text="sᴜᴘᴘᴏꝛᴛ",
+                text="🌹 sᴜᴘᴘᴏꝛᴛ",
                 url=config.SUPPORT_CHAT,
                 icon_custom_emoji_id=5409194306365829029,
                 style=ButtonStyle.PRIMARY
             )
         ],
-        [InlineKeyboardButton(text=" ᴄʟᴏsᴇ ▣", callback_data="close", style=ButtonStyle.DANGER, icon_custom_emoji_id=5408832111773757273)],
+        [InlineKeyboardButton(text="❤️‍🩹 ᴄʟᴏsᴇ ❤️‍🩹", callback_data="close", style=ButtonStyle.DANGER, icon_custom_emoji_id=5408832111773757273)],
     ]
     return buttons
 
