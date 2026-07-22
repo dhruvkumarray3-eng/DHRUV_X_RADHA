@@ -79,11 +79,20 @@ async def song_command_private(client, message: Message, lang):
         return await mystic.edit_text(lang["play_4"].format(SONG_DOWNLOAD_DURATION, dur_min))
 
     await mystic.delete()
-    await message.reply_photo(
-        thumb,
-        caption=lang["song_4"].format(title),
-        reply_markup=InlineKeyboardMarkup(song_markup(lang, vidid)),
-    )
+    _fallback = "SHUKLAMUSIC/assets/fallback_thumb.jpg"
+    for _thumb in [thumb, _fallback]:
+        try:
+            await message.reply_photo(
+                _thumb,
+                caption=lang["song_4"].format(title),
+                reply_markup=InlineKeyboardMarkup(song_markup(lang, vidid)),
+                has_spoiler=True,
+            )
+            break
+        except Exception:
+            if _thumb == _fallback:
+                raise
+            continue
 
 
 @app.on_callback_query(filters.regex(r"song_back") & ~BANNED_USERS)
@@ -204,6 +213,7 @@ async def song_download_cb(client, cq, lang):
             await app.send_video(
                 chat_id=cq.message.chat.id,
                 video=file_path,
+                has_spoiler=True,
                 duration=duration_sec,
                 caption=f"🎬 <b>{title}</b>\n\n<emoji id=5409235997613372119>©</emoji> ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href=https://t.me/II_NOBITA_X_PRIME_II>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>",
                 thumb=thumb,

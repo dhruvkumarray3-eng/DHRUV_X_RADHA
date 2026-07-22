@@ -53,6 +53,7 @@ _USER_CMDS = [
     ("notes",     "🌹 ᴠɪᴇᴡ sᴀᴠᴇᴅ ɢʀᴏᴜᴘ ɴᴏᴛᴇs"),
     ("save",      "🫡 sᴀᴠᴇ ᴀ ɴᴏᴛᴇ ɪɴ ɢʀᴏᴜᴘ"),
     ("get",       "🫰 ɢᴇᴛ ᴀ sᴀᴠᴇᴅ ɴᴏᴛᴇ"),
+    ("cleanmongo","🤕 ᴄʟᴇᴀɴ ᴊᴜɴᴋ ᴅᴀᴛᴀ ᴀɴᴅ ᴅʙ sᴛᴀᴛs"),
 ]
 
 # ── Admin commands — shown only to group admins ──────────────────────────────

@@ -23,6 +23,7 @@ from config import YOUTUBE_IMG_URL
 # Constants
 CACHE_DIR = "cache"
 os.makedirs(CACHE_DIR, exist_ok=True)
+_FALLBACK_THUMB = "SHUKLAMUSIC/assets/fallback_thumb.jpg"
 
 PANEL_W, PANEL_H = 763, 545
 PANEL_X = (1280 - PANEL_W) // 2
@@ -83,7 +84,7 @@ async def get_thumb(videoid: str) -> str:
             raise ValueError("No info returned")
         raw_title = info.get("title") or "Unsupported Title"
         title = re.sub(r"\W+", " ", raw_title).title()
-        thumbnail = info.get("thumbnail") or YOUTUBE_IMG_URL
+        thumbnail = info.get("thumbnail") or None
         dur_sec = int(info.get("duration") or 0)
         m, s = divmod(dur_sec, 60)
         duration = f"{m}:{s:02d}" if dur_sec else None
@@ -97,24 +98,30 @@ async def get_thumb(videoid: str) -> str:
         else:
             views = f"{vc} views" if vc else "Unknown Views"
     except Exception:
-        title, thumbnail, duration, views = "Unsupported Title", YOUTUBE_IMG_URL, None, "Unknown Views"
+        title, thumbnail, duration, views = "Unsupported Title", None, None, "Unknown Views"
 
     is_live = not duration or str(duration).strip().lower() in {"", "live", "live now"}
     duration_text = "Live" if is_live else duration or "Unknown Mins"
 
     # Download thumbnail
     thumb_path = os.path.join(CACHE_DIR, f"thumb{videoid}.png")
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(thumbnail) as resp:
-                if resp.status == 200:
-                    async with aiofiles.open(thumb_path, "wb") as f:
-                        await f.write(await resp.read())
-    except Exception:
-        return YOUTUBE_IMG_URL
+    if thumbnail:
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(thumbnail) as resp:
+                    if resp.status == 200:
+                        async with aiofiles.open(thumb_path, "wb") as f:
+                            await f.write(await resp.read())
+        except Exception:
+            pass
 
+    # If download failed or no URL → use fallback as base
     if not os.path.exists(thumb_path) or os.path.getsize(thumb_path) == 0:
-        return YOUTUBE_IMG_URL
+        import shutil
+        try:
+            shutil.copy(_FALLBACK_THUMB, thumb_path)
+        except Exception:
+            return _FALLBACK_THUMB
 
     # Create base image
     base = Image.open(thumb_path).resize((1280, 720)).convert("RGBA")

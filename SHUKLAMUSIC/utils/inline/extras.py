@@ -54,7 +54,12 @@ def supp_markup(_):
         [
             [
                 InlineKeyboardButton(
-                    text=_["S_B_9"],
+                    text="✨ ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ",
+                    url=SUPPORT_CHAT,
+                    style=ButtonStyle.SUCCESS,
+                ),
+                InlineKeyboardButton(
+                    text="❤️‍🔥 sᴜᴘᴘᴏʀᴛ",
                     url=SUPPORT_CHAT,
                     style=ButtonStyle.PRIMARY,
                 ),
