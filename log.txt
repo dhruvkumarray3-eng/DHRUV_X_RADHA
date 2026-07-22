@@ -1343,3 +1343,10 @@ client_session: <aiohttp.client.ClientSession object at 0x7f75f458eea0>
 [22-Jul-26 02:53:26 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
   ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
 ╚═════ஜ۩۞۩ஜ════╝
+[22-Jul-26 02:57:58 - INFO] - SHUKLAMUSIC.core.bot - Stopping Bot...
+[22-Jul-26 02:57:58 - INFO] - SHUKLAMUSIC.core.userbot - Stopping Assistants...
+[22-Jul-26 02:57:58 - INFO] - SHUKLAMUSIC - 𝗦𝗧𝗢𝗣 𝗦𝗧𝗥𝗔𝗡𝗚𝗘𝗥 𝗠𝗨𝗦𝗜𝗖🎻 𝗕𝗢𝗧..
+[22-Jul-26 02:57:59 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f9828120da0>
+[22-Jul-26 02:57:59 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f97dc96dfd0>
