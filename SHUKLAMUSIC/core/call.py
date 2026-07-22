@@ -26,6 +26,7 @@ from SHUKLAMUSIC.misc import db
 from SHUKLAMUSIC.utils.database import (
     add_active_chat,
     add_active_video_chat,
+    get_autoplay,
     get_lang,
     get_loop,
     group_assistant,
@@ -127,7 +128,7 @@ class Call(PyTgCalls):
             await client.play(
                 chat_id=chat_id,
                 stream=stream,
-                config=types.GroupCallConfig(auto_start=False),
+                config=types.GroupCallConfig(auto_start=True),
             )
         except exceptions.NoActiveGroupCall:
             raise
@@ -333,6 +334,54 @@ class Call(PyTgCalls):
                 await set_loop(chat_id, loop)
             await auto_clean(popped)
             if not check:
+                # ── Autoplay: queue a related track instead of leaving ──
+                if await get_autoplay(chat_id) and popped:
+                    try:
+                        last_title = popped.get("title", "")
+                        last_vidid = popped.get("vidid", "")
+                        original_chat_id = popped.get("chat_id", chat_id)
+                        language_ap = await get_lang(chat_id)
+                        _ap = get_string(language_ap)
+                        details, new_vidid = await YouTube.track(last_title or last_vidid)
+                        if details and new_vidid and new_vidid != last_vidid:
+                            from SHUKLAMUSIC.utils.stream.queue import put_queue
+                            file_path, direct = await YouTube.download(
+                                new_vidid, None, videoid=True, video=False
+                            )
+                            db[chat_id] = []
+                            ap_stream = self._build_stream(file_path, video=False)
+                            await self._play_on_assistant(client, chat_id, ap_stream)
+                            await put_queue(
+                                chat_id,
+                                original_chat_id,
+                                file_path if direct else f"vid_{new_vidid}",
+                                details["title"],
+                                details["duration_min"],
+                                "❤️‍🔥 ᴀᴜᴛᴏᴘʟᴀʏ",
+                                new_vidid,
+                                0,
+                                "audio",
+                            )
+                            img = await gen_thumb(new_vidid)
+                            ap_button = stream_markup(_ap, chat_id)
+                            ap_title = details["title"].title()
+                            run = await app.send_photo(
+                                original_chat_id,
+                                photo=img,
+                                has_spoiler=True,
+                                caption=_ap["stream_1"].format(
+                                    f"https://t.me/{app.username}?start=info_{new_vidid}",
+                                    ap_title[:23],
+                                    details["duration_min"],
+                                    "❤️‍🔥 ᴀᴜᴛᴏᴘʟᴀʏ",
+                                ),
+                                reply_markup=InlineKeyboardMarkup(ap_button),
+                            )
+                            db[chat_id][0]["mystic"] = run
+                            db[chat_id][0]["markup"] = "stream"
+                            return
+                    except Exception:
+                        pass   # autoplay failed → fall through and leave normally
                 await _clear_(chat_id)
                 return await client.leave_call(chat_id, close=False)
         except Exception:
