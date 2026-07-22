@@ -1374,3 +1374,36 @@ client_session: <aiohttp.client.ClientSession object at 0x7f97dc96dfd0>
   ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
 ╚═════ஜ۩۞۩ஜ════╝
 [22-Jul-26 16:53:19 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: started monitoring chat -1004475946467
+[22-Jul-26 16:58:24 - INFO] - SHUKLAMUSIC.core.bot - Stopping Bot...
+[22-Jul-26 16:58:24 - INFO] - SHUKLAMUSIC.core.userbot - Stopping Assistants...
+[22-Jul-26 16:58:24 - INFO] - SHUKLAMUSIC - 𝗦𝗧𝗢𝗣 𝗦𝗧𝗥𝗔𝗡𝗚𝗘𝗥 𝗠𝗨𝗦𝗜𝗖🎻 𝗕𝗢𝗧..
+[22-Jul-26 16:58:25 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7fb20e6f7500>
+[22-Jul-26 16:58:25 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7fb20c2c0500>
+[22-Jul-26 16:58:33 - INFO] - SHUKLAMUSIC.core.mongo - Connecting to your Mongo Database...
+[22-Jul-26 16:58:33 - INFO] - SHUKLAMUSIC.core.mongo - Connected to your Mongo Database.
+[22-Jul-26 16:58:33 - INFO] - SHUKLAMUSIC.core.dir - Directories Updated.
+[22-Jul-26 16:58:33 - INFO] - SHUKLAMUSIC.core.git - Git Client Found [VPS DEPLOYER]
+[22-Jul-26 16:58:33 - INFO] - SHUKLAMUSIC.misc - 𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗟𝗢𝗔𝗗 𝗕𝗔𝗕𝗬🍫........
+[22-Jul-26 16:58:33 - INFO] - SHUKLAMUSIC.core.bot - Starting Bot...
+[22-Jul-26 16:58:37 - INFO] - SHUKLAMUSIC.misc - 𝗦𝗨𝗗𝗢 𝗨𝗦𝗘𝗥 𝗗𝗢𝗡𝗘✨🎋.
+[22-Jul-26 16:58:43 - INFO] - SHUKLAMUSIC.core.bot - Music Bot Started Successfully as ⌜ ɴᴏʙɪᴛᴀ x ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ ⌟ [ ɴᴏ ᴀᴅs ]
+[22-Jul-26 16:58:44 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[22-Jul-26 16:58:44 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[22-Jul-26 16:58:44 - INFO] - apscheduler.scheduler - Added job "start_nightmode" to job store "default"
+[22-Jul-26 16:58:44 - INFO] - apscheduler.scheduler - Added job "close_nightmode" to job store "default"
+[22-Jul-26 16:58:44 - INFO] - apscheduler.scheduler - Scheduler started
+[22-Jul-26 16:58:44 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[22-Jul-26 16:58:44 - INFO] - apscheduler.scheduler - Added job "_check_mongo_size" to job store "default"
+[22-Jul-26 16:58:44 - INFO] - apscheduler.scheduler - Scheduler started
+[22-Jul-26 16:58:45 - INFO] - SHUKLAMUSIC.plugins - 𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...
+[22-Jul-26 16:58:49 - INFO] - SHUKLAMUSIC.core.commands - ✅ Commands registered: 36 user • 32 admin • 4/4 scopes OK.
+[22-Jul-26 16:58:49 - INFO] - SHUKLAMUSIC.core.userbot - Starting Assistants...
+[22-Jul-26 16:58:50 - INFO] - SHUKLAMUSIC.core.userbot - Assistant Started as <a href=tg://user?id=7161571562>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>
+[22-Jul-26 16:58:50 - INFO] - SHUKLAMUSIC.core.call - Starting PyTgCalls Client...
+
+[22-Jul-26 16:59:03 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: loaded settings for 2 chats (monitoring starts when music plays)
+[22-Jul-26 16:59:03 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
+  ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
+╚═════ஜ۩۞۩ஜ════╝
