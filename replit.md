@@ -1,13 +1,6 @@
-# SHUKLAMUSIC — Nobita X Prime Telegram Music Bot
+# NOBITA X PRIME Music Bot
 
-A Pyrogram-based Telegram bot that streams music and video in group voice chats. Supports YouTube, Spotify, SoundCloud, and more, with queue management, admin controls, and up to 5 assistant accounts for simultaneous voice chats.
-
-## Stack
-
-- **Language:** Python 3.12
-- **Telegram library:** Pyrogram + py-tgcalls + ntgcalls
-- **Database:** MongoDB (via Motor async driver)
-- **Media:** yt-dlp, ffmpeg
+A feature-rich Telegram Music Bot that streams YouTube music directly into group and channel voice chats. Built on Pyrogram + PyTgCalls.
 
 ## How to run
 
@@ -15,49 +8,36 @@ A Pyrogram-based Telegram bot that streams music and video in group voice chats.
 python3 -m SHUKLAMUSIC
 ```
 
-The run workflow is already configured as **Start application**.
+The **Start application** workflow runs this automatically on startup.
 
-## Required secrets (add via Replit Secrets)
+## Required Secrets (Replit → Tools → Secrets)
 
 | Secret | Description |
-|--------|-------------|
-| `BOT_TOKEN` | Telegram bot token from @BotFather — **required** |
-| `MONGO_DB_URI` | MongoDB connection string — **required** |
-| `STRING1` | Pyrogram session string for assistant account 1 — **required for voice chat streaming** |
-| `STRING2`–`STRING5` | Additional assistant session strings — optional, for multiple simultaneous voice chats |
-| `GIT_TOKEN` | GitHub personal access token — optional, used for the `/update` autopush command |
+|---|---|
+| `BOT_TOKEN` | From [@BotFather](https://t.me/BotFather) |
+| `MONGO_DB_URI` | MongoDB Atlas connection string |
+| `STRING_SESSION` | Pyrogram string session for assistant account |
+| `SESSION_SECRET` | Any random string (already set) |
+| `GIT_TOKEN` | GitHub personal access token (for `/update` auto-push) |
 
-## Optional environment variables (already set in .replit)
+## Stack
 
-| Variable | Value | Description |
-|----------|-------|-------------|
-| `OWNER_ID` | 8245258112 | Telegram user ID of the bot owner |
-| `LOGGER_ID` | -1004458016685 | Telegram group ID where the bot logs events |
-| `UPSTREAM_REPO` | github.com/dhruvkumarray3-eng/DHRUV_X_RADHA | Repo used for `/update` command |
-| `UPSTREAM_BRANCH` | main | Branch for `/update` |
+- **Python 3.12**
+- **Pyrogram** — Telegram MTProto client (bot)
+- **PyTgCalls / ntgcalls** — Voice chat streaming
+- **MongoDB / Motor** — Async database
+- **yt-dlp** — YouTube audio downloading
+- **APScheduler** — Scheduled tasks (nightmode, DB cleanup)
 
-## Generating a Pyrogram session string (STRING1)
+## Key configuration
 
-Run this locally and paste the output string as the `STRING1` secret:
+Edit `config.py` or set environment variables for optional tuning:
 
-```python
-from pyrogram import Client
-api_id = YOUR_API_ID
-api_hash = "YOUR_API_HASH"
-with Client("session", api_id=api_id, api_hash=api_hash) as app:
-    print(app.export_session_string())
-```
+- `LOGGER_ID` — Telegram chat ID for bot logs
+- `OWNER_ID` — Your Telegram user ID
+- `DURATION_LIMIT` — Max song duration in minutes (default: 17000)
+- `UPSTREAM_REPO` / `GIT_TOKEN` — GitHub repo for `/update` auto-push
 
-## Project structure
+## User preferences
 
-```
-SHUKLAMUSIC/
-├── core/          # Bot, userbot, and MongoDB client setup
-├── plugins/       # All command handlers (music, admin, tools, misc)
-├── platforms/     # Platform integrations (YouTube, Spotify, etc.)
-├── mongo/         # MongoDB collection helpers
-├── utils/         # Utilities (thumbnails, formatters, etc.)
-├── assets/        # Static assets (fonts, images)
-├── config.py      # Reads all config from environment variables
-└── __main__.py    # Entry point
-```
+- GitHub token (`GIT_TOKEN`) should be set so every code change can be auto-pushed via the `/update` command.

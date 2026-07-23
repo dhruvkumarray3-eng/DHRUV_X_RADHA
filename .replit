@@ -5,7 +5,7 @@ stack = "BEST_EFFORT_FALLBACK"
 
 [nix]
 channel = "stable-25_05"
-packages = ["cacert", "espeak-ng", "exiftool", "ffmpeg-full", "freetype", "ghostscript", "gmp", "imagemagickBig", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "libyaml", "mupdf", "netpbm", "openjpeg", "openssl", "poppler_utils", "rapidfuzz-cpp", "taskflow", "tcl", "tk", "zlib"]
+packages = ["cacert", "cargo", "espeak-ng", "exiftool", "ffmpeg-full", "freetype", "ghostscript", "gmp", "imagemagickBig", "lcms2", "libGL", "libGLU", "libiconv", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "libyaml", "mupdf", "netpbm", "openjpeg", "openssl", "pkg-config", "poppler_utils", "rapidfuzz-cpp", "rustc", "taskflow", "tcl", "tk", "zlib"]
 
 [workflows]
 runButton = "Project"
