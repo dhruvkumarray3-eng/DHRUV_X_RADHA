@@ -1498,3 +1498,7 @@ client_session: <aiohttp.client.ClientSession object at 0x7f2228196cf0>
 [23-Jul-26 01:48:21 - INFO] - SHUKLAMUSIC.core.userbot - Assistant Started as <a href=tg://user?id=7161571562>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>
 [23-Jul-26 01:48:21 - INFO] - SHUKLAMUSIC.core.call - Starting PyTgCalls Client...
 
+[23-Jul-26 01:48:31 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: loaded settings for 2 chats (monitoring starts when music plays)
+[23-Jul-26 01:48:31 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
+  ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
+╚═════ஜ۩۞۩ஜ════╝
