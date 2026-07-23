@@ -101,13 +101,5 @@ def private_panel(_):
                 icon_custom_emoji_id=_E_CROWN
             ),
         ],
-        [
-            InlineKeyboardButton(
-                text="😇 ʜᴇʟᴘ & ᴄᴏᴍᴍᴀɴᴅs",
-                url=f"https://t.me/{_clean_username(config.OWNER_USERNAME)}",
-                style=ButtonStyle.PRIMARY,
-                icon_custom_emoji_id=_E_DIAMOND
-            ),
-        ],
     ]
     return buttons

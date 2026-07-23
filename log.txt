@@ -1462,3 +1462,39 @@ client_session: <aiohttp.client.ClientSession object at 0x7fe049dda840>
 [23-Jul-26 01:38:55 - INFO] - SHUKLAMUSIC.core.userbot - Assistant Started as <a href=tg://user?id=7161571562>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>
 [23-Jul-26 01:38:55 - INFO] - SHUKLAMUSIC.core.call - Starting PyTgCalls Client...
 
+[23-Jul-26 01:39:09 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: loaded settings for 2 chats (monitoring starts when music plays)
+[23-Jul-26 01:39:09 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
+  ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
+╚═════ஜ۩۞۩ஜ════╝
+[23-Jul-26 01:41:42 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: started monitoring chat -1004475946467
+[23-Jul-26 01:46:22 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: started monitoring chat -1004486589054
+[23-Jul-26 01:47:10 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: stopped monitoring chat -1004486589054
+[23-Jul-26 01:47:49 - INFO] - SHUKLAMUSIC.core.bot - Stopping Bot...
+[23-Jul-26 01:47:49 - INFO] - SHUKLAMUSIC.core.userbot - Stopping Assistants...
+[23-Jul-26 01:47:49 - INFO] - SHUKLAMUSIC - 𝗦𝗧𝗢𝗣 𝗦𝗧𝗥𝗔𝗡𝗚𝗘𝗥 𝗠𝗨𝗦𝗜𝗖🎻 𝗕𝗢𝗧..
+[23-Jul-26 01:47:50 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f2228e50ad0>
+[23-Jul-26 01:47:50 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f2228196cf0>
+[23-Jul-26 01:47:59 - INFO] - SHUKLAMUSIC.core.mongo - Connecting to your Mongo Database...
+[23-Jul-26 01:47:59 - INFO] - SHUKLAMUSIC.core.mongo - Connected to your Mongo Database.
+[23-Jul-26 01:47:59 - INFO] - SHUKLAMUSIC.core.dir - Directories Updated.
+[23-Jul-26 01:47:59 - INFO] - SHUKLAMUSIC.core.git - Git Client Found [VPS DEPLOYER]
+[23-Jul-26 01:47:59 - INFO] - SHUKLAMUSIC.misc - 𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗟𝗢𝗔𝗗 𝗕𝗔𝗕𝗬🍫........
+[23-Jul-26 01:47:59 - INFO] - SHUKLAMUSIC.core.bot - Starting Bot...
+[23-Jul-26 01:48:06 - INFO] - SHUKLAMUSIC.misc - 𝗦𝗨𝗗𝗢 𝗨𝗦𝗘𝗥 𝗗𝗢𝗡𝗘✨🎋.
+[23-Jul-26 01:48:13 - INFO] - SHUKLAMUSIC.core.bot - Music Bot Started Successfully as ⌜ ɴᴏʙɪᴛᴀ x ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ ⌟ [ ɴᴏ ᴀᴅs ]
+[23-Jul-26 01:48:14 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[23-Jul-26 01:48:14 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[23-Jul-26 01:48:14 - INFO] - apscheduler.scheduler - Added job "start_nightmode" to job store "default"
+[23-Jul-26 01:48:14 - INFO] - apscheduler.scheduler - Added job "close_nightmode" to job store "default"
+[23-Jul-26 01:48:14 - INFO] - apscheduler.scheduler - Scheduler started
+[23-Jul-26 01:48:14 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[23-Jul-26 01:48:14 - INFO] - apscheduler.scheduler - Added job "_check_mongo_size" to job store "default"
+[23-Jul-26 01:48:14 - INFO] - apscheduler.scheduler - Scheduler started
+[23-Jul-26 01:48:15 - INFO] - SHUKLAMUSIC.plugins - 𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...
+[23-Jul-26 01:48:18 - INFO] - SHUKLAMUSIC.core.commands - ✅ Commands registered: 36 user • 32 admin • 4/4 scopes OK.
+[23-Jul-26 01:48:18 - INFO] - SHUKLAMUSIC.core.userbot - Starting Assistants...
+[23-Jul-26 01:48:21 - INFO] - SHUKLAMUSIC.core.userbot - Assistant Started as <a href=tg://user?id=7161571562>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>
+[23-Jul-26 01:48:21 - INFO] - SHUKLAMUSIC.core.call - Starting PyTgCalls Client...
+
