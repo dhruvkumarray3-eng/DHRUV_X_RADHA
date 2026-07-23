@@ -77,7 +77,7 @@ WORD_BANK = [
 
 PURPLE_TOP = (88, 24, 138)
 PURPLE_BOTTOM = (35, 8, 66)
-BRAND_TEXT = "RADHA MUSIC"
+BRAND_TEXT = "ɴᴏʙɪᴛᴀ x ᴘʀɪᴍᴇ ᴍᴜsɪᴄ"
 
 
 def _purple_canvas(size=(800, 400)):
@@ -713,3 +713,82 @@ async def trivia_leaderboard(client, message: Message):
     if not has_users:
         text += battle_smallcaps("No champions yet! Start a battle with /triviabattle")
     await message.reply_text(text)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AUTO CHATFIGHT — send a random game every 10 minutes to enabled chats
+# ─────────────────────────────────────────────────────────────────────────────
+chatfight_auto_db = mongodb["chatfight_auto_chats"]
+_AUTO_LOOP_STARTED = False
+
+
+async def _auto_chatfight_loop():
+    """Background task: fire a random ChatFight game every 10 minutes."""
+    while True:
+        await asyncio.sleep(600)  # 10 minutes
+        try:
+            async for doc in chatfight_auto_db.find({"enabled": True}):
+                chat_id = doc["chat_id"]
+                if chat_id in active_games:
+                    continue  # Game already running, skip
+                game_type = random.choice(["word", "emoji", "flag"])
+                try:
+                    if game_type == "word":
+                        await start_word_game(chat_id)
+                    elif game_type == "emoji":
+                        await start_emoji_game(chat_id)
+                    else:
+                        await start_flag_game(chat_id)
+                    await asyncio.sleep(2)  # Small gap between chats
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+
+def _start_auto_loop():
+    global _AUTO_LOOP_STARTED
+    if not _AUTO_LOOP_STARTED:
+        _AUTO_LOOP_STARTED = True
+        asyncio.create_task(_auto_chatfight_loop())
+
+
+# Start the loop when this module is loaded
+asyncio.get_event_loop().call_soon(_start_auto_loop)
+
+
+@app.on_message(filters.command(["chatfighton", "cfon"]) & filters.group & ~BANNED_USERS)
+async def chatfight_auto_on(client, message: Message):
+    from pyrogram.enums import ChatMemberStatus as CMS
+    try:
+        m = await client.get_chat_member(message.chat.id, message.from_user.id)
+        if m.status not in [CMS.OWNER, CMS.ADMINISTRATOR]:
+            return await message.reply_text("❌ ᴀᴅᴍɪɴ ᴏɴʟʏ.")
+    except Exception:
+        return
+
+    await chatfight_auto_db.update_one(
+        {"chat_id": message.chat.id},
+        {"$set": {"chat_id": message.chat.id, "enabled": True}},
+        upsert=True,
+    )
+    _start_auto_loop()
+    await message.reply_text(
+        f"✅ **ᴄʜᴀᴛғɪɢʜᴛ ᴀᴜᴛᴏ ᴇɴᴀʙʟᴇᴅ!**\n\n"
+        "A random word/emoji/flag game will be sent every **10 minutes** automatically! 🎮\n\n"
+        "Use `/chatfightoff` to stop."
+    )
+
+
+@app.on_message(filters.command(["chatfightoff", "cfoff"]) & filters.group & ~BANNED_USERS)
+async def chatfight_auto_off(client, message: Message):
+    from pyrogram.enums import ChatMemberStatus as CMS
+    try:
+        m = await client.get_chat_member(message.chat.id, message.from_user.id)
+        if m.status not in [CMS.OWNER, CMS.ADMINISTRATOR]:
+            return await message.reply_text("❌ ᴀᴅᴍɪɴ ᴏɴʟʏ.")
+    except Exception:
+        return
+
+    await chatfight_auto_db.delete_one({"chat_id": message.chat.id})
+    await message.reply_text("❌ **ᴄʜᴀᴛғɪɢʜᴛ ᴀᴜᴛᴏ ᴅɪsᴀʙʟᴇᴅ.**\nNo more automatic games.")

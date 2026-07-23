@@ -474,6 +474,15 @@ async def welcome(client, message: Message):
                 )
                 await add_served_chat(message.chat.id)
 
+                # Auto-detect and link channel if group has a linked channel
+                try:
+                    from SHUKLAMUSIC.utils.database import set_cmode
+                    chat_info = await client.get_chat(message.chat.id)
+                    if chat_info.linked_chat:
+                        await set_cmode(message.chat.id, chat_info.linked_chat.id)
+                except Exception:
+                    pass
+
                 # DM the adder
                 try:
                     if message.from_user:

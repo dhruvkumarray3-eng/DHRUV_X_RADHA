@@ -114,7 +114,7 @@ def help_pannel_page2(_, START: Union[bool, int] = None):
     ])
 
 
-# ─── PAGE 3 : hb22 – hb31  (new sections) ───────────────────────────────────
+# ─── PAGE 3 : hb22 – hb31 ───────────────────────────────────────────────────
 def help_pannel_page3(_, START: Union[bool, int] = None):
     return InlineKeyboardMarkup([
         [
@@ -135,7 +135,24 @@ def help_pannel_page3(_, START: Union[bool, int] = None):
         [
             InlineKeyboardButton(text="🔊 ᴠᴄ ʟᴏɢs",       callback_data="help_callback hb31", style=ButtonStyle.PRIMARY,   icon_custom_emoji_id=_E_VC),
         ],
-        _nav_row(_, "help_page_2", "settingsback_helper" if START else "close", "help_page_1", bool(START)),
+        _nav_row(_, "help_page_2", "settingsback_helper" if START else "close", "help_page_4", bool(START)),
+    ])
+
+
+# ─── PAGE 4 : hb32 – hb37  (new features) ───────────────────────────────────
+def help_pannel_page4(_, START: Union[bool, int] = None):
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton(text=_["H_B_32"], callback_data="help_callback hb32", style=ButtonStyle.DANGER,    icon_custom_emoji_id=_E_MEGA),
+            InlineKeyboardButton(text=_["H_B_33"], callback_data="help_callback hb33", style=ButtonStyle.SUCCESS,   icon_custom_emoji_id=_E_BELL),
+            InlineKeyboardButton(text=_["H_B_34"], callback_data="help_callback hb34", style=ButtonStyle.PRIMARY,   icon_custom_emoji_id=_E_SHIELD),
+        ],
+        [
+            InlineKeyboardButton(text=_["H_B_35"], callback_data="help_callback hb35", style=ButtonStyle.DANGER,    icon_custom_emoji_id=_E_HEART),
+            InlineKeyboardButton(text=_["H_B_36"], callback_data="help_callback hb36", style=ButtonStyle.SUCCESS,   icon_custom_emoji_id=_E_INFO),
+            InlineKeyboardButton(text=_["H_B_37"], callback_data="help_callback hb37", style=ButtonStyle.PRIMARY,   icon_custom_emoji_id=_E_VC),
+        ],
+        _nav_row(_, "help_page_3", "settingsback_helper" if START else "close", "help_page_1", bool(START)),
     ])
 
 

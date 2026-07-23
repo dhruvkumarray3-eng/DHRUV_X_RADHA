@@ -22,7 +22,7 @@ from SHUKLAMUSIC.utils.database import get_lang, get_served_chats, get_served_us
 from SHUKLAMUSIC.utils.decorators.language import LanguageStart, languageCB
 from SHUKLAMUSIC.utils.inline.help import (
     help_back_markup, private_help_panel,
-    help_pannel_page1, help_pannel_page2, help_pannel_page3,
+    help_pannel_page1, help_pannel_page2, help_pannel_page3, help_pannel_page4,
 )
 from SHUKLAMUSIC.utils.inline.start import private_panel
 from config import BANNED_USERS, START_IMG_URL, SUPPORT_CHAT, SHASHANK_IMG, START_PICS
@@ -184,6 +184,18 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_30, reply_markup=help_back_markup(_, 3))
     elif cb == "hb31":
         await CallbackQuery.edit_message_text(helpers.HELP_31, reply_markup=help_back_markup(_, 3))
+    elif cb == "hb32":
+        await CallbackQuery.edit_message_text(helpers.HELP_32, reply_markup=help_back_markup(_, 4))
+    elif cb == "hb33":
+        await CallbackQuery.edit_message_text(helpers.HELP_33, reply_markup=help_back_markup(_, 4))
+    elif cb == "hb34":
+        await CallbackQuery.edit_message_text(helpers.HELP_34, reply_markup=help_back_markup(_, 4))
+    elif cb == "hb35":
+        await CallbackQuery.edit_message_text(helpers.HELP_35, reply_markup=help_back_markup(_, 4))
+    elif cb == "hb36":
+        await CallbackQuery.edit_message_text(helpers.HELP_36, reply_markup=help_back_markup(_, 4))
+    elif cb == "hb37":
+        await CallbackQuery.edit_message_text(helpers.HELP_37, reply_markup=help_back_markup(_, 4))
 
 
 @app.on_callback_query(filters.regex("^help_page_") & ~BANNED_USERS)
@@ -200,6 +212,8 @@ async def help_page_cb(client, CallbackQuery, _):
         keyboard = help_pannel_page2(_)
     elif page == "help_page_3":
         keyboard = help_pannel_page3(_)
+    elif page == "help_page_4":
+        keyboard = help_pannel_page4(_)
     else:
         keyboard = help_pannel_page1(_)
     language = await get_lang(CallbackQuery.message.chat.id)

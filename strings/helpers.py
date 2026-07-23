@@ -314,6 +314,91 @@ HELP_31 = """🔊 <b><u>ᴠᴄ ʟᴏɢɢᴇʀ :</u></b>
 <i>ᴀᴅᴍɪɴ ʀɪɢʜᴛs ʀᴇǫᴜɪʀᴇᴅ.</i>
 """
 
+HELP_32 = """📢 <b><u>ꜰᴏʀᴄᴇ sᴜʙsᴄʀɪʙᴇ :</u></b>
+
+Require users to join a channel before using bot commands in the group.
+
+• /fsub @channel — set required channel
+• /fsub channel_id — set by channel ID
+• /fsub off — disable force subscribe
+
+⚠️ <i>Bot must be admin in the channel. Admins are exempt from FSub check.</i>
+"""
+
+HELP_33 = """🔔 <b><u>ᴀᴜᴛᴏ ᴀᴘᴘʀᴏᴠᴇ :</u></b>
+
+Automatically approve all join requests to your group.
+
+• /autoapprove on — enable auto approve
+• /autoapprove off — disable auto approve
+• /autoapprove — check current status
+
+⚠️ <i>Bot must have "Add Members" permission in the group.</i>
+"""
+
+HELP_34 = """🛡️ <b><u>ɢᴜᴀʀᴅɪᴀɴ — ᴀɴᴛɪ ꜰʟᴏᴏᴅ :</u></b>
+
+Protect your group from message flooding.
+Users who send 5+ messages in 5 seconds are automatically muted for 5 minutes.
+
+• /guardian on — enable guardian/anti-flood
+• /guardian off — disable guardian
+• /guardian — check status
+
+⚠️ <i>Admins are never muted. Bot must have restrict permissions.</i>
+"""
+
+HELP_35 = """❤️ <b><u>ꜰᴇᴇʟɪɴɢs / ʀᴇᴀᴄᴛɪᴏɴs :</u></b>
+
+Express feelings with anime GIFs! Reply to a user or mention them.
+
+• /hug @user — hug someone 🤗
+• /pat @user — pat someone 🥰
+• /slap @user — slap someone 👋
+• /kiss @user — kiss someone 😘
+• /cuddle @user — cuddle 🫂
+• /wave @user — wave 👋
+• /poke @user — poke 👉
+• /bite @user — bite 😬
+• /punch @user — punch 👊
+• /handshake @user — shake hands 🤝
+• /smile @user — smile 😄
+• /happy — express happiness 😊
+• /sad — express sadness 😢
+• /blush — blush 😊
+• /dance — dance 💃
+"""
+
+HELP_36 = """👬 <b><u>ʙʀᴏᴛʜᴇʀ / sɪsᴛᴇʀ ʀᴇʟᴀᴛɪᴏɴs :</u></b>
+
+Set family relationships with other users.
+
+• /brother @user — set your brother
+• /bro — see your current brother
+• /sister @user — set your sister
+• /sis — see your current sister
+• /family — see all your relations
+• /myrelations — same as /family
+"""
+
+HELP_37 = """🔊 <b><u>ᴛᴛs — ᴛᴇxᴛ ᴛᴏ sᴘᴇᴇᴄʜ :</u></b>
+
+Convert any text to speech in 30+ languages!
+
+• /tts [text] — converts using group language
+• /tts hi नमस्ते — Hindi speech
+• /tts en Hello world — English speech
+• /tts ar مرحبا — Arabic speech
+
+<b>🌍 Common Language Codes:</b>
+<code>hi</code> Hindi · <code>en</code> English · <code>te</code> Telugu
+<code>ta</code> Tamil · <code>ml</code> Malayalam · <code>bn</code> Bengali
+<code>ar</code> Arabic · <code>fr</code> French · <code>de</code> German
+<code>es</code> Spanish · <code>ja</code> Japanese · <code>ko</code> Korean
+<code>ru</code> Russian · <code>tr</code> Turkish · <code>zh</code> Chinese
+<code>ur</code> Urdu · <code>th</code> Thai · <code>vi</code> Vietnamese
+"""
+
 HELP_19 = """🎮 <b><u>ɢʀᴏᴜᴘ ɢᴀᴍᴇs :</u></b>
 
 ᴜsᴇ ᴛʜᴇsᴇ ᴄᴏᴍᴍᴀɴᴅs ᴛᴏ ᴘʟᴀʏ ɪɴᴛᴇʀᴀᴄᴛɪᴠᴇ ɢᴀᴍᴇs ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘ!
