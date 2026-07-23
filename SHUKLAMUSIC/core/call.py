@@ -342,7 +342,10 @@ class Call(PyTgCalls):
                         original_chat_id = popped.get("chat_id", chat_id)
                         language_ap = await get_lang(chat_id)
                         _ap = get_string(language_ap)
-                        details, new_vidid = await YouTube.track(last_title or last_vidid)
+                        # Prefer Radio-playlist related songs; fall back to title search
+                        details, new_vidid = await YouTube.related_track(last_vidid)
+                        if not details and last_title:
+                            details, new_vidid = await YouTube.track(last_title)
                         if details and new_vidid and new_vidid != last_vidid:
                             from SHUKLAMUSIC.utils.stream.queue import put_queue
                             file_path, direct = await YouTube.download(

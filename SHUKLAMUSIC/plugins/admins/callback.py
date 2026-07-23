@@ -84,7 +84,8 @@ async def del_back_playlist(client, CallbackQuery, _):
         counter = bet[1]
     chat_id = int(chat)
     if not await is_active_chat(chat_id):
-        return await CallbackQuery.answer(_["general_5"], show_alert=True)
+        await CallbackQuery.answer()
+        return await CallbackQuery.message.reply_text(_["general_5"])
     mention = CallbackQuery.from_user.mention
     if command == "UpVote":
         if chat_id not in votemode:

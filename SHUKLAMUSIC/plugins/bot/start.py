@@ -381,9 +381,62 @@ async def welcome(client, message: Message):
                 except:
                     pass
             if member.id == app.id:
-                if message.chat.type != ChatType.SUPERGROUP:
+                # ── CHANNEL: stay, send connect-channel message, DM adder ──
+                if message.chat.type == ChatType.CHANNEL:
+                    await add_served_chat(message.chat.id)
+                    channel_buttons = InlineKeyboardMarkup([
+                        [
+                            InlineKeyboardButton(
+                                text="🔗 ᴄᴏɴɴᴇᴄᴛ ᴛᴏ ɢʀᴏᴜᴘ",
+                                url=f"https://t.me/{app.username}?start=help",
+                            ),
+                            InlineKeyboardButton(
+                                text="🎵 sᴜᴘᴘᴏʀᴛ",
+                                url=f"https://t.me/{config.SUPPORT_CHAT}",
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                text="📖 ʜᴏᴡ ᴛᴏ ᴜsᴇ",
+                                url=f"https://t.me/{app.username}?start=help",
+                            ),
+                        ],
+                    ])
+                    try:
+                        await message.reply_photo(
+                            random.choice(YUMI_PICS),
+                            caption=_["start_channel_1"].format(message.chat.title),
+                            reply_markup=channel_buttons,
+                        )
+                    except Exception:
+                        try:
+                            await app.send_message(
+                                message.chat.id,
+                                _["start_channel_1"].format(message.chat.title),
+                                reply_markup=channel_buttons,
+                            )
+                        except Exception:
+                            pass
+                    # DM the adder
+                    try:
+                        if message.from_user:
+                            await app.send_message(
+                                message.from_user.id,
+                                _["start_dm_ch_1"].format(
+                                    message.from_user.mention,
+                                    message.chat.title,
+                                ),
+                            )
+                    except Exception:
+                        pass
+                    return await message.stop_propagation()
+
+                # ── BASIC GROUP: tell to convert to supergroup ──
+                if message.chat.type not in (ChatType.SUPERGROUP, ChatType.CHANNEL):
                     await message.reply_text(_["start_4"])
                     return await app.leave_chat(message.chat.id)
+
+                # ── BLACKLISTED ──
                 if message.chat.id in await blacklisted_chats():
                     await message.reply_text(
                         _["start_5"].format(
@@ -395,9 +448,9 @@ async def welcome(client, message: Message):
                     )
                     return await app.leave_chat(message.chat.id)
 
+                # ── SUPERGROUP: welcome in group + DM adder ──
                 out = start_panel(_)
                 
-                # --- GET CUSTOM OR DEFAULT CAPTION ---
                 default_caption = _["start_3"].format(
                     message.from_user.mention,
                     app.mention,
@@ -408,7 +461,7 @@ async def welcome(client, message: Message):
                 final_caption = await get_welcome_caption(
                     "welcome_group", 
                     default_caption, 
-                    member, # Passing the new member object
+                    member,
                     await client.get_me(),
                     message.chat
                 )
@@ -420,6 +473,20 @@ async def welcome(client, message: Message):
                     reply_markup=InlineKeyboardMarkup(out),
                 )
                 await add_served_chat(message.chat.id)
+
+                # DM the adder
+                try:
+                    if message.from_user:
+                        await app.send_message(
+                            message.from_user.id,
+                            _["start_dm_grp_1"].format(
+                                message.from_user.mention,
+                                message.chat.title,
+                            ),
+                        )
+                except Exception:
+                    pass
+
                 await message.stop_propagation()
         except Exception as ex:
             print(ex)

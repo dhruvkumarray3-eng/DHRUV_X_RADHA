@@ -400,6 +400,53 @@ class YouTubeAPI:
             ids.append(vid)
         return ids
 
+    async def related_track(self, vidid: str):
+        """Fetch a YouTube-related track using the YouTube Radio/Mix playlist.
+        Returns (details_dict, vidid) or (None, None) on failure."""
+
+        def _fetch():
+            ydl_opts = {
+                "quiet": True,
+                "no_warnings": True,
+                "extract_flat": True,
+                "playlist_items": "2-8",   # skip seed (item 1), try next 7
+            }
+            url = f"https://www.youtube.com/watch?v={vidid}&list=RD{vidid}"
+            try:
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url, download=False)
+                    entries = info.get("entries") or []
+                    for entry in entries:
+                        eid = entry.get("id") or ""
+                        etitle = entry.get("title") or ""
+                        edur = entry.get("duration")
+                        # skip seed, private/deleted, or shorts (<60 s)
+                        if (
+                            not eid
+                            or eid == vidid
+                            or not etitle
+                            or etitle in ("[Private video]", "[Deleted video]")
+                            or (edur and int(edur) < 60)
+                        ):
+                            continue
+                        dur_min = "0:00"
+                        if edur:
+                            m, s = divmod(int(edur), 60)
+                            dur_min = f"{m}:{s:02d}"
+                        return {
+                            "title": etitle,
+                            "duration_min": dur_min,
+                            "vidid": eid,
+                            "link": f"https://www.youtube.com/watch?v={eid}",
+                            "thumb": f"https://i.ytimg.com/vi/{eid}/hqdefault.jpg",
+                        }, eid
+            except Exception:
+                pass
+            return None, None
+
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, _fetch)
+
     async def track(self, link: str, videoid: Union[bool, str] = None):
         if videoid:
             link = self.base + link

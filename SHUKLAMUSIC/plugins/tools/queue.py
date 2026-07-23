@@ -158,7 +158,8 @@ async def queued_tracks(client, CallbackQuery: CallbackQuery, _):
     except:
         return
     if not await is_active_chat(chat_id):
-        return await CallbackQuery.answer(_["general_5"], show_alert=True)
+        await CallbackQuery.answer()
+        return await CallbackQuery.message.reply_text(_["general_5"])
     got = db.get(chat_id)
     if not got:
         return await CallbackQuery.answer(_["queue_2"], show_alert=True)
@@ -206,7 +207,8 @@ async def queue_back(client, CallbackQuery: CallbackQuery, _):
     except:
         return
     if not await is_active_chat(chat_id):
-        return await CallbackQuery.answer(_["general_5"], show_alert=True)
+        await CallbackQuery.answer()
+        return await CallbackQuery.message.reply_text(_["general_5"])
     got = db.get(chat_id)
     if not got:
         return await CallbackQuery.answer(_["queue_2"], show_alert=True)
