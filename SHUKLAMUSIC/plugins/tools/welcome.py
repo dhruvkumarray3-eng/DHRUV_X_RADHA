@@ -1,19 +1,12 @@
 # -----------------------------------------------
 # 🔸 StrangerMusic Project
 # 🔹 Developed & Maintained by: Shukla (https://github.com/itzshukla)
-# 📅 Copyright © 2022 – All Rights Reserved
-#
-# 📖 License:
-# This source code is open for educational and non-commercial use ONLY.
-# You are required to retain this credit in all copies or substantial portions of this file.
-# Commercial use, redistribution, or removal of this notice is strictly prohibited
-# without prior written permission from the author.
-#
 # ❤️ Made with dedication and love by ItzShukla
 # -----------------------------------------------
 from SHUKLAMUSIC import app
 from pyrogram.errors import RPCError
 from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.enums import ButtonStyle
 from typing import Union, Optional
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageChops
 import random
@@ -30,7 +23,7 @@ from SHUKLAMUSIC.utils.Shukla_ban import admin_filter
 
 LOGGER = getLogger(__name__)
 
-# ── Statusvideobytaraxd pack IDs (@stickerXtara) ──
+# ── Statusvideobytaraxd pack IDs ──
 _TX_STAR   = 6298332994260175589   # ⭐️
 _TX_HEART  = 6298356878573307709   # ❤️
 _TX_OK     = 6296501388276926215   # ✅
@@ -45,6 +38,14 @@ _TX_ROSE   = 6102617459204822706   # 🌹
 def tx(eid, fb):
     return f'<emoji id={eid}>{fb}</emoji>'
 
+# ── Welcome background (catbox) ──
+WEL_BG_URL  = "https://files.catbox.moe/a86v1l.png"
+WEL_BG_PATH = "SHUKLAMUSIC/assets/wel2.png"
+
+# ── Emojis palette ──
+EMOJIS = ["🫠", "❤️‍🩹", "❤️‍🔥", "🌚", "👀", "✨", "👻", "😇", "🌹", "🤗", "✨", "☄️"]
+
+# ── Default fallback photos ──
 random_photo = [
     "https://telegra.ph/file/1949480f01355b4e87d26.jpg",
     "https://telegra.ph/file/3ef2cc0ad2bc548bafb30.jpg",
@@ -54,7 +55,23 @@ random_photo = [
     "https://i.ibb.co/rRXc8MGR/image.jpg",
 ]
 
-# --------------------------------------------------------------------------------- #
+# ─────────────────────────────────────────────────────────────────────────────
+
+async def _ensure_wel_bg():
+    """Download & cache the catbox welcome background if not present."""
+    import aiohttp
+    if not os.path.exists(WEL_BG_PATH):
+        os.makedirs(os.path.dirname(WEL_BG_PATH), exist_ok=True)
+        try:
+            async with aiohttp.ClientSession() as s:
+                async with s.get(WEL_BG_URL, timeout=aiohttp.ClientTimeout(total=15)) as r:
+                    if r.status == 200:
+                        with open(WEL_BG_PATH, "wb") as f:
+                            f.write(await r.read())
+        except Exception as e:
+            LOGGER.warning(f"Failed to download welcome bg: {e}")
+
+
 class WelDatabase:
     def __init__(self):
         self.data = {}
@@ -64,7 +81,7 @@ class WelDatabase:
 
     async def add_wlcm(self, chat_id):
         if chat_id not in self.data:
-            self.data[chat_id] = {"state": "on"}  # Default state is "on"
+            self.data[chat_id] = {"state": "on"}
 
     async def rm_wlcm(self, chat_id):
         if chat_id in self.data:
@@ -81,7 +98,7 @@ class temp:
     B_NAME = None
 
 
-def circle(pfp, size=(500, 500), brightness_factor=10):
+def circle(pfp, size=(500, 500), brightness_factor=1.0):
     pfp = pfp.resize(size, Image.LANCZOS).convert("RGBA")
     pfp = ImageEnhance.Brightness(pfp).enhance(brightness_factor)
     bigsize = (pfp.size[0] * 3, pfp.size[1] * 3)
@@ -95,21 +112,32 @@ def circle(pfp, size=(500, 500), brightness_factor=10):
 
 
 def welcomepic(pic, user, chatname, id, uname, brightness_factor=1.3):
-    background = Image.open("SHUKLAMUSIC/assets/wel2.png")
+    if not os.path.exists(WEL_BG_PATH):
+        # Fallback: solid dark background
+        background = Image.new("RGB", (1000, 500), (20, 20, 30))
+    else:
+        background = Image.open(WEL_BG_PATH).convert("RGBA")
+
     pfp = Image.open(pic).convert("RGBA")
     pfp = circle(pfp, brightness_factor=brightness_factor)
     pfp = pfp.resize((500, 500))
     draw = ImageDraw.Draw(background)
-    font = ImageFont.truetype('SHUKLAMUSIC/assets/font.ttf', size=60)
-    
-    # Updated ID position to (630, 450)
+
+    try:
+        font = ImageFont.truetype('SHUKLAMUSIC/assets/font.ttf', size=60)
+    except Exception:
+        font = ImageFont.load_default()
+
+    # Draw ID text (bottom-right area)
     draw.text((630, 450), f'ID: {id}', fill=(255, 255, 255), font=font)
-    
-    # Updated PFP position to (48, 88)
+
+    # Paste circular profile picture (left side)
     pfp_position = (48, 88)
     background.paste(pfp, pfp_position, pfp)
-    background.save(f"downloads/welcome#{id}.png")
-    return f"downloads/welcome#{id}.png"
+
+    out_path = f"downloads/welcome#{id}.png"
+    background.convert("RGB").save(out_path)
+    return out_path
 
 
 @app.on_message(filters.command("welcome") & ~filters.private)
@@ -151,6 +179,10 @@ async def greet_new_member(_, member: ChatMemberUpdated):
 
     if member.new_chat_member and not member.old_chat_member and member.new_chat_member.status != "kicked":
         user = member.new_chat_member.user
+
+        # Ensure welcome background is downloaded
+        await _ensure_wel_bg()
+
         try:
             pic = await app.download_media(user.photo.big_file_id, file_name=f"pp{user.id}.png")
         except AttributeError:
@@ -162,40 +194,57 @@ async def greet_new_member(_, member: ChatMemberUpdated):
             except Exception as e:
                 LOGGER.error(e)
 
+        # Pick random emojis from the palette
+        e1, e2, e3, e4 = random.choices(EMOJIS, k=4)
+
         try:
             welcomeimg = welcomepic(pic, user.first_name, member.chat.title, user.id, user.username)
-            button_text = "๏ ᴠɪᴇᴡ ɴᴇᴡ ᴍᴇᴍʙᴇʀ ๏"
-            add_button_text = "✙ ᴋɪᴅɴᴀᴘ ᴍᴇ ✙"
+
             deep_link = f"tg://openmessage?user_id={user.id}"
-            add_link = f"https://t.me/{app.username}?startgroup=true"
+            add_link  = f"https://t.me/{app.username}?startgroup=true"
+
+            caption = (
+                f"{tx(_TX_STAR,'⭐️')} {tx(_TX_BOOM,'💥')} <b>ᴡᴇʟᴄᴏᴍᴇ</b> {tx(_TX_BOOM,'💥')} {tx(_TX_STAR,'⭐️')}\n\n"
+                f"❤️‍🔥✨ <b>▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬</b> ✨❤️‍🔥\n\n"
+                f"{tx(_TX_CROWN,'👑')} <b>ɴᴀᴍᴇ :</b> {user.mention}\n"
+                f"{tx(_TX_SPARK,'💫')} <b>ɪᴅ :</b> <code>{user.id}</code>\n"
+                f"{tx(_TX_ROSE,'🌹')} <b>ᴜ_ɴᴀᴍᴇ :</b> @{user.username if user.username else 'None'}\n"
+                f"{tx(_TX_OK,'✅')} <b>ᴍᴇᴍʙᴇʀs :</b> {count}\n\n"
+                f"🤗😇 <b>▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬</b> 😇🤗\n\n"
+                f"🌚 <i>ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ɢʀᴏᴜᴘ! ᴍᴀᴋᴇ ʏᴏᴜʀsᴇʟғ ᴀᴛ ʜᴏᴍᴇ ᴀɴᴅ ʜᴀᴠᴇ ᴀ ɢʀᴇᴀᴛ ᴛɪᴍᴇ!</i> {e1}\n\n"
+                f"☄️ {tx(_TX_GEM,'💎')} {tx(_TX_STAR,'⭐️')} {tx(_TX_HEART,'❤️')} 👀 🌹 ✨ 👻"
+            )
 
             msg = await app.send_photo(
                 chat_id,
                 photo=welcomeimg,
-                caption=(
-                    f"{tx(_TX_STAR,'⭐️')} {tx(_TX_BOOM,'💥')} <b>ᴡᴇʟᴄᴏᴍᴇ</b> {tx(_TX_BOOM,'💥')} {tx(_TX_STAR,'⭐️')}\n\n"
-                    f"{tx(_TX_HEART,'❤️')} {tx(_TX_GEM,'💎')} <b>▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬</b> {tx(_TX_GEM,'💎')} {tx(_TX_HEART,'❤️')}\n\n"
-                    f"{tx(_TX_CROWN,'👑')} <b>ɴᴀᴍᴇ :</b> {user.mention}\n"
-                    f"{tx(_TX_SPARK,'💫')} <b>ɪᴅ :</b> <code>{user.id}</code>\n"
-                    f"{tx(_TX_ROSE,'🌹')} <b>ᴜ_ɴᴀᴍᴇ :</b> @{user.username if user.username else 'None'}\n"
-                    f"{tx(_TX_OK,'✅')} <b>ᴍᴇᴍʙᴇʀs :</b> {count}\n\n"
-                    f"{tx(_TX_HUG,'🫶')} {tx(_TX_LOVE,'😍')} <b>▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬</b> {tx(_TX_LOVE,'😍')} {tx(_TX_HUG,'🫶')}\n\n"
-                    f"{tx(_TX_ROSE,'🌹')} {tx(_TX_GEM,'💎')} {tx(_TX_STAR,'⭐️')} {tx(_TX_HEART,'❤️')} {tx(_TX_SPARK,'💫')}"
-                ),
+                caption=caption,
                 parse_mode=enums.ParseMode.HTML,
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton(button_text, url=deep_link)],
-                    [InlineKeyboardButton(text=add_button_text, url=add_link)],
+                    [
+                        InlineKeyboardButton(
+                            "๏ ᴠɪᴇᴡ ɴᴇᴡ ᴍᴇᴍʙᴇʀ ๏",
+                            url=deep_link,
+                            style=ButtonStyle.PRIMARY,
+                        )
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "✙ ᴋɪᴅɴᴀᴘ ᴍᴇ ✙",
+                            url=add_link,
+                            style=ButtonStyle.DANGER,
+                        )
+                    ],
                 ])
             )
 
             temp.MELCOW[f"welcome-{chat_id}"] = msg
 
-            # Auto-delete welcome message in 5 minutes (300 seconds)
+            # Auto-delete in 5 minutes
             await asyncio.sleep(300)
             try:
                 await msg.delete()
-            except:
+            except Exception:
                 pass
 
         except Exception as e:

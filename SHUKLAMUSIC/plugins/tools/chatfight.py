@@ -79,6 +79,36 @@ PURPLE_TOP = (88, 24, 138)
 PURPLE_BOTTOM = (35, 8, 66)
 BRAND_TEXT = "ɴᴏʙɪᴛᴀ x ᴘʀɪᴍᴇ ᴍᴜsɪᴄ"
 
+# ── Catbox background for all game images ──
+CATBOX_GAME_BG_URL  = "https://files.catbox.moe/apbxin.jpg"
+CATBOX_GAME_BG_PATH = "SHUKLAMUSIC/assets/game_bg.jpg"
+
+
+async def _fetch_catbox_bg() -> Image.Image:
+    """Download & cache the catbox background; return an RGBA Image."""
+    import aiohttp
+    if not os.path.exists(CATBOX_GAME_BG_PATH):
+        os.makedirs(os.path.dirname(CATBOX_GAME_BG_PATH), exist_ok=True)
+        try:
+            async with aiohttp.ClientSession() as s:
+                async with s.get(CATBOX_GAME_BG_URL, timeout=aiohttp.ClientTimeout(total=15)) as r:
+                    if r.status == 200:
+                        with open(CATBOX_GAME_BG_PATH, "wb") as f:
+                            f.write(await r.read())
+        except Exception:
+            pass  # fallback handled below
+    if os.path.exists(CATBOX_GAME_BG_PATH):
+        return Image.open(CATBOX_GAME_BG_PATH).convert("RGBA").resize((800, 400), Image.LANCZOS)
+    # Fallback: purple gradient if download failed
+    img = Image.new("RGB", (800, 400), color=PURPLE_TOP)
+    for y in range(400):
+        ratio = y / 400
+        r = int(PURPLE_TOP[0] + (PURPLE_BOTTOM[0] - PURPLE_TOP[0]) * ratio)
+        g = int(PURPLE_TOP[1] + (PURPLE_BOTTOM[1] - PURPLE_TOP[1]) * ratio)
+        b = int(PURPLE_TOP[2] + (PURPLE_BOTTOM[2] - PURPLE_TOP[2]) * ratio)
+        ImageDraw.Draw(img).line([(0, y), (800, y)], fill=(r, g, b))
+    return img.convert("RGBA")
+
 
 def _purple_canvas(size=(800, 400)):
     img = Image.new("RGB", size, color=PURPLE_TOP)
@@ -117,10 +147,10 @@ def _draw_branding(bg):
     return bg
 
 
-def create_game_image(text):
+async def create_game_image(text):
     output_path = f"downloads/game_{random.randint(1000, 9999)}.jpg"
     os.makedirs("downloads", exist_ok=True)
-    bg = _purple_canvas().convert("RGBA")
+    bg = await _fetch_catbox_bg()
     draw = ImageDraw.Draw(bg)
     try:
         font = ImageFont.truetype(FONT_PATH, 65)
@@ -129,6 +159,8 @@ def create_game_image(text):
     bbox = draw.textbbox((0, 0), text, font=font)
     text_w, text_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
     x, y = (bg.size[0] - text_w) / 2, ((bg.size[1] - text_h) / 2) - 30
+    # Shadow
+    draw.text((x + 3, y + 3), text, fill=(0, 0, 0, 160), font=font)
     draw.text((x, y), text, fill="white", font=font)
     bg = _draw_branding(bg)
     bg = bg.convert("RGB")
@@ -147,7 +179,7 @@ async def create_emoji_or_flag_image(identifier, is_flag=False):
         hex_code = "-".join(f"{ord(c):x}" for c in identifier).replace("-fe0f", "")
         url = f"https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.0.3/assets/72x72/{hex_code}.png"
 
-    bg = _purple_canvas().convert("RGBA")
+    bg = await _fetch_catbox_bg()
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=aiohttp.ClientTimeout(total=10)) as resp:
@@ -186,7 +218,7 @@ async def start_word_game(chat_id):
         is_missing = random.choice([True, False])
         display_word = hide_letters(original_word) if is_missing else original_word
 
-        img_path = create_game_image(display_word)
+        img_path = await create_game_image(display_word)
         caption = (
             f"⚡ **{smallcaps('Be the first to write the word shown in the photo!')}**\n\n"
             f"⏱ **{smallcaps('Time remaining: 10 minutes')}**"

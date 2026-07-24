@@ -417,15 +417,40 @@ async def welcome(client, message: Message):
                             )
                         except Exception:
                             pass
-                    # DM the adder
+                    # DM the adder (channel) with connect-channel button
                     try:
                         if message.from_user:
+                            ch_id = message.chat.id
+                            ch_username = message.chat.username
+                            connect_url = (
+                                f"https://t.me/{app.username}?start=channelplay_{ch_id}"
+                                if not ch_username
+                                else f"https://t.me/{app.username}?start=channelplay"
+                            )
                             await app.send_message(
                                 message.from_user.id,
                                 _["start_dm_ch_1"].format(
                                     message.from_user.mention,
                                     message.chat.title,
                                 ),
+                                reply_markup=InlineKeyboardMarkup([
+                                    [
+                                        InlineKeyboardButton(
+                                            "🔗 ᴄᴏɴɴᴇᴄᴛ ᴄʜᴀɴɴᴇʟ",
+                                            url=f"https://t.me/{app.username}?startgroup=true",
+                                        ),
+                                    ],
+                                    [
+                                        InlineKeyboardButton(
+                                            "📖 ʜᴏᴡ ᴛᴏ sᴇᴛᴜᴘ",
+                                            url=f"https://t.me/{app.username}?start=help",
+                                        ),
+                                        InlineKeyboardButton(
+                                            "💬 sᴜᴘᴘᴏʀᴛ",
+                                            url=f"https://t.me/{config.SUPPORT_CHAT}",
+                                        ),
+                                    ],
+                                ]),
                             )
                     except Exception:
                         pass
@@ -483,7 +508,7 @@ async def welcome(client, message: Message):
                 except Exception:
                     pass
 
-                # DM the adder
+                # DM the adder (group) with help button
                 try:
                     if message.from_user:
                         await app.send_message(
@@ -492,6 +517,24 @@ async def welcome(client, message: Message):
                                 message.from_user.mention,
                                 message.chat.title,
                             ),
+                            reply_markup=InlineKeyboardMarkup([
+                                [
+                                    InlineKeyboardButton(
+                                        "🎵 /ᴘʟᴀʏ sᴏɴɢ",
+                                        url=f"https://t.me/{app.username}?start=help",
+                                    ),
+                                    InlineKeyboardButton(
+                                        "📖 ᴄᴏᴍᴍᴀɴᴅs",
+                                        url=f"https://t.me/{app.username}?start=help",
+                                    ),
+                                ],
+                                [
+                                    InlineKeyboardButton(
+                                        "💬 sᴜᴘᴘᴏʀᴛ",
+                                        url=f"https://t.me/{config.SUPPORT_CHAT}",
+                                    ),
+                                ],
+                            ]),
                         )
                 except Exception:
                     pass
