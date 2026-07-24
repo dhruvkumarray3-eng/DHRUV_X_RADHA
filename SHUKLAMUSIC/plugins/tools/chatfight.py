@@ -9,12 +9,13 @@ import os
 import random
 from PIL import Image, ImageDraw, ImageFont
 from pyrogram import filters
-from pyrogram.enums import ButtonStyle
+from pyrogram.enums import ButtonStyle, ChatType
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 
 from SHUKLAMUSIC import app
 from SHUKLAMUSIC.core.mongo import mongodb
 from config import BANNED_USERS
+from SHUKLAMUSIC.utils.branding import BRAND_NAME, GAME_BACKGROUND_URL
 
 game_db = mongodb["wordgame_leaderboard"]
 
@@ -77,10 +78,10 @@ WORD_BANK = [
 
 PURPLE_TOP = (88, 24, 138)
 PURPLE_BOTTOM = (35, 8, 66)
-BRAND_TEXT = "ɴᴏʙɪᴛᴀ x ᴘʀɪᴍᴇ ᴍᴜsɪᴄ"
+BRAND_TEXT = BRAND_NAME
 
 # ── Catbox background for all game images ──
-CATBOX_GAME_BG_URL  = "https://files.catbox.moe/apbxin.jpg"
+CATBOX_GAME_BG_URL  = GAME_BACKGROUND_URL
 CATBOX_GAME_BG_PATH = "SHUKLAMUSIC/assets/game_bg.jpg"
 
 
@@ -421,31 +422,51 @@ async def giveup_callback(client, callback_query):
     )
 
 
-@app.on_message(filters.command(["wordgame", "cfword"]) & filters.group & ~BANNED_USERS)
+@app.on_message(filters.command(["wordgame", "cfword", "wordplay", "chatfight"]) & (filters.group | filters.private) & ~BANNED_USERS)
 async def cmd_word_game(client, message: Message):
     _start_inactivity_loop()
     if message.chat.id in active_games:
         return await message.reply_text(smallcaps("A game is already running in this chat!"))
+    if message.chat.type == ChatType.PRIVATE:
+        intro = await message.reply_text("🎮 ✨ ᴡᴏʀᴅᴘʟᴀʏ ɪs ʟᴏᴀᴅɪɴɢ... ❤️‍🔥")
+        for text in ("🫠 ɢᴇᴛ ʀᴇᴀᴅʏ...", "👀 ᴛʜɪɴᴋ ғᴀsᴛ...", "✨ ʟᴇᴛ's ᴘʟᴀʏ!"):
+            await asyncio.sleep(0.35)
+            try:
+                await intro.edit_text(text)
+            except Exception:
+                pass
+        try:
+            await intro.delete()
+        except Exception:
+            pass
     await start_word_game(message.chat.id)
 
 
-@app.on_message(filters.command(["emojigame", "cfemoji"]) & filters.group & ~BANNED_USERS)
+@app.on_message(filters.command(["emojigame", "cfemoji"]) & (filters.group | filters.private) & ~BANNED_USERS)
 async def cmd_emoji_game(client, message: Message):
     _start_inactivity_loop()
     if message.chat.id in active_games:
         return await message.reply_text(smallcaps("A game is already running in this chat!"))
+    if message.chat.type == ChatType.PRIVATE:
+        intro = await message.reply_text("🎮 ✨ ᴡᴏʀᴅᴘʟᴀʏ ɪs ʟᴏᴀᴅɪɴɢ... ❤️‍🔥")
+        await asyncio.sleep(0.6)
+        await intro.delete()
     await start_emoji_game(message.chat.id)
 
 
-@app.on_message(filters.command(["flaggame", "cfflag"]) & filters.group & ~BANNED_USERS)
+@app.on_message(filters.command(["flaggame", "cfflag"]) & (filters.group | filters.private) & ~BANNED_USERS)
 async def cmd_flag_game(client, message: Message):
     _start_inactivity_loop()
     if message.chat.id in active_games:
         return await message.reply_text(smallcaps("A game is already running in this chat!"))
+    if message.chat.type == ChatType.PRIVATE:
+        intro = await message.reply_text("🎮 ✨ ᴡᴏʀᴅᴘʟᴀʏ ɪs ʟᴏᴀᴅɪɴɢ... ❤️‍🔥")
+        await asyncio.sleep(0.6)
+        await intro.delete()
     await start_flag_game(message.chat.id)
 
 
-@app.on_message(filters.group & filters.text & ~filters.bot & ~BANNED_USERS, group=10)
+@app.on_message((filters.group | filters.private) & filters.text & ~filters.bot & ~BANNED_USERS, group=10)
 async def chat_activity_tracker(client, message: Message):
     chat_id = message.chat.id
     if not message.from_user:
@@ -585,12 +606,20 @@ async def start_trivia_battle(client, message: Message):
             icon_custom_emoji_id=_E_JOIN,
         )]]
     )
-    intro = await message.reply_text(
+    intro_img = await create_game_image("⚔️ TRIVIA\nBATTLE")
+    intro = await message.reply_photo(
+        photo=intro_img,
+        caption=(
         f"🏆 <b>{battle_smallcaps('Trivia Battle Royale')}</b> 🏆\n\n"
         f"{battle_smallcaps('Tap below to join the battle! 5 rounds of trivia, fastest correct answers win the most points.')}\n\n"
         f"⏳ {battle_smallcaps('Starting in 20 seconds...')}",
+        ),
         reply_markup=join_markup,
     )
+    try:
+        os.remove(intro_img)
+    except OSError:
+        pass
     active_battles[chat_id]["intro_msg"] = intro
     await asyncio.sleep(20)
 
@@ -599,11 +628,13 @@ async def start_trivia_battle(client, message: Message):
         return
     if not battle["players"]:
         del active_battles[chat_id]
-        return await intro.edit_text(f"😔 {battle_smallcaps('No one joined the battle. Try again with')} /triviabattle")
+        return await intro.edit_caption(
+            f"😔 {battle_smallcaps('No one joined the battle. Try again with')} /triviabattle"
+        )
 
     battle["phase"] = "question"
     names = ", ".join(battle["players"].values())
-    await intro.edit_text(
+    await intro.edit_caption(
         f"⚔️ <b>{battle_smallcaps('Battle starting!')}</b>\n\n{battle_smallcaps('Fighters')}: {names}\n\n"
         f"{battle_smallcaps('Get ready for round 1!')}"
     )
@@ -650,12 +681,20 @@ async def run_trivia_round(client, chat_id):
         )])
 
     round_label = battle_smallcaps(f"Round {battle['round']}/5")
-    msg = await app.send_message(
-        chat_id,
+    question_img = await create_game_image(f"ROUND {battle['round']}/5")
+    msg = await app.send_photo(
+        chat_id=chat_id,
+        photo=question_img,
+        caption=(
         f"🏆 <b>{round_label}</b>\n\n❓ <b>{question}</b>\n\n"
         f"⏱ {battle_smallcaps('You have 15 seconds!')}",
+        ),
         reply_markup=InlineKeyboardMarkup(rows),
     )
+    try:
+        os.remove(question_img)
+    except OSError:
+        pass
     battle["question_msg"] = msg
     await asyncio.sleep(15)
 
@@ -678,7 +717,7 @@ async def run_trivia_round(client, chat_id):
         winner_text = battle_smallcaps("No one answered correctly!")
 
     try:
-        await msg.edit_text(
+        await msg.edit_caption(
             f"✅ <b>{battle_smallcaps('Correct answer')}:</b> {correct_option}\n\n{winner_text}"
         )
     except Exception:

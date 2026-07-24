@@ -20,6 +20,7 @@ from SHUKLAMUSIC.utils.database import add_served_chat, get_assistant, is_active
 from SHUKLAMUSIC.misc import SUDOERS
 from SHUKLAMUSIC.mongo.afkdb import PROCESS
 from SHUKLAMUSIC.utils.Shukla_ban import admin_filter
+from SHUKLAMUSIC.utils.branding import BRAND_EMOJIS, WELCOME_BACKGROUND_URL
 
 LOGGER = getLogger(__name__)
 
@@ -39,11 +40,13 @@ def tx(eid, fb):
     return f'<emoji id={eid}>{fb}</emoji>'
 
 # ── Welcome background (catbox) ──
-WEL_BG_URL  = "https://files.catbox.moe/a86v1l.png"
-WEL_BG_PATH = "SHUKLAMUSIC/assets/wel2.png"
+WEL_BG_URL  = WELCOME_BACKGROUND_URL
+# A new cache name makes sure the requested Catbox artwork replaces any old
+# imported welcome card that happened to be present in the workspace.
+WEL_BG_PATH = "SHUKLAMUSIC/assets/welcome_catbox.png"
 
 # ── Emojis palette ──
-EMOJIS = ["🫠", "❤️‍🩹", "❤️‍🔥", "🌚", "👀", "✨", "👻", "😇", "🌹", "🤗", "✨", "☄️"]
+EMOJIS = BRAND_EMOJIS
 
 # ── Default fallback photos ──
 random_photo = [
@@ -117,6 +120,7 @@ def welcomepic(pic, user, chatname, id, uname, brightness_factor=1.3):
         background = Image.new("RGB", (1000, 500), (20, 20, 30))
     else:
         background = Image.open(WEL_BG_PATH).convert("RGBA")
+        background = background.resize((1000, 500), Image.Resampling.LANCZOS)
 
     pfp = Image.open(pic).convert("RGBA")
     pfp = circle(pfp, brightness_factor=brightness_factor)

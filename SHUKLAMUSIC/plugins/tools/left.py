@@ -8,13 +8,14 @@ from pyrogram import Client, filters
 from pyrogram.errors import RPCError
 from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.enums import ButtonStyle
+from SHUKLAMUSIC.utils.branding import BRAND_EMOJIS, BRAND_NAME
 from typing import Union, Optional
 from PIL import Image, ImageDraw, ImageFont
 import asyncio
 import random
 
 # ── Emoji palette (same as welcome) ──
-EMOJIS = ["🫠", "❤️‍🩹", "❤️‍🔥", "🌚", "👀", "✨", "👻", "😇", "🌹", "🤗", "✨", "☄️"]
+EMOJIS = BRAND_EMOJIS
 
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -98,12 +99,13 @@ async def member_has_left(client: app, member: ChatMemberUpdated):
 
             caption = (
                 f"❅─────✧❅✦❅✧─────❅\n\n"
-                f"🌚 {e1} <b>ᴀ ᴍᴇᴍʙᴇʀ ʟᴇғᴛ ᴛʜᴇ ɢʀᴏᴜᴘ</b> 🥀\n\n"
+                f"🌚 {e1} <b>ᴀ ᴍᴇᴍʙᴇʀ ʟᴇғᴛ ᴛʜᴇ ɢʀᴏᴜᴘ</b> 🌹\n\n"
                 f"☄️ <b>➻</b> {member.old_chat_member.user.mention}\n\n"
                 f"❤️‍🩹 <b>▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬</b> ❤️‍🔥\n\n"
-                f"👀 ✨ <b>ᴏᴋ ʙʏᴇ ᴅᴇᴀʀ ᴀɴᴅ ʜᴏᴘᴇ ᴛᴏ sᴇᴇ ʏᴏᴜ ᴀɢᴀɪɴ ɪɴ ᴛʜɪs ɢʀᴏᴜᴘ ᴡɪᴛʜ ʏᴏᴜʀ ғʀɪᴇɴᴅs</b> ✨ 👀\n\n"
+                f"👀 ✨ <b>ʙʏᴇ, ᴅᴇᴀʀ! ᴛʜᴀɴᴋs ғᴏʀ ᴛʜᴇ ᴍᴇᴍᴏʀɪᴇs — ᴄᴏᴍᴇ ʙᴀᴄᴋ sᴏᴏɴ</b> ✨ 👀\n\n"
                 f"👻 {e2} <b>▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬</b> {e3} 😇\n\n"
-                f"🌹 <b>ㅤ•─╼⃝𖠁 ʙʏᴇ ♡︎ ʙᴀʙʏ 𖠁⃝╾─•</b> 🌹"
+                f"🌹 <b>ㅤ•─╼⃝𖠁 ʙʏᴇ ♡︎ ʙᴀʙʏ 𖠁⃝╾─•</b> 🌹\n\n"
+                f"❤️‍🔥 <b>{BRAND_NAME}</b>"
             )
 
             deep_link = f"tg://openmessage?user_id={user.id}"
@@ -115,7 +117,7 @@ async def member_has_left(client: app, member: ChatMemberUpdated):
                 reply_markup=InlineKeyboardMarkup([
                     [
                         InlineKeyboardButton(
-                            "๏ ᴠɪᴇᴡ ᴜsᴇʀ ๏",
+                            "👀 ᴠɪᴇᴡ ᴜsᴇʀ 👀",
                             url=deep_link,
                             style=ButtonStyle.DANGER,
                         )
@@ -144,13 +146,13 @@ async def member_has_left(client: app, member: ChatMemberUpdated):
             msg = await client.send_message(
                 chat_id=member.chat.id,
                 text=(
-                    f"🌚 {e1} <b>ᴀ ᴍᴇᴍʙᴇʀ ʟᴇғᴛ ᴛʜᴇ ɢʀᴏᴜᴘ</b> 🥀\n\n"
+                        f"🌚 {e1} <b>ᴀ ᴍᴇᴍʙᴇʀ ʟᴇғᴛ ᴛʜᴇ ɢʀᴏᴜᴘ</b> 🌹\n\n"
                     f"☄️ <b>➻</b> {user.mention}\n\n"
-                    f"👻 ✨ <b>ᴏᴋ ʙʏᴇ ᴅᴇᴀʀ, ʜᴏᴘᴇ ᴛᴏ sᴇᴇ ʏᴏᴜ ᴀɢᴀɪɴ!</b> ✨ 😇\n\n"
-                    f"🌹 <b>ʙʏᴇ ♡ ʙᴀʙʏ</b> 🌹 {e2}"
+                    f"👻 ✨ <b>ʙʏᴇ, ᴅᴇᴀʀ — ᴄᴏᴍᴇ ʙᴀᴄᴋ sᴏᴏɴ!</b> ✨ 😇\n\n"
+                    f"🌹 <b>ʙʏᴇ ♡ ʙᴀʙʏ</b> 🌹 {e2}\n\n❤️‍🔥 <b>{BRAND_NAME}</b>"
                 ),
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton("๏ ᴠɪᴇᴡ ᴜsᴇʀ ๏", url=deep_link, style=ButtonStyle.DANGER)]
+                    [InlineKeyboardButton("👀 ᴠɪᴇᴡ ᴜsᴇʀ 👀", url=deep_link, style=ButtonStyle.DANGER)]
                 ])
             )
             asyncio.create_task(_auto_delete(msg, 30))

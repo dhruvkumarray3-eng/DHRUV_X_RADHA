@@ -366,7 +366,7 @@ class Call(PyTgCalls):
                                 "audio",
                             )
                             img = await gen_thumb(new_vidid)
-                            ap_button = stream_markup(_ap, chat_id)
+                            ap_button = stream_markup(_ap, chat_id, new_vidid)
                             ap_title = details["title"].title()
                             run = await app.send_photo(
                                 original_chat_id,
@@ -425,7 +425,7 @@ class Call(PyTgCalls):
                     text=_["call_6"],
                 )
             img = await gen_thumb(videoid)
-            button = stream_markup(_, chat_id)
+            button = stream_markup(_, chat_id, videoid)
             run = await app.send_photo(
                 chat_id=original_chat_id,
                 photo=img,
@@ -461,7 +461,7 @@ class Call(PyTgCalls):
                     text=_["call_6"],
                 )
             img = await gen_thumb(videoid)
-            button = stream_markup(_, chat_id)
+            button = stream_markup(_, chat_id, videoid)
             await mystic.delete()
             run = await app.send_photo(
                 chat_id=original_chat_id,
@@ -486,7 +486,7 @@ class Call(PyTgCalls):
                     original_chat_id,
                     text=_["call_6"],
                 )
-            button = stream_markup(_, chat_id)
+            button = stream_markup(_, chat_id, videoid)
             run = await app.send_photo(
                 chat_id=original_chat_id,
                 photo=config.STREAM_IMG_URL,
@@ -505,7 +505,7 @@ class Call(PyTgCalls):
                     text=_["call_6"],
                 )
             if videoid == "telegram":
-                button = stream_markup(_, chat_id)
+                button = stream_markup(_, chat_id, videoid)
                 run = await app.send_photo(
                     chat_id=original_chat_id,
                     photo=(
@@ -521,7 +521,7 @@ class Call(PyTgCalls):
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "tg"
             elif videoid == "soundcloud":
-                button = stream_markup(_, chat_id)
+                button = stream_markup(_, chat_id, videoid)
                 run = await app.send_photo(
                     chat_id=original_chat_id,
                     photo=config.SOUNCLOUD_IMG_URL,
@@ -534,7 +534,7 @@ class Call(PyTgCalls):
                 db[chat_id][0]["markup"] = "tg"
             else:
                 img = await gen_thumb(videoid)
-                button = stream_markup(_, chat_id)
+                button = stream_markup(_, chat_id, videoid)
                 run = await app.send_photo(
                     chat_id=original_chat_id,
                     photo=img,

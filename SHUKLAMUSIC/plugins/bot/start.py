@@ -7,8 +7,14 @@ import json as _json
 import urllib.request
 import aiohttp
 from pyrogram import filters, enums
-from pyrogram.enums import ChatType
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
+from pyrogram.enums import ButtonStyle, ChatType
+from pyrogram.types import (
+    ChatMemberUpdated,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    InputMediaPhoto,
+    Message,
+)
 import yt_dlp
 
 import config
@@ -42,6 +48,7 @@ from SHUKLAMUSIC.utils.formatters import get_readable_time
 from SHUKLAMUSIC.utils.inline import help_pannel, private_panel, start_panel
 from config import BANNED_USERS
 from strings import get_string
+from SHUKLAMUSIC.utils.branding import BRAND_NAME, BRAND_LINK
 
 # ================================
 #        DATABASE SETUP
@@ -194,7 +201,26 @@ async def start_pm(client, message: Message, _):
 
     if len(message.text.split()) > 1:
         name = message.text.split(None, 1)[1]
-        if name[0:4] == "help":
+        if name in {"chatfight", "wordplay", "wordgame"}:
+            from SHUKLAMUSIC.plugins.tools.chatfight import start_word_game
+            await start_word_game(message.chat.id)
+        elif name.startswith("channelplay_"):
+            channel_id = name.split("_", 1)[1]
+            await message.reply_text(
+                f"🔗 <b>ᴄᴏɴɴᴇᴄᴛ {BRAND_NAME}</b>\n\n"
+                "Add me to your group with the button below, then I will connect "
+                "this channel automatically when you send /start.",
+                reply_markup=InlineKeyboardMarkup([[
+                    InlineKeyboardButton(
+                        "🔗 ᴀᴅᴅ ᴍᴇ & ᴄᴏɴɴᴇᴄᴛ ᴄʜᴀɴɴᴇʟ",
+                        url=f"https://t.me/{app.username}?startgroup=channelplay_{channel_id}",
+                        style=ButtonStyle.SUCCESS,
+                    )
+                ], [
+                    InlineKeyboardButton("💬 sᴜᴘᴘᴏʀᴛ", url=config.SUPPORT_CHAT, style=ButtonStyle.DANGER)
+                ]]),
+            )
+        elif name[0:4] == "help":
             keyboard = help_pannel(_)
             await message.reply_photo(
                 random.choice(YUMI_PICS),
@@ -345,6 +371,23 @@ async def start_gp(client, message: Message, _):
         pass
     # --- REACTION END ---
     
+    payload = message.text.split(None, 1)[1] if len(message.text.split()) > 1 else ""
+    if payload.startswith("channelplay_"):
+        channel_id = payload.split("_", 1)[1]
+        try:
+            from SHUKLAMUSIC.utils.database import set_cmode
+            await set_cmode(message.chat.id, int(channel_id))
+            await message.reply_text(
+                f"✅ <b>ᴄʜᴀɴɴᴇʟ ᴄᴏɴɴᴇᴄᴛᴇᴅ!</b>\n\n"
+                f"🎵 {BRAND_NAME} will now stream in the selected channel.",
+                reply_markup=InlineKeyboardMarkup([[
+                    InlineKeyboardButton("🎵 ʜᴇʟᴘ & ᴄᴏᴍᴍᴀɴᴅs", url=f"https://t.me/{app.username}?start=help", style=ButtonStyle.PRIMARY),
+                    InlineKeyboardButton("💬 sᴜᴘᴘᴏʀᴛ", url=config.SUPPORT_CHAT, style=ButtonStyle.DANGER),
+                ]]),
+            )
+        except Exception:
+            await message.reply_text("❌ Channel connect failed. Make sure I am an admin in the channel and group.")
+        return
     out = start_panel(_)
     uptime = int(time.time() - _boot_)
     
@@ -387,12 +430,14 @@ async def welcome(client, message: Message):
                     channel_buttons = InlineKeyboardMarkup([
                         [
                             InlineKeyboardButton(
-                                text="🔗 ᴄᴏɴɴᴇᴄᴛ ᴛᴏ ɢʀᴏᴜᴘ",
-                                url=f"https://t.me/{app.username}?start=help",
+                                text="🔗 ᴄᴏɴɴᴇᴄᴛ ᴛʜɪs ᴄʜᴀɴɴᴇʟ",
+                                url=f"https://t.me/{app.username}?start=channelplay_{message.chat.id}",
+                                style=ButtonStyle.SUCCESS,
                             ),
                             InlineKeyboardButton(
                                 text="🎵 sᴜᴘᴘᴏʀᴛ",
                                 url=f"https://t.me/{config.SUPPORT_CHAT}",
+                                style=ButtonStyle.DANGER,
                             ),
                         ],
                         [
@@ -422,11 +467,9 @@ async def welcome(client, message: Message):
                         if message.from_user:
                             ch_id = message.chat.id
                             ch_username = message.chat.username
-                            connect_url = (
-                                f"https://t.me/{app.username}?start=channelplay_{ch_id}"
-                                if not ch_username
-                                else f"https://t.me/{app.username}?start=channelplay"
-                            )
+                            # The payload survives the add-to-group flow and is
+                            # consumed by start_gp to connect this channel.
+                            connect_url = f"https://t.me/{app.username}?startgroup=channelplay_{ch_id}"
                             await app.send_message(
                                 message.from_user.id,
                                 _["start_dm_ch_1"].format(
@@ -437,7 +480,7 @@ async def welcome(client, message: Message):
                                     [
                                         InlineKeyboardButton(
                                             "🔗 ᴄᴏɴɴᴇᴄᴛ ᴄʜᴀɴɴᴇʟ",
-                                            url=f"https://t.me/{app.username}?startgroup=true",
+                                             url=connect_url,
                                         ),
                                     ],
                                     [
@@ -542,3 +585,62 @@ async def welcome(client, message: Message):
                 await message.stop_propagation()
         except Exception as ex:
             print(ex)
+
+
+@app.on_chat_member_updated(filters.channel, group=-10)
+async def channel_bot_added(client, member: ChatMemberUpdated):
+    """Handle channel additions where Telegram does not emit new_chat_members."""
+    old = member.old_chat_member
+    new = member.new_chat_member
+    if not new or new.user.id != app.id:
+        return
+    if old and old.status not in {"left", "kicked"}:
+        return
+
+    chat = member.chat
+    await add_served_chat(chat.id)
+    connect_url = f"https://t.me/{app.username}?startgroup=channelplay_{chat.id}"
+    buttons = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    "🔗 ᴄᴏɴɴᴇᴄᴛ ᴛʜɪs ᴄʜᴀɴɴᴇʟ",
+                    url=connect_url,
+                    style=ButtonStyle.SUCCESS,
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    "📖 ʜᴏᴡ ᴛᴏ sᴇᴛᴜᴘ",
+                    url=f"https://t.me/{app.username}?start=help",
+                    style=ButtonStyle.PRIMARY,
+                ),
+                InlineKeyboardButton(
+                    "💬 sᴜᴘᴘᴏʀᴛ",
+                    url=config.SUPPORT_CHAT,
+                    style=ButtonStyle.DANGER,
+                ),
+            ],
+        ]
+    )
+    try:
+        await app.send_message(
+            member.from_user.id,
+            f"👋 <b>ʜᴇʟʟᴏ {member.from_user.mention}!</b>\n\n"
+            f"✅ <b>{BRAND_NAME}</b> was added to <b>{html.escape(chat.title or 'your channel')}</b>.\n"
+            "Use the button below to connect this channel to a music group.",
+            reply_markup=buttons,
+        )
+    except Exception:
+        # Telegram can reject unsolicited DMs when the adder has never opened
+        # the bot; the in-channel setup message remains available.
+        pass
+    try:
+        await client.send_message(
+            chat.id,
+            f"✅ <b>{BRAND_NAME}</b> is ready in <b>{html.escape(chat.title or 'this channel')}</b>.\n"
+            "Open the private setup button to connect a music group.",
+            reply_markup=buttons,
+        )
+    except Exception:
+        pass

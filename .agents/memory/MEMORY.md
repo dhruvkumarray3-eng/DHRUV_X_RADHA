@@ -1,0 +1,1 @@
+- [Telegram channel additions](telegram-channel-additions.md) — channel bot installs need ChatMemberUpdated handling; new_chat_members alone is not reliable.

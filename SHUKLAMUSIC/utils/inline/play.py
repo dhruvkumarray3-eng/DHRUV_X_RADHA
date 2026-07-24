@@ -113,7 +113,7 @@ def stream_markup_timer(_, chat_id, played, dur):
     return buttons
 
 
-def stream_markup(_, chat_id):
+def stream_markup(_, chat_id, videoid=None):
     buttons = [
         [
             InlineKeyboardButton(text="", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068, style=ButtonStyle.SUCCESS),
@@ -128,6 +128,19 @@ def stream_markup(_, chat_id):
                 style=ButtonStyle.PRIMARY,
             ),
         ],
+        *(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="⬇️ ᴅᴏᴡɴʟᴏᴀᴅ ᴛʜɪs sᴏɴɢ",
+                        url=f"https://t.me/{app.username}?start=dl_{videoid}_a",
+                        style=ButtonStyle.SUCCESS,
+                    )
+                ]
+            ]
+            if videoid and videoid not in {"telegram", "soundcloud"}
+            else []
+        ),
         [
             InlineKeyboardButton(
                 text="✨ ᴜᴘᴅᴀᴛᴇ",
