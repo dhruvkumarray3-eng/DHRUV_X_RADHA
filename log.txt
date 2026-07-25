@@ -1701,3 +1701,225 @@ client_session: <aiohttp.client.ClientSession object at 0x7f3c243bd910>
 [24-Jul-26 03:39:16 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
   ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
 ╚═════ஜ۩۞۩ஜ════╝
+[24-Jul-26 03:41:15 - WARNING] - SHUKLAMUSIC.plugins.tools.welcome - Failed to download welcome bg: Server disconnected
+[24-Jul-26 03:41:17 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: started monitoring chat -1004475946467
+[24-Jul-26 03:45:18 - INFO] - SHUKLAMUSIC.core.bot - Stopping Bot...
+[24-Jul-26 03:45:27 - INFO] - SHUKLAMUSIC.core.mongo - Connecting to your Mongo Database...
+[24-Jul-26 03:45:27 - INFO] - SHUKLAMUSIC.core.mongo - Connected to your Mongo Database.
+[24-Jul-26 03:45:27 - INFO] - SHUKLAMUSIC.core.dir - Directories Updated.
+[24-Jul-26 03:45:27 - INFO] - SHUKLAMUSIC.core.git - Git Client Found [VPS DEPLOYER]
+[24-Jul-26 03:45:27 - INFO] - SHUKLAMUSIC.misc - 𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗟𝗢𝗔𝗗 𝗕𝗔𝗕𝗬🍫........
+[24-Jul-26 03:45:27 - INFO] - SHUKLAMUSIC.core.bot - Starting Bot...
+[24-Jul-26 03:45:30 - INFO] - SHUKLAMUSIC.misc - 𝗦𝗨𝗗𝗢 𝗨𝗦𝗘𝗥 𝗗𝗢𝗡𝗘✨🎋.
+[24-Jul-26 03:45:35 - INFO] - SHUKLAMUSIC.core.bot - Music Bot Started Successfully as ⌜ ɴᴏʙɪᴛᴀ x ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ ⌟ [ ɴᴏ ᴀᴅs ]
+[24-Jul-26 03:45:35 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[24-Jul-26 03:45:35 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[24-Jul-26 03:45:35 - INFO] - apscheduler.scheduler - Added job "start_nightmode" to job store "default"
+[24-Jul-26 03:45:35 - INFO] - apscheduler.scheduler - Added job "close_nightmode" to job store "default"
+[24-Jul-26 03:45:35 - INFO] - apscheduler.scheduler - Scheduler started
+[24-Jul-26 03:45:35 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[24-Jul-26 03:45:35 - INFO] - apscheduler.scheduler - Added job "_check_mongo_size" to job store "default"
+[24-Jul-26 03:45:35 - INFO] - apscheduler.scheduler - Scheduler started
+[24-Jul-26 03:45:37 - INFO] - SHUKLAMUSIC.plugins - 𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...
+[24-Jul-26 03:45:41 - INFO] - SHUKLAMUSIC.core.commands - ✅ Commands registered: 36 user • 32 admin • 4/4 scopes OK.
+[24-Jul-26 03:45:41 - INFO] - SHUKLAMUSIC.core.userbot - Starting Assistants...
+[24-Jul-26 03:45:42 - INFO] - SHUKLAMUSIC.core.userbot - Assistant Started as <a href=tg://user?id=7161571562>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>
+[24-Jul-26 03:45:42 - INFO] - SHUKLAMUSIC.core.call - Starting PyTgCalls Client...
+
+[24-Jul-26 03:45:52 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: loaded settings for 2 chats (monitoring starts when music plays)
+[24-Jul-26 03:45:52 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
+  ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
+╚═════ஜ۩۞۩ஜ════╝
+[24-Jul-26 03:46:17 - INFO] - SHUKLAMUSIC.core.bot - Stopping Bot...
+[24-Jul-26 03:46:22 - INFO] - SHUKLAMUSIC.core.mongo - Connecting to your Mongo Database...
+[24-Jul-26 03:46:22 - INFO] - SHUKLAMUSIC.core.mongo - Connected to your Mongo Database.
+[24-Jul-26 03:46:22 - INFO] - SHUKLAMUSIC.core.dir - Directories Updated.
+[24-Jul-26 03:46:22 - INFO] - SHUKLAMUSIC.core.git - Git Client Found [VPS DEPLOYER]
+[24-Jul-26 03:46:22 - INFO] - SHUKLAMUSIC.misc - 𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗟𝗢𝗔𝗗 𝗕𝗔𝗕𝗬🍫........
+[24-Jul-26 03:46:22 - INFO] - SHUKLAMUSIC.core.bot - Starting Bot...
+[24-Jul-26 03:46:23 - INFO] - SHUKLAMUSIC.misc - 𝗦𝗨𝗗𝗢 𝗨𝗦𝗘𝗥 𝗗𝗢𝗡𝗘✨🎋.
+[24-Jul-26 03:46:28 - INFO] - SHUKLAMUSIC.core.bot - Music Bot Started Successfully as ⌜ ɴᴏʙɪᴛᴀ x ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ ⌟ [ ɴᴏ ᴀᴅs ]
+[24-Jul-26 03:46:28 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[24-Jul-26 03:46:28 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[24-Jul-26 03:46:28 - INFO] - apscheduler.scheduler - Added job "start_nightmode" to job store "default"
+[24-Jul-26 03:46:28 - INFO] - apscheduler.scheduler - Added job "close_nightmode" to job store "default"
+[24-Jul-26 03:46:28 - INFO] - apscheduler.scheduler - Scheduler started
+[24-Jul-26 03:46:28 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[24-Jul-26 03:46:28 - INFO] - apscheduler.scheduler - Added job "_check_mongo_size" to job store "default"
+[24-Jul-26 03:46:28 - INFO] - apscheduler.scheduler - Scheduler started
+[24-Jul-26 03:46:29 - INFO] - SHUKLAMUSIC.plugins - 𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...
+[24-Jul-26 03:46:32 - INFO] - SHUKLAMUSIC.core.commands - ✅ Commands registered: 36 user • 32 admin • 4/4 scopes OK.
+[24-Jul-26 03:46:32 - INFO] - SHUKLAMUSIC.core.userbot - Starting Assistants...
+[24-Jul-26 03:46:33 - INFO] - SHUKLAMUSIC.core.userbot - Assistant Started as <a href=tg://user?id=7161571562>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>
+[24-Jul-26 03:46:33 - INFO] - SHUKLAMUSIC.core.call - Starting PyTgCalls Client...
+
+[24-Jul-26 03:46:42 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: loaded settings for 2 chats (monitoring starts when music plays)
+[24-Jul-26 03:46:42 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
+  ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
+╚═════ஜ۩۞۩ஜ════╝
+[24-Jul-26 03:46:58 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: started monitoring chat -1004475946467
+[24-Jul-26 03:55:14 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/tools/chatlog.py", line 37, in join_watcher
+    link = await app.export_chat_invite_link(chat.id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/invite_links/export_chat_invite_link.py", line 59, in export_chat_invite_link
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/advanced/invoke.py", line 107, in invoke
+    r = await session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 551, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 514, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.ChatAdminRequired: Telegram says: [400 CHAT_ADMIN_REQUIRED] - You must be an admin in this chat to do this. (caused by "messages.ExportChatInvite")
+[24-Jul-26 04:14:10 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/tools/chatlog.py", line 37, in join_watcher
+    link = await app.export_chat_invite_link(chat.id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/invite_links/export_chat_invite_link.py", line 59, in export_chat_invite_link
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/advanced/invoke.py", line 107, in invoke
+    r = await session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 551, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 514, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.ChatAdminRequired: Telegram says: [400 CHAT_ADMIN_REQUIRED] - You must be an admin in this chat to do this. (caused by "messages.ExportChatInvite")
+[24-Jul-26 04:14:11 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/tools/chatlog.py", line 37, in join_watcher
+    link = await app.export_chat_invite_link(chat.id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/invite_links/export_chat_invite_link.py", line 59, in export_chat_invite_link
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/advanced/invoke.py", line 107, in invoke
+    r = await session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 551, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 514, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.ChatAdminRequired: Telegram says: [400 CHAT_ADMIN_REQUIRED] - You must be an admin in this chat to do this. (caused by "messages.ExportChatInvite")
+[24-Jul-26 04:18:35 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: stopped monitoring chat -1004475946467
+[24-Jul-26 04:28:12 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/errors.py", line 113, in wrapper
+    raise err
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/errors.py", line 101, in wrapper
+    return await func(client, message, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/extra/kangsticker.py", line 155, in kang
+    stickerset = await get_sticker_set_by_name(client, packname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/stickerset.py", line 21, in get_sticker_set_by_name
+    return await client.invoke(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/advanced/invoke.py", line 107, in invoke
+    r = await session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 551, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 514, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.StickersetInvalid: Telegram says: [400 STICKERSET_INVALID] - The requested sticker set is invalid. (caused by "messages.GetStickerSet")
+[24-Jul-26 04:28:42 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in MessageHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/errors.py", line 113, in wrapper
+    raise err
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/errors.py", line 101, in wrapper
+    return await func(client, message, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/extra/kangsticker.py", line 155, in kang
+    stickerset = await get_sticker_set_by_name(client, packname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/SHUKLAMUSIC/utils/stickerset.py", line 21, in get_sticker_set_by_name
+    return await client.invoke(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/advanced/invoke.py", line 107, in invoke
+    r = await session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 551, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 514, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.StickersetInvalid: Telegram says: [400 STICKERSET_INVALID] - The requested sticker set is invalid. (caused by "messages.GetStickerSet")
+[24-Jul-26 04:35:55 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: started monitoring chat -1002773284808
+[24-Jul-26 04:45:56 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: stopped monitoring chat -1002773284808
+[24-Jul-26 04:54:15 - ERROR] - pyrogram.dispatcher - Unexpected exception raised in ChatMemberUpdatedHandler:
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/dispatcher.py", line 444, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/runner/workspace/SHUKLAMUSIC/plugins/tools/welcome.py", line 202, in greet_new_member
+    count = await app.get_chat_members_count(chat_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/chats/get_chat_members_count.py", line 61, in get_chat_members_count
+    r = await self.invoke(
+        ^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/methods/advanced/invoke.py", line 107, in invoke
+    r = await session.invoke(
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 551, in invoke
+    return await self.send(query, timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/session/session.py", line 514, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.ChannelPrivate: Telegram says: [400 CHANNEL_PRIVATE] - You haven't joined this channel/supergroup. (caused by "channels.GetFullChannel")
+[25-Jul-26 03:03:28 - INFO] - SHUKLAMUSIC.core.mongo - Connecting to your Mongo Database...
+[25-Jul-26 03:03:28 - INFO] - SHUKLAMUSIC.core.mongo - Connected to your Mongo Database.
+[25-Jul-26 03:03:28 - INFO] - SHUKLAMUSIC.core.dir - Directories Updated.
+[25-Jul-26 03:03:28 - INFO] - SHUKLAMUSIC.core.git - Git Client Found [VPS DEPLOYER]
+[25-Jul-26 03:03:28 - INFO] - SHUKLAMUSIC.misc - 𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗟𝗢𝗔𝗗 𝗕𝗔𝗕𝗬🍫........
+[25-Jul-26 03:03:28 - INFO] - SHUKLAMUSIC.core.bot - Starting Bot...
+[25-Jul-26 03:03:35 - INFO] - SHUKLAMUSIC.misc - 𝗦𝗨𝗗𝗢 𝗨𝗦𝗘𝗥 𝗗𝗢𝗡𝗘✨🎋.
+[25-Jul-26 03:03:40 - INFO] - SHUKLAMUSIC.core.bot - Music Bot Started Successfully as ⌜ ɴᴏʙɪᴛᴀ x ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ ⌟ [ ɴᴏ ᴀᴅs ]
+[25-Jul-26 03:03:40 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[25-Jul-26 03:03:40 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[25-Jul-26 03:03:40 - INFO] - apscheduler.scheduler - Added job "start_nightmode" to job store "default"
+[25-Jul-26 03:03:40 - INFO] - apscheduler.scheduler - Added job "close_nightmode" to job store "default"
+[25-Jul-26 03:03:40 - INFO] - apscheduler.scheduler - Scheduler started
+[25-Jul-26 03:03:41 - INFO] - apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[25-Jul-26 03:03:41 - INFO] - apscheduler.scheduler - Added job "_check_mongo_size" to job store "default"
+[25-Jul-26 03:03:41 - INFO] - apscheduler.scheduler - Scheduler started
+[25-Jul-26 03:03:45 - INFO] - SHUKLAMUSIC.plugins - 𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...
+[25-Jul-26 03:03:49 - INFO] - SHUKLAMUSIC.core.commands - ✅ Commands registered: 36 user • 32 admin • 4/4 scopes OK.
+[25-Jul-26 03:03:49 - INFO] - SHUKLAMUSIC.core.userbot - Starting Assistants...
+[25-Jul-26 03:03:50 - INFO] - SHUKLAMUSIC.core.userbot - Assistant Started as <a href=tg://user?id=7161571562>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>
+[25-Jul-26 03:03:50 - INFO] - SHUKLAMUSIC.core.call - Starting PyTgCalls Client...
+
+[25-Jul-26 03:04:06 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: loaded settings for 3 chats (monitoring starts when music plays)
+[25-Jul-26 03:04:06 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
+  ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
+╚═════ஜ۩۞۩ஜ════╝
