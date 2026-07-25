@@ -55,11 +55,12 @@ async def init():
         await SHUKLA.stream_call("https://te.legra.ph/file/29f784eb49d230ab62e9e.mp4")
     except NoActiveGroupCall:
         LOGGER("SHUKLAMUSIC").error(
-            "𝗣𝗹𝗭 𝗦𝗧𝗔𝗥𝗧 𝗬𝗢𝗨𝗥 𝗟𝗢𝗚 𝗚𝗥𝗢𝗨𝗣 𝗩𝗢𝗜𝗖𝗘𝗖𝗛𝗔𝗧\𝗖𝗛𝗔𝗡𝗡𝗘𝗟\n\n𝗦𝗧𝗥𝗔𝗡𝗚𝗘𝗥 𝗕𝗢𝗧 𝗦𝗧𝗢𝗣........"
+            "No active voice chat in LOGGER_ID; continuing without startup audio."
         )
-        exit()
     except:
-        pass
+        LOGGER("SHUKLAMUSIC").exception(
+            "Startup audio check failed; continuing with the bot running."
+        )
     await SHUKLA.decorators()
     await initialize_vc_logger()
     LOGGER("SHUKLAMUSIC").info(

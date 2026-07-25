@@ -165,6 +165,25 @@ Telegram username, so it follows Telegram's required `_by_<bot_username>`
 format. The bot automatically tries the next pack when a pack is full or its
 name is already occupied.
 
+### ✅ Auto-approve join requests
+
+Add the bot to your group or supergroup as an administrator with the
+**Add Members / Invite Users** permission. Then run:
+
+```text
+/autoapprove on
+```
+
+To turn it off:
+
+```text
+/autoapprove off
+```
+
+The setting is stored per chat in MongoDB. The bot must remain an administrator
+with **Add Members** permission; otherwise Telegram will reject approvals and
+the bot will report the failure in its logs.
+
 ### 🛡️ Moderation
 
 | Command | Description |

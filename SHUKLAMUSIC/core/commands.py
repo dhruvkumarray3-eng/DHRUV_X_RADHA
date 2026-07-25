@@ -94,6 +94,7 @@ _ADMIN_CMDS = [
     ("reload",     "☄️ ʀᴇʟᴏᴀᴅ ᴀᴅᴍɪɴ ᴄᴀᴄʜᴇ"),
     ("filter",     "🌹 ᴀᴅᴅ ᴀ ᴋᴇʏᴡᴏʀᴅ ғɪʟᴛᴇʀ"),
     ("filters",    "🌹 ʟɪsᴛ ᴀʟʟ ᴋᴇʏᴡᴏʀᴅ ғɪʟᴛᴇʀs"),
+    ("autoapprove", "✅ ᴀᴜᴛᴏ ᴀᴘᴘʀᴏᴠᴇ ᴊᴏɪɴ ʀᴇǫᴜᴇsᴛs"),
 ]
 
 # ── All scopes to delete before re-registering ──────────────────────────────
