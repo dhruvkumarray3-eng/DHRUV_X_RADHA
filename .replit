@@ -39,3 +39,7 @@ run = ["python3", "-m", "SHUKLAMUSIC"]
 [userenv.shared]
 UPSTREAM_BRANCH = "main"
 UPSTREAM_REPO = "https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA"
+
+[[ports]]
+localPort = 8080
+externalPort = 80
