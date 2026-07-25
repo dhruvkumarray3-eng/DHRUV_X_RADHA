@@ -3,6 +3,8 @@
 # -----------------------------------------------
 import asyncio
 import importlib
+import os
+from aiohttp import web
 from pyrogram import idle
 from pytgcalls.exceptions import NoActiveGroupCall
 import config
@@ -13,6 +15,24 @@ from SHUKLAMUSIC.plugins import ALL_MODULES
 from SHUKLAMUSIC.utils.database import get_banned_users, get_gbanned
 from SHUKLAMUSIC.plugins.tools.vclogger import initialize_vc_logger
 from SHUKLAMUSIC.core.commands import register_bot_commands
+
+
+# ── Keep-alive web server ─────────────────────────────────────────────────────
+async def _ping(request):
+    return web.Response(text="OK")
+
+async def start_keepalive():
+    """Start a lightweight HTTP server so the repl stays alive via pings."""
+    _app = web.Application()
+    _app.router.add_get("/", _ping)
+    _app.router.add_get("/ping", _ping)
+    runner = web.AppRunner(_app)
+    await runner.setup()
+    port = int(os.environ.get("PORT", 8080))
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+    LOGGER("SHUKLAMUSIC").info(f"Keep-alive server started on port {port}")
+
 
 async def init():
     if (
@@ -51,6 +71,7 @@ async def init():
         pass
     await SHUKLA.decorators()
     await initialize_vc_logger()
+    await start_keepalive()
     LOGGER("SHUKLAMUSIC").info("Bot fully started!")
     await idle()
     await app.stop()

@@ -29,7 +29,10 @@ BOT_TOKEN = getenv("BOT_TOKEN")
 OWNER_USERNAME = getenv("OWNER_USERNAME", "II_NOBITA_X_PRIME_II")
 BOT_USERNAME = getenv("BOT_USERNAME", "RADHA_MUSIC_GMS_op_bot")
 BOT_NAME = getenv("BOT_NAME", "NOBITA X PRIME")
-ASSUSERNAME = getenv("ASSUSERNAME", "Aiused")
+ASSUSERNAME = getenv("ASSUSERNAME", "")
+
+# AI Chatbot
+GROQ_API_KEY = getenv("GROQ_API_KEY", None)
 
 
 # MongoDB

@@ -499,7 +499,7 @@ async def welcome(client, message: Message):
                             ),
                             InlineKeyboardButton(
                                 text="🎵 sᴜᴘᴘᴏʀᴛ",
-                                url=f"https://t.me/{config.SUPPORT_CHAT}",
+                                url=config.SUPPORT_CHAT,
                                 style=ButtonStyle.DANGER,
                             ),
                         ],
@@ -553,7 +553,7 @@ async def welcome(client, message: Message):
                                         ),
                                         InlineKeyboardButton(
                                             "💬 sᴜᴘᴘᴏʀᴛ",
-                                            url=f"https://t.me/{config.SUPPORT_CHAT}",
+                                            url=config.SUPPORT_CHAT,
                                         ),
                                     ],
                                 ]),
@@ -637,7 +637,7 @@ async def welcome(client, message: Message):
                                 [
                                     InlineKeyboardButton(
                                         "💬 sᴜᴘᴘᴏʀᴛ",
-                                        url=f"https://t.me/{config.SUPPORT_CHAT}",
+                                        url=config.SUPPORT_CHAT,
                                     ),
                                 ],
                             ]),

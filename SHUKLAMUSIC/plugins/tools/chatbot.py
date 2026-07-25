@@ -1,6 +1,6 @@
 # -----------------------------------------------
-# 🔸 StrangerMusic Project — MongoDB ChatBot (No External API)
-# 🔹 Keyword-trained auto-reply system, fully stored & matched in MongoDB
+# 🔸 StrangerMusic Project — AI ChatBot (Groq + MongoDB fallback)
+# 🔹 Uses Groq LLM when GROQ_API_KEY is set; falls back to keyword auto-reply
 # -----------------------------------------------
 import re
 from pyrogram import filters
@@ -9,31 +9,72 @@ from SHUKLAMUSIC import app
 from SHUKLAMUSIC.core.mongo import mongodb
 from SHUKLAMUSIC.utils.database import is_nonadmin_chat
 from SHUKLAMUSIC.misc import SUDOERS
-from config import BANNED_USERS, OWNER_ID
+from config import BANNED_USERS, OWNER_ID, GROQ_API_KEY
 
 chatbot_settings = mongodb.chatbot_settings
 chatbot_replies = mongodb.chatbot_replies
 
-_E_ON = 6073371665381724173     # 🥰 emoji_2e47b
-_E_OFF = 6073598306510967017    # 🐈 emoji_2e47b
-_E_LEARN = 6073117703965511893  # 💐 emoji_2e47b
-_E_ERR = 5978715546865112655    # 🚩
+_E_ON = 6073371665381724173
+_E_OFF = 6073598306510967017
+_E_LEARN = 6073117703965511893
+_E_ERR = 5978715546865112655
+_E_AI = 5471952986970267163
 
 
 def e(eid, fb):
     return f"<emoji id={eid}>{fb}</emoji>"
 
 
+# ── Groq client (lazy init) ──────────────────────────────────────────────────
+_groq_client = None
+
+def _get_groq():
+    global _groq_client
+    if _groq_client is None and GROQ_API_KEY:
+        try:
+            from groq import AsyncGroq
+            _groq_client = AsyncGroq(api_key=GROQ_API_KEY)
+        except Exception:
+            pass
+    return _groq_client
+
+
+async def ask_groq(user_text: str) -> str | None:
+    client = _get_groq()
+    if not client:
+        return None
+    try:
+        chat_completion = await client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a friendly, helpful Telegram music bot assistant. "
+                        "Keep replies short and conversational (1-3 sentences). "
+                        "You help users with music, fun chats, and general questions."
+                    ),
+                },
+                {"role": "user", "content": user_text},
+            ],
+            model="llama3-8b-8192",
+            max_tokens=300,
+            temperature=0.7,
+        )
+        return chat_completion.choices[0].message.content.strip()
+    except Exception:
+        return None
+
+
 CB_HELP = f"""
-{e(_E_LEARN,'💐')} <b>ChatBot — Command List</b>
+{e(_E_AI,'🤖')} <b>ChatBot — Command List</b>
 
-A simple auto-reply chatbot that learns from your group, powered entirely by MongoDB. No external AI API is used.
+{"🟢 <b>AI mode active</b> (Groq LLM)" if GROQ_API_KEY else "🟡 <b>Keyword mode</b> (no GROQ_API_KEY set)"}
 
-• <code>/chatbot on</code> — enable auto-replies in this chat
-• <code>/chatbot off</code> — disable auto-replies in this chat
-• <code>/teach &lt;keyword&gt; | &lt;reply&gt;</code> — teach the bot a new reply (admin only)
+• <code>/chatbot on</code> — enable chatbot in this group
+• <code>/chatbot off</code> — disable chatbot in this group
+• <code>/teach &lt;keyword&gt; | &lt;reply&gt;</code> — teach a keyword reply (admin only)
 • <code>/unlearn &lt;keyword&gt;</code> — remove a taught reply (admin only)
-• <code>/learned</code> — list everything the bot has learned in this chat
+• <code>/learned</code> — list learned keywords in this chat
 """
 
 
@@ -43,7 +84,9 @@ async def is_chatbot_enabled(chat_id: int) -> bool:
 
 
 async def set_chatbot_enabled(chat_id: int, enabled: bool):
-    await chatbot_settings.update_one({"chat_id": chat_id}, {"$set": {"enabled": enabled}}, upsert=True)
+    await chatbot_settings.update_one(
+        {"chat_id": chat_id}, {"$set": {"enabled": enabled}}, upsert=True
+    )
 
 
 async def is_admin(client, message: Message) -> bool:
@@ -73,16 +116,21 @@ async def chatbot_help_cmd(client, message: Message):
 async def chatbot_toggle_cmd(client, message: Message):
     if len(message.command) != 2 or message.command[1].lower() not in ("on", "off"):
         state = await is_chatbot_enabled(message.chat.id)
+        mode = "🤖 Groq AI" if GROQ_API_KEY else "📚 Keyword"
         status = f"{e(_E_ON,'🥰')} <b>ON</b>" if state else f"{e(_E_OFF,'🐈')} <b>OFF</b>"
         return await message.reply_text(
-            f"{e(_E_LEARN,'💐')} <b>ChatBot status:</b> {status}\n\nUsage: <code>/chatbot on</code> or <code>/chatbot off</code>"
+            f"{e(_E_AI,'🤖')} <b>ChatBot status:</b> {status} | Mode: {mode}\n\n"
+            f"Usage: <code>/chatbot on</code> or <code>/chatbot off</code>"
         )
     if not await is_admin(client, message):
         return await message.reply_text(f"{e(_E_ERR,'🚩')} Only group admins can toggle the chatbot.")
     state = message.command[1].lower() == "on"
     await set_chatbot_enabled(message.chat.id, state)
+    mode = "🤖 Groq AI" if GROQ_API_KEY else "📚 Keyword"
     if state:
-        await message.reply_text(f"{e(_E_ON,'🥰')} <b>ChatBot enabled</b> — I will now auto-reply to learned keywords in this chat.")
+        await message.reply_text(
+            f"{e(_E_ON,'🥰')} <b>ChatBot enabled</b> [{mode}] — I will now reply to messages in this chat."
+        )
     else:
         await message.reply_text(f"{e(_E_OFF,'🐈')} <b>ChatBot disabled</b> for this chat.")
 
@@ -106,7 +154,9 @@ async def teach_cmd(client, message: Message):
         {"$set": {"reply": reply}},
         upsert=True,
     )
-    await message.reply_text(f"{e(_E_LEARN,'💐')} Learned! When someone says <b>{keyword}</b>, I'll reply with that text.")
+    await message.reply_text(
+        f"{e(_E_LEARN,'💐')} Learned! When someone says <b>{keyword}</b>, I'll reply with that text."
+    )
 
 
 @app.on_message(filters.command("unlearn") & filters.group & ~BANNED_USERS)
@@ -128,20 +178,34 @@ async def learned_cmd(client, message: Message):
     cursor = chatbot_replies.find({"chat_id": message.chat.id}).limit(50)
     keywords = [doc["keyword"] async for doc in cursor]
     if not keywords:
-        return await message.reply_text("I haven't learned anything in this chat yet. Teach me with /teach.")
-    text = f"{e(_E_LEARN,'💐')} <b>Learned keywords in this chat:</b>\n\n" + ", ".join(f"<code>{k}</code>" for k in keywords)
+        return await message.reply_text(
+            "I haven't learned any keywords in this chat yet. Teach me with /teach."
+        )
+    text = (
+        f"{e(_E_LEARN,'💐')} <b>Learned keywords in this chat:</b>\n\n"
+        + ", ".join(f"<code>{k}</code>" for k in keywords)
+    )
     await message.reply_text(text)
 
 
-@app.on_message(filters.group & filters.text & ~filters.bot & ~filters.command(["teach", "unlearn", "learned", "chatbot"]) & ~BANNED_USERS, group=20)
+@app.on_message(
+    filters.group
+    & filters.text
+    & ~filters.bot
+    & ~filters.command(["teach", "unlearn", "learned", "chatbot"])
+    & ~BANNED_USERS,
+    group=20,
+)
 async def chatbot_auto_reply(client, message: Message):
     if not message.text or message.text.startswith("/"):
         return
     if not await is_chatbot_enabled(message.chat.id):
         return
+
     text = message.text.strip().lower()
     text_clean = re.sub(r"[^\w\s]", "", text)
 
+    # 1️⃣ Always check taught keywords first (exact → cleaned → partial)
     doc = await chatbot_replies.find_one({"chat_id": message.chat.id, "keyword": text})
     if not doc:
         doc = await chatbot_replies.find_one({"chat_id": message.chat.id, "keyword": text_clean})
@@ -151,8 +215,19 @@ async def chatbot_auto_reply(client, message: Message):
             if candidate["keyword"] in text_clean.split() or candidate["keyword"] in text_clean:
                 doc = candidate
                 break
+
     if doc:
         try:
             await message.reply_text(doc["reply"])
+        except Exception:
+            pass
+        return
+
+    # 2️⃣ Fall back to Groq AI when no keyword matched
+    if GROQ_API_KEY:
+        try:
+            ai_reply = await ask_groq(message.text.strip())
+            if ai_reply:
+                await message.reply_text(ai_reply)
         except Exception:
             pass
