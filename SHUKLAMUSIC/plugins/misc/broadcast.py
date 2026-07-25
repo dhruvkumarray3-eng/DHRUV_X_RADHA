@@ -33,26 +33,47 @@ IS_BROADCASTING = False
 
 
 def _broadcast_selector_markup(chat_id: int, msg_id: int) -> InlineKeyboardMarkup:
-    """Colorful pin-mode selector shown before broadcast starts."""
+    """Target + pin-mode selector shown before broadcast starts."""
     return InlineKeyboardMarkup([
+        # ── Row 1: Target audience ──
         [
             InlineKeyboardButton(
-                text="🔊 ʟᴏᴜᴅ ᴘɪɴ",
-                callback_data=f"bcast_loud|{chat_id}|{msg_id}",
-                style=ButtonStyle.DANGER,
+                text="👥 ɢʀᴏᴜᴘs",
+                callback_data=f"bcast_nopin|groups|{chat_id}|{msg_id}",
+                style=ButtonStyle.PRIMARY,
             ),
             InlineKeyboardButton(
-                text="📌 sɪʟᴇɴᴛ ᴘɪɴ",
-                callback_data=f"bcast_silent|{chat_id}|{msg_id}",
-                style=ButtonStyle.PRIMARY,
+                text="👤 ᴜsᴇʀs",
+                callback_data=f"bcast_nopin|users|{chat_id}|{msg_id}",
+                style=ButtonStyle.SUCCESS,
             ),
         ],
         [
             InlineKeyboardButton(
-                text="📨 ɴᴏ ᴘɪɴ",
-                callback_data=f"bcast_nopin|{chat_id}|{msg_id}",
-                style=ButtonStyle.SUCCESS,
+                text="📢 ᴄʜᴀɴɴᴇʟs",
+                callback_data=f"bcast_nopin|channels|{chat_id}|{msg_id}",
+                style=ButtonStyle.DANGER,
             ),
+            InlineKeyboardButton(
+                text="🌐 ᴀʟʟ",
+                callback_data=f"bcast_nopin|all|{chat_id}|{msg_id}",
+                style=ButtonStyle.DANGER,
+            ),
+        ],
+        # ── Row 3: Pin options (groups only) ──
+        [
+            InlineKeyboardButton(
+                text="🔊 ɢʀᴏᴜᴘs + ʟᴏᴜᴅ ᴘɪɴ",
+                callback_data=f"bcast_loud|groups|{chat_id}|{msg_id}",
+                style=ButtonStyle.DANGER,
+            ),
+            InlineKeyboardButton(
+                text="📌 ɢʀᴏᴜᴘs + sɪʟᴇɴᴛ ᴘɪɴ",
+                callback_data=f"bcast_silent|groups|{chat_id}|{msg_id}",
+                style=ButtonStyle.PRIMARY,
+            ),
+        ],
+        [
             InlineKeyboardButton(
                 text="❌ ᴄᴀɴᴄᴇʟ",
                 callback_data="bcast_cancel",
@@ -62,16 +83,55 @@ def _broadcast_selector_markup(chat_id: int, msg_id: int) -> InlineKeyboardMarku
     ])
 
 
-async def _do_broadcast(client, origin_chat_id: int, msg_id: int, pin_mode: str) -> tuple:
-    """Send the forwarded message to all served chats.
+async def _do_broadcast(
+    client,
+    origin_chat_id: int,
+    msg_id: int,
+    pin_mode: str,
+    target: str = "groups",
+) -> tuple:
+    """Forward a message to the chosen target.
+
+    target: 'groups' | 'users' | 'channels' | 'all'
     pin_mode: 'loud' | 'silent' | 'nopin'
     Returns (sent_count, failed_count, pinned_count).
     """
+    from pyrogram.enums import ChatType
+
     sent = failed = pinned = 0
-    chats = [int(c["chat_id"]) for c in await get_served_chats()]
-    for chat_id in chats:
+
+    # ── Build recipient list ────────────────────────────────────────────────
+    chat_ids: list[int] = []
+
+    if target in ("groups", "channels", "all"):
+        for c in await get_served_chats():
+            cid = int(c["chat_id"])
+            if target == "all":
+                chat_ids.append(cid)
+            else:
+                try:
+                    chat_obj = await app.get_chat(cid)
+                    is_channel = chat_obj.type == ChatType.CHANNEL
+                    if target == "channels" and is_channel:
+                        chat_ids.append(cid)
+                    elif target == "groups" and not is_channel:
+                        chat_ids.append(cid)
+                except Exception:
+                    if target == "groups":   # assume group when unknown
+                        chat_ids.append(cid)
+
+    if target in ("users", "all"):
+        for u in await get_served_users():
+            chat_ids.append(int(u["user_id"]))
+
+    # ── Send ────────────────────────────────────────────────────────────────
+    seen: set[int] = set()
+    for cid in chat_ids:
+        if cid in seen:
+            continue
+        seen.add(cid)
         try:
-            m = await app.forward_messages(chat_id, origin_chat_id, msg_id)
+            m = await app.forward_messages(cid, origin_chat_id, msg_id)
             sent += 1
             if pin_mode == "loud":
                 try:
@@ -93,12 +153,13 @@ async def _do_broadcast(client, origin_chat_id: int, msg_id: int, pin_mode: str)
                 continue
             await asyncio.sleep(flood_time)
             try:
-                m = await app.forward_messages(chat_id, origin_chat_id, msg_id)
+                m = await app.forward_messages(cid, origin_chat_id, msg_id)
                 sent += 1
             except Exception:
                 failed += 1
         except Exception:
             failed += 1
+
     return sent, failed, pinned
 
 
@@ -226,38 +287,51 @@ async def broadcast_pin_callback(client, cq):
         await cq.answer("❌ Broadcast cancelled.", show_alert=True)
         return
 
+    # New format: bcast_<pin>|<target>|<chat_id>|<msg_id>
     parts = data.split("|")
-    if len(parts) != 3:
+    if len(parts) != 4:
         return await cq.answer("Invalid data.", show_alert=True)
 
-    pin_mode  = parts[0].replace("bcast_", "")   # loud | silent | nopin
-    origin_chat_id = int(parts[1])
-    msg_id    = int(parts[2])
+    pin_mode       = parts[0].replace("bcast_", "")  # loud | silent | nopin
+    target         = parts[1]                          # groups | users | channels | all
+    origin_chat_id = int(parts[2])
+    msg_id         = int(parts[3])
 
-    pin_label = {"loud": "🔊 Loud Pin", "silent": "📌 Silent Pin", "nopin": "📨 No Pin"}.get(pin_mode, pin_mode)
-    await cq.answer(f"Starting broadcast with {pin_label}…")
+    _target_labels = {
+        "groups": "👥 Groups", "users": "👤 Users",
+        "channels": "📢 Channels", "all": "🌐 All",
+    }
+    _pin_labels = {"loud": "🔊 Loud Pin", "silent": "📌 Silent Pin", "nopin": "📨 No Pin"}
+    target_label = _target_labels.get(target, target)
+    pin_label    = _pin_labels.get(pin_mode, pin_mode)
 
+    await cq.answer(f"Broadcasting to {target_label}…")
     try:
         await cq.message.edit_text(
-            f"📢 <b>Broadcasting…</b>  ({pin_label})\n\n⏳ Please wait…"
+            f"📢 <b>Broadcasting…</b>\n"
+            f"🎯 <b>Target:</b> {target_label}  •  <b>Pin:</b> {pin_label}\n\n"
+            f"⏳ Please wait…"
         )
     except Exception:
         pass
 
     IS_BROADCASTING = True
     try:
-        sent, failed, pinned = await _do_broadcast(client, origin_chat_id, msg_id, pin_mode)
+        sent, failed, pinned = await _do_broadcast(
+            client, origin_chat_id, msg_id, pin_mode, target=target
+        )
     finally:
         IS_BROADCASTING = False
 
     summary = (
         f"✅ <b>Broadcast Complete!</b>\n\n"
+        f"🎯 <b>Target:</b> {target_label}\n"
         f"📤 <b>Sent:</b> {sent}\n"
         f"❌ <b>Failed:</b> {failed}\n"
     )
     if pin_mode != "nopin":
         summary += f"📌 <b>Pinned:</b> {pinned}\n"
-    summary += f"\n<i>Mode: {pin_label}</i>"
+    summary += f"\n<i>Pin mode: {pin_label}</i>"
 
     try:
         await cq.message.edit_text(summary)

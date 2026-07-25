@@ -2005,3 +2005,11 @@ pyrogram.errors.exceptions.bad_request_400.ChannelPrivate: Telegram says: [400 C
   ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
 ╚═════ஜ۩۞۩ஜ════╝
 [25-Jul-26 07:36:37 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: started monitoring chat -1004385235406
+[25-Jul-26 07:37:27 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: started monitoring chat -1004475946467
+[25-Jul-26 07:46:59 - INFO] - SHUKLAMUSIC.core.bot - Stopping Bot...
+[25-Jul-26 07:46:59 - INFO] - SHUKLAMUSIC.core.userbot - Stopping Assistants...
+[25-Jul-26 07:46:59 - INFO] - SHUKLAMUSIC - 𝗦𝗧𝗢𝗣 𝗦𝗧𝗥𝗔𝗡𝗚𝗘𝗥 𝗠𝗨𝗦𝗜𝗖🎻 𝗕𝗢𝗧..
+[25-Jul-26 07:47:00 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f18d447f890>
+[25-Jul-26 07:47:00 - ERROR] - asyncio - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f18b41c5cd0>

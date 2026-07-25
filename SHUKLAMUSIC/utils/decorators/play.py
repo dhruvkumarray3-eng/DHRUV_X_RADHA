@@ -44,14 +44,23 @@ def PlayWrapper(command):
         language = await get_lang(message.chat.id)
         _ = get_string(language)
         if message.sender_chat:
+            from pyrogram.enums import ButtonStyle as _BS
             upl = InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton(
-                            text="ʜᴏᴡ ᴛᴏ ғɪx ?",
+                            text="🔧 ʜᴏᴡ ᴛᴏ ғɪx ?",
                             callback_data="SHUKLAmousAdmin",
+                            style=_BS.DANGER,
                         ),
-                    ]
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            text="💬 sᴜᴘᴘᴏʀᴛ",
+                            url=config.SUPPORT_CHAT,
+                            style=_BS.PRIMARY,
+                        ),
+                    ],
                 ]
             )
             return await message.reply_text(_["general_3"], reply_markup=upl)

@@ -458,11 +458,14 @@ async def markup_timer():
                 except:
                     _ = get_string("en")
                 try:
+                    _is_autoplay = playing[0].get("by") == "❤️‍🔥 ᴀᴜᴛᴏᴘʟᴀʏ"
                     buttons = stream_markup_timer(
                         _,
                         chat_id,
                         seconds_to_min(playing[0]["played"]),
                         playing[0]["dur"],
+                        videoid=playing[0].get("vidid"),
+                        autoplay=_is_autoplay,
                     )
                     await mystic.edit_reply_markup(
                         reply_markup=InlineKeyboardMarkup(buttons)

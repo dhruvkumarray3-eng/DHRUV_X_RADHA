@@ -42,7 +42,7 @@ def track_markup(_, videoid, user_id, channel, fplay):
     return buttons
 
 
-def stream_markup_timer(_, chat_id, played, dur):
+def stream_markup_timer(_, chat_id, played, dur, videoid=None, autoplay=False):
     played_sec = time_to_seconds(played)
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
@@ -94,6 +94,18 @@ def stream_markup_timer(_, chat_id, played, dur):
                 style=ButtonStyle.PRIMARY,
             ),
         ],
+    ]
+    # Download row for autoplay songs — preserved during timer ticks
+    if autoplay and videoid and videoid not in {"telegram", "soundcloud"}:
+        buttons.append([
+            InlineKeyboardButton(
+                text="⬇️ ᴛᴀᴘ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ sᴏɴɢ",
+                url=f"https://t.me/{app.username}?start=dl_{videoid}_a",
+                style=ButtonStyle.SUCCESS,
+                icon_custom_emoji_id=5309984423003823246,
+            ),
+        ])
+    buttons += [
         [
             InlineKeyboardButton(
                 text="✨ ᴜᴘᴅᴀᴛᴇ",
