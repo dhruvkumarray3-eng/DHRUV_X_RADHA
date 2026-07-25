@@ -21,8 +21,8 @@ from pyrogram import filters
 load_dotenv()
 
 # Required credentials
-API_ID = int(getenv("API_ID", "38987335"))
-API_HASH = getenv("API_HASH", "540c20b4512ccc762d72dabd45a30e47")
+API_ID = int(getenv("API_ID", "0"))
+API_HASH = getenv("API_HASH", "")
 BOT_TOKEN = getenv("BOT_TOKEN")
 
 # Bot and owner info
@@ -77,7 +77,7 @@ TG_AUDIO_FILESIZE_LIMIT = int(getenv("TG_AUDIO_FILESIZE_LIMIT", "5242880000"))
 TG_VIDEO_FILESIZE_LIMIT = int(getenv("TG_VIDEO_FILESIZE_LIMIT", "5242880000"))
 
 # Session strings
-STRING1 = getenv("STRING_SESSION", "BQIHiFwAFULY22zV-SOhCMJ4lGGL2gQuE84tDSjZJaVZ6aWKG4NxhFPgNc2guIg3261Cly8_238zueejqSMxQFZKOcVAJG3bmMESlunKUtZDTdh_CBSsrSWKxCwu-58Yngza5Nsapz4JQNk9l72hc3evjXM4grqzlmUvLY9Zf7r3wlfA94V1aAbYNQJJefiraVdBDPFqxBorKRrRdFWO4P72-OZATeRIsk5xV33XPi0toIOBlTQ2Jrc-jL9FldZYLq-f6J8XmSlC_PL8MxEuuOjK_UNueeG24HjmjuAtPx3xmPaMpi2BfR4rotTxVXTA9fD-kn6tBnNRqVpTQoDxdqIa4C0fAAAAAAGq3OjqAA")
+STRING1 = getenv("STRING_SESSION", None)
 STRING2 = getenv("STRING_SESSION2", None)
 STRING3 = getenv("STRING_SESSION3", None)
 STRING4 = getenv("STRING_SESSION4", None)

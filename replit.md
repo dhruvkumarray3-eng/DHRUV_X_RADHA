@@ -1,46 +1,45 @@
 # NOBITA X PRIME MUSIC BOT
 
-A powerful Telegram Music Bot that streams YouTube audio into Telegram group voice chats, with moderation, welcome messages, games, and more.
+A feature-rich Telegram Music Bot that streams YouTube audio/video in group & channel voice chats. Built on Pyrogram + PyTgCalls.
 
-## How to Run
-
-The bot starts automatically via the **Start application** workflow:
+## How to run
 
 ```
 python3 -m SHUKLAMUSIC
 ```
 
-## Required Secrets
+The workflow **Start application** is configured and runs automatically when you press the Run button.
 
-Set these in Replit → Tools → Secrets:
+## Required secrets (set in Replit Secrets)
 
 | Secret | Description |
 |---|---|
-| `BOT_TOKEN` | Telegram bot token from @BotFather |
+| `BOT_TOKEN` | From [@BotFather](https://t.me/BotFather) |
+| `API_ID` | From [my.telegram.org](https://my.telegram.org) → Apps |
+| `API_HASH` | From [my.telegram.org](https://my.telegram.org) → Apps |
 | `MONGO_DB_URI` | MongoDB Atlas connection string |
-| `STRING_SESSION` | Pyrogram string session (via @StringFetchBot) |
-| `LOGGER_ID` | Telegram chat ID for bot logs |
-| `SESSION_SECRET` | Random secret string |
-| `GIT_TOKEN` | GitHub personal access token (for `/update` auto-push) |
+| `OWNER_ID` | Your Telegram numeric user ID |
+| `STRING_SESSION` | Pyrogram session string for the VC assistant account |
+| `LOGGER_ID` | Telegram group/channel ID for bot logs (use `0` to disable) |
+| `GIT_TOKEN` | GitHub PAT — enables `/update` auto-push (optional) |
+
+## Optional env vars (set in .replit `[userenv.shared]`)
+
+| Variable | Default | Description |
+|---|---|---|
+| `UPSTREAM_REPO` | dhruvkumarray3-eng/DHRUV_X_RADHA | GitHub repo used by `/update` |
+| `UPSTREAM_BRANCH` | `main` | Branch to pull/push |
 
 ## Stack
 
 - **Python 3.12**
-- **Pyrogram** — Telegram bot framework
-- **py-tgcalls / PyTgCalls** — Voice chat streaming
-- **Motor / PyMongo** — MongoDB async driver
-- **yt-dlp** — YouTube audio download
-- **APScheduler** — Scheduled tasks (nightmode, etc.)
+- **Pyrogram** — Telegram MTProto client
+- **PyTgCalls / NTgCalls** — voice chat streaming
+- **Motor / MongoDB** — async database
+- **yt-dlp** — YouTube download backend
+- **APScheduler** — nightmode & mongo-size jobs
 
-## Configuration
+## User preferences
 
-All config is in `config.py` — reads from environment variables with sensible defaults. Key optional vars:
-
-- `OWNER_ID` — your Telegram user ID
-- `UPSTREAM_REPO` — GitHub repo for `/update` command
-- `LOGGER_ID` — group/channel for VC and bot event logs
-
-## User Preferences
-
-- Keep existing project structure; do not migrate or restructure.
-- GIT_TOKEN is set for GitHub auto-push via the `/update` command.
+- Keep the project's existing module structure (`SHUKLAMUSIC/` package).
+- Do not migrate the database away from MongoDB.
