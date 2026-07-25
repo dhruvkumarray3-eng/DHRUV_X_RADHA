@@ -231,34 +231,75 @@ async def start_pm(client, message: Message, _):
         elif name[0:3] == "sud":
             await sudoers_list(client=client, message=message, _=_)
         elif name[0:3] == "inf":
-            # ── Info handler: full yt-dlp metadata + colorful download buttons ──
+            # ── Info handler: py_yt primary → yt-dlp+cookies fallback ──
             m = await message.reply_text("🔎 ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ...")
             vidid = str(name).replace("info_", "", 1)
             video_url = f"https://www.youtube.com/watch?v={vidid}"
+            title = channel = channel_url = duration = views = published = thumbnail = None
             try:
-                def _ytdlp_info():
-                    opts = {"quiet": True, "no_warnings": True, "skip_download": True}
-                    with yt_dlp.YoutubeDL(opts) as ydl:
-                        return ydl.extract_info(video_url, download=False)
-                loop = asyncio.get_event_loop()
-                info = await loop.run_in_executor(None, _ytdlp_info)
-                title     = info.get("title") or "Unknown"
-                channel   = info.get("uploader") or info.get("channel") or "Unknown"
-                channel_url = info.get("uploader_url") or info.get("channel_url") or \
-                              f"https://www.youtube.com/results?search_query={vidid}"
-                raw_dur   = info.get("duration")
-                duration  = f"{int(raw_dur)//60}:{int(raw_dur)%60:02d}" if raw_dur else "N/A"
-                raw_views = info.get("view_count")
-                views     = f"{raw_views:,}" if raw_views else "N/A"
-                raw_date  = info.get("upload_date") or ""          # "YYYYMMDD"
-                if len(raw_date) == 8:
-                    published = f"{raw_date[6:]}/{raw_date[4:6]}/{raw_date[:4]}"
-                else:
-                    published = "N/A"
-                thumbnail = (
-                    next((t["url"] for t in (info.get("thumbnails") or [])[::-1] if t.get("url")), "")
-                    or f"https://i.ytimg.com/vi/{vidid}/hqdefault.jpg"
-                )
+                # ── Primary: py_yt (no bot-detection issues) ──
+                from py_yt import VideosSearch as _VS
+                _res = _VS(video_url, limit=1)
+                _entries = (await _res.next()).get("result") or []
+                if _entries:
+                    _r = _entries[0]
+                    title    = _r.get("title") or "Unknown"
+                    channel  = (_r.get("channel") or {}).get("name") or "Unknown"
+                    channel_url = (_r.get("channel") or {}).get("link") or \
+                                  f"https://www.youtube.com/results?search_query={vidid}"
+                    duration = _r.get("duration") or "N/A"
+                    raw_views = _r.get("viewCount", {}).get("short") or "N/A"
+                    views    = str(raw_views)
+                    published = _r.get("publishedTime") or "N/A"
+                    _thumbs  = _r.get("thumbnails") or []
+                    thumbnail = (_thumbs[-1]["url"].split("?")[0] if _thumbs else None) \
+                                or f"https://i.ytimg.com/vi/{vidid}/hqdefault.jpg"
+            except Exception:
+                pass
+
+            if not title:
+                # ── Fallback: yt-dlp with cookies.txt (handles age-gated / signed-in content) ──
+                try:
+                    import os as _os
+                    _cookies = _os.path.join(_os.path.dirname(__file__), "..", "..", "assets", "cookies.txt")
+                    _cookies = _os.path.abspath(_cookies)
+                    def _ytdlp_info():
+                        opts = {
+                            "quiet": True,
+                            "no_warnings": True,
+                            "skip_download": True,
+                        }
+                        if _os.path.exists(_cookies):
+                            opts["cookiefile"] = _cookies
+                        with yt_dlp.YoutubeDL(opts) as ydl:
+                            return ydl.extract_info(video_url, download=False)
+                    _loop = asyncio.get_event_loop()
+                    info = await _loop.run_in_executor(None, _ytdlp_info)
+                    title       = info.get("title") or "Unknown"
+                    channel     = info.get("uploader") or info.get("channel") or "Unknown"
+                    channel_url = info.get("uploader_url") or info.get("channel_url") or \
+                                  f"https://www.youtube.com/results?search_query={vidid}"
+                    raw_dur     = info.get("duration")
+                    duration    = f"{int(raw_dur)//60}:{int(raw_dur)%60:02d}" if raw_dur else "N/A"
+                    raw_views   = info.get("view_count")
+                    views       = f"{raw_views:,}" if raw_views else "N/A"
+                    raw_date    = info.get("upload_date") or ""
+                    if len(raw_date) == 8:
+                        published = f"{raw_date[6:]}/{raw_date[4:6]}/{raw_date[:4]}"
+                    else:
+                        published = "N/A"
+                    _thumbs2    = info.get("thumbnails") or []
+                    thumbnail   = (
+                        next((t["url"] for t in reversed(_thumbs2) if t.get("url")), None)
+                        or f"https://i.ytimg.com/vi/{vidid}/hqdefault.jpg"
+                    )
+                except Exception:
+                    pass
+
+            if not title:
+                await m.edit_text("❌ Song info nahi mili. Dobara try karo.")
+            else:
+                thumbnail = thumbnail or f"https://i.ytimg.com/vi/{vidid}/hqdefault.jpg"
                 searched_text = _["start_6"].format(
                     title, duration, views, published, channel_url, channel, app.mention
                 )
@@ -290,8 +331,6 @@ async def start_pm(client, message: Message, _):
                     )
                 except Exception:
                     await message.reply_text(searched_text, reply_markup=key, disable_web_page_preview=True)
-            except Exception:
-                await m.edit_text("❌ Song info nahi mili. Dobara try karo.")
         elif name.startswith("dl_"):
             # ── Download handler via ShrutiAPI (bypasses YouTube bot-check) ──
             m = await message.reply_text("⏬ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ʏᴏᴜʀ sᴏɴɢ, ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ... ❤️‍🔥")

@@ -351,14 +351,16 @@ class Call(PyTgCalls):
                             details, new_vidid = await YouTube.track(last_title)
                         if details and new_vidid and new_vidid != last_vidid and new_vidid not in played_ids:
                             from SHUKLAMUSIC.utils.stream.queue import put_queue
+                            # Inherit video/audio mode from the song that just ended
+                            autoplay_video = popped.get("streamtype", "audio") == "video"
                             # Record both the outgoing and incoming song in history
                             await add_autoplay_history(chat_id, last_vidid)
                             await add_autoplay_history(chat_id, new_vidid)
                             file_path, direct = await YouTube.download(
-                                new_vidid, None, videoid=True, video=False
+                                new_vidid, None, videoid=True, video=autoplay_video
                             )
                             db[chat_id] = []
-                            ap_stream = self._build_stream(file_path, video=False)
+                            ap_stream = self._build_stream(file_path, video=autoplay_video)
                             await self._play_on_assistant(client, chat_id, ap_stream)
                             await put_queue(
                                 chat_id,
@@ -369,10 +371,10 @@ class Call(PyTgCalls):
                                 "❤️‍🔥 ᴀᴜᴛᴏᴘʟᴀʏ",
                                 new_vidid,
                                 0,
-                                "audio",
+                                "video" if autoplay_video else "audio",
                             )
                             img = await gen_thumb(new_vidid)
-                            ap_button = stream_markup(_ap, chat_id, new_vidid)
+                            ap_button = stream_markup(_ap, chat_id, new_vidid, autoplay=True)
                             ap_title = details["title"].title()
                             run = await app.send_photo(
                                 original_chat_id,

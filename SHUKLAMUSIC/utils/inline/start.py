@@ -12,7 +12,7 @@
 # ❤️ Made with dedication and love by ItzShukla
 # -----------------------------------------------
 
-from pyrogram.types import InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, WebAppInfo
 
 import config
 from pyrogram.enums import ButtonStyle
@@ -102,4 +102,14 @@ def private_panel(_):
             ),
         ],
     ]
+    # Add NOBITA MUSIC APP button if MINIAPP_URL is configured
+    if config.MINIAPP_URL:
+        buttons.append([
+            InlineKeyboardButton(
+                text=_["S_B_10"],
+                web_app=WebAppInfo(url=config.MINIAPP_URL),
+                style=ButtonStyle.PRIMARY,
+                icon_custom_emoji_id=_E_DIAMOND,
+            )
+        ])
     return buttons

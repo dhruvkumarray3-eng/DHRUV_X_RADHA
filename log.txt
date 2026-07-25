@@ -1975,3 +1975,6 @@ pyrogram.errors.exceptions.bad_request_400.ChannelPrivate: Telegram says: [400 C
 [25-Jul-26 07:24:51 - INFO] - SHUKLAMUSIC - ╔═════ஜ۩۞۩ஜ════╗
   ☠︎︎𝗠𝗔𝗗𝗘 𝗕𝗬 𝗠𝗥 𝗦𝗛𝗜𝗩𝗔𝗡𝗦𝗛
 ╚═════ஜ۩۞۩ஜ════╝
+[25-Jul-26 07:35:18 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: started monitoring chat -1003987285343
+[25-Jul-26 07:35:19 - INFO] - SHUKLAMUSIC.plugins.tools.vclogger - VCLogger: started monitoring chat -1004385235406
+[25-Jul-26 07:35:42 - INFO] - SHUKLAMUSIC.core.bot - Stopping Bot...

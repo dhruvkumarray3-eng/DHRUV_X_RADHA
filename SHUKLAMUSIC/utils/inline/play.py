@@ -133,7 +133,13 @@ def _dl_buttons(app_username, videoid):
     ]]
 
 
-def stream_markup(_, chat_id, videoid=None):
+def stream_markup(_, chat_id, videoid=None, autoplay=False):
+    """
+    autoplay=True  → called from the autoplay engine; shows a single
+                     full-width DM-download button below AUTOPLAY and
+                     hides the regular audio/video split row.
+    autoplay=False → regular play; shows audio + video split row.
+    """
     buttons = [
         [
             InlineKeyboardButton(text="", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068, style=ButtonStyle.SUCCESS),
@@ -148,26 +154,35 @@ def stream_markup(_, chat_id, videoid=None):
                 style=ButtonStyle.PRIMARY,
             ),
         ],
-        *(
-            [
-                [
-                    InlineKeyboardButton(
-                        text="🎵 ᴀᴜᴅɪᴏ",
-                        url=f"https://t.me/{app.username}?start=dl_{videoid}_a",
-                        style=ButtonStyle.SUCCESS,
-                        icon_custom_emoji_id=5309984423003823246,
-                    ),
-                    InlineKeyboardButton(
-                        text="🎬 ᴠɪᴅᴇᴏ",
-                        url=f"https://t.me/{app.username}?start=dl_{videoid}_v",
-                        style=ButtonStyle.PRIMARY,
-                        icon_custom_emoji_id=5404870433093048964,
-                    ),
-                ]
-            ]
-            if videoid and videoid not in {"telegram", "soundcloud"}
-            else []
-        ),
+    ]
+    # Download row — differs between autoplay and regular play
+    if autoplay and videoid and videoid not in {"telegram", "soundcloud"}:
+        # Single full-width "DM download" button for autoplay songs
+        buttons.append([
+            InlineKeyboardButton(
+                text="⬇️ ᴛᴀᴘ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ sᴏɴɢ",
+                url=f"https://t.me/{app.username}?start=dl_{videoid}_a",
+                style=ButtonStyle.SUCCESS,
+                icon_custom_emoji_id=5309984423003823246,
+            ),
+        ])
+    elif not autoplay and videoid and videoid not in {"telegram", "soundcloud"}:
+        # Regular play: keep audio + video split
+        buttons.append([
+            InlineKeyboardButton(
+                text="🎵 ᴀᴜᴅɪᴏ",
+                url=f"https://t.me/{app.username}?start=dl_{videoid}_a",
+                style=ButtonStyle.SUCCESS,
+                icon_custom_emoji_id=5309984423003823246,
+            ),
+            InlineKeyboardButton(
+                text="🎬 ᴠɪᴅᴇᴏ",
+                url=f"https://t.me/{app.username}?start=dl_{videoid}_v",
+                style=ButtonStyle.PRIMARY,
+                icon_custom_emoji_id=5404870433093048964,
+            ),
+        ])
+    buttons += [
         [
             InlineKeyboardButton(
                 text="✨ ᴜᴘᴅᴀᴛᴇ",
