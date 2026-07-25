@@ -152,7 +152,16 @@ async def kang(client, message: Message):
             if limit >= 50:
                 return await msg.delete()
 
-            stickerset = await get_sticker_set_by_name(client, packname)
+            # Telegram can return STICKERSET_INVALID for an old/deleted pack.
+            # Treat it as missing so /kang recreates the pack instead of
+            # exposing a traceback to the chat.
+            try:
+                stickerset = await get_sticker_set_by_name(client, packname)
+            except Exception as error:
+                if "STICKERSET_INVALID" in str(error):
+                    stickerset = None
+                else:
+                    raise
             if not stickerset:
                 stickerset = await create_sticker_set(
                     client,

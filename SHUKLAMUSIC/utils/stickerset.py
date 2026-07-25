@@ -24,7 +24,10 @@ async def get_sticker_set_by_name(
                 hash=0,
             )
         )
-    except errors.exceptions.not_acceptable_406.StickersetInvalid:
+    except (
+        errors.exceptions.not_acceptable_406.StickersetInvalid,
+        errors.exceptions.bad_request_400.StickersetInvalid,
+    ):
         return None
 
 async def create_sticker_set(

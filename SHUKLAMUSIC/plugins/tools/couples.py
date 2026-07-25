@@ -22,6 +22,7 @@ from pyrogram.enums import *
 
 from SHUKLAMUSIC import app as app
 from SHUKLAMUSIC.mongo.couples_db import _get_image, get_couple
+import config
 
 # ── AttractivePack emoji IDs ──
 _AP_PINK   = 5208942800514596941   # 🩷
@@ -41,8 +42,10 @@ def ap(eid, fb):
 POLICE = [
     [
         InlineKeyboardButton(
-            text="Mᴀᴅᴀʀᴀ",
-            url=f"https://t.me/Egoist_Destroyer",
+            text="❤️‍🔥 ɴᴏʙɪᴛᴀ x ᴘʀɪᴍᴇ ❤️‍🔥",
+            url=f"https://t.me/{config.OWNER_USERNAME.lstrip('@')}",
+            style=ButtonStyle.SUCCESS,
+            icon_custom_emoji_id=_AP_LOVE,
         ),
     ],
 ]

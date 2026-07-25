@@ -22,7 +22,8 @@ game_db = mongodb["wordgame_leaderboard"]
 last_message_time = {}
 active_games = {}
 user_cooldowns = {}
-INACTIVITY_LIMIT = 300
+GAME_DURATION_SECONDS = 20 * 60
+INACTIVITY_LIMIT = GAME_DURATION_SECONDS
 PENALTY_TIME = 60
 _INACTIVITY_STARTED = False
 
@@ -222,7 +223,7 @@ async def start_word_game(chat_id):
         img_path = await create_game_image(display_word)
         caption = (
             f"⚡ **{smallcaps('Be the first to write the word shown in the photo!')}**\n\n"
-            f"⏱ **{smallcaps('Time remaining: 10 minutes')}**"
+            f"⏱ **{smallcaps('Time remaining: 20 minutes')}**"
         )
 
         markup = None
@@ -262,7 +263,7 @@ async def start_emoji_game(chat_id):
         img_path = await create_emoji_or_flag_image(correct_emoji, is_flag=False)
         caption = (
             f"👇 **{smallcaps('Identify the emoji in the photo and select it below!')}**\n\n"
-            f"⏱ **{smallcaps('Time remaining: 10 minutes')}**"
+            f"⏱ **{smallcaps('Time remaining: 20 minutes')}**"
         )
 
         rows, row = [], []
@@ -292,7 +293,7 @@ async def start_flag_game(chat_id):
         img_path = await create_emoji_or_flag_image(correct_country["code"], is_flag=True)
         caption = (
             f"🌍 **{smallcaps('Guess the country from its flag and select the correct option!')}**\n\n"
-            f"⏱ **{smallcaps('Time remaining: 10 minutes')}**"
+            f"⏱ **{smallcaps('Time remaining: 20 minutes')}**"
         )
 
         rows, row = [], []
@@ -498,7 +499,12 @@ async def chat_activity_tracker(client, message: Message):
             await send_claim(client, chat_id, msg)
 
 
-@app.on_message(filters.command(["wordleaderboard", "gametop", "cflb"]) & ~BANNED_USERS)
+@app.on_message(
+    filters.command(
+        ["wordleaderboard", "gametop", "cflb", "chatfightrank", "cfrank", "rankings"]
+    )
+    & ~BANNED_USERS
+)
 async def word_leaderboard(client, message: Message):
     top_users = game_db.find().sort("points", -1).limit(10)
     text = f"🏆 **{smallcaps('ChatFight Global Leaderboard')}** 🏆\n\n"
@@ -517,7 +523,7 @@ async def inactivity_checker_loop():
         await asyncio.sleep(60)
         current_time = time.time()
         for chat_id, game_data in list(active_games.items()):
-            if (current_time - game_data["start_time"]) > 600:
+            if (current_time - game_data["start_time"]) > GAME_DURATION_SECONDS:
                 try:
                     await app.delete_messages(chat_id, game_data["message_id"])
                 except Exception:
@@ -787,16 +793,16 @@ async def trivia_leaderboard(client, message: Message):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# AUTO CHATFIGHT — send a random game every 10 minutes to enabled chats
+# AUTO CHATFIGHT — send a random game every 20 minutes to enabled chats
 # ─────────────────────────────────────────────────────────────────────────────
 chatfight_auto_db = mongodb["chatfight_auto_chats"]
 _AUTO_LOOP_STARTED = False
 
 
 async def _auto_chatfight_loop():
-    """Background task: fire a random ChatFight game every 10 minutes."""
+    """Background task: fire a random ChatFight game every 20 minutes."""
     while True:
-        await asyncio.sleep(600)  # 10 minutes
+        await asyncio.sleep(GAME_DURATION_SECONDS)
         try:
             async for doc in chatfight_auto_db.find({"enabled": True}):
                 chat_id = doc["chat_id"]
@@ -846,7 +852,7 @@ async def chatfight_auto_on(client, message: Message):
     _start_auto_loop()
     await message.reply_text(
         f"✅ **ᴄʜᴀᴛғɪɢʜᴛ ᴀᴜᴛᴏ ᴇɴᴀʙʟᴇᴅ!**\n\n"
-        "A random word/emoji/flag game will be sent every **10 minutes** automatically! 🎮\n\n"
+        "A random word/emoji/flag game will be sent every **20 minutes** automatically! 🎮\n\n"
         "Use `/chatfightoff` to stop."
     )
 

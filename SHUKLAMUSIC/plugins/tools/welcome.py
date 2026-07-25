@@ -25,11 +25,9 @@ from SHUKLAMUSIC.utils.branding import BRAND_EMOJIS, WELCOME_BACKGROUND_URL
 LOGGER = getLogger(__name__)
 
 # ── Statusvideobytaraxd pack IDs ──
-_TX_STAR   = 6298332994260175589   # ⭐️
 _TX_HEART  = 6298356878573307709   # ❤️
 _TX_OK     = 6296501388276926215   # ✅
 _TX_CROWN  = 6219549292458150316   # 👑
-_TX_SPARK  = 6255705323588290387   # 💫
 _TX_BOOM   = 6298644001432012664   # 💥
 _TX_HUG    = 6298454498884978957   # 🫶
 _TX_LOVE   = 6298335558355651118   # 😍
@@ -61,12 +59,14 @@ random_photo = [
 # ─────────────────────────────────────────────────────────────────────────────
 
 async def _ensure_wel_bg():
-    """Download & cache the catbox welcome background if not present."""
+    """Ensure the exact Catbox welcome template is available locally."""
     import aiohttp
     if not os.path.exists(WEL_BG_PATH):
         os.makedirs(os.path.dirname(WEL_BG_PATH), exist_ok=True)
         try:
-            async with aiohttp.ClientSession() as s:
+            async with aiohttp.ClientSession(
+                headers={"User-Agent": "Mozilla/5.0"}
+            ) as s:
                 async with s.get(WEL_BG_URL, timeout=aiohttp.ClientTimeout(total=15)) as r:
                     if r.status == 200:
                         with open(WEL_BG_PATH, "wb") as f:
@@ -116,31 +116,54 @@ def circle(pfp, size=(500, 500), brightness_factor=1.0):
 
 def welcomepic(pic, user, chatname, id, uname, brightness_factor=1.3):
     if not os.path.exists(WEL_BG_PATH):
-        # Fallback: solid dark background
-        background = Image.new("RGB", (1000, 500), (20, 20, 30))
-    else:
-        background = Image.open(WEL_BG_PATH).convert("RGBA")
-        background = background.resize((1000, 500), Image.Resampling.LANCZOS)
+        raise FileNotFoundError(
+            f"Welcome template is missing: {WEL_BG_PATH}"
+        )
+
+    # Keep the Catbox template pixel-perfect.  It already contains the
+    # welcome artwork, title and member-profile frame; only the PFP and ID
+    # are dynamic overlays.
+    background = Image.open(WEL_BG_PATH).convert("RGBA")
+    width, height = background.size
 
     pfp = Image.open(pic).convert("RGBA")
-    pfp = circle(pfp, brightness_factor=brightness_factor)
-    pfp = pfp.resize((500, 500))
+    pfp_size = round(min(width * 0.125, height * 0.225))
+    pfp = circle(pfp, size=(pfp_size, pfp_size), brightness_factor=brightness_factor)
     draw = ImageDraw.Draw(background)
 
     try:
-        font = ImageFont.truetype('SHUKLAMUSIC/assets/font.ttf', size=60)
+        id_font = ImageFont.truetype(
+            "SHUKLAMUSIC/assets/font.ttf",
+            size=round(height * 0.052),
+        )
     except Exception:
-        font = ImageFont.load_default()
+        id_font = ImageFont.load_default()
 
-    # Draw ID text (bottom-right area)
-    draw.text((630, 450), f'ID: {id}', fill=(255, 255, 255), font=font)
+    # Cover only the template placeholder and write the member's real ID in
+    # the same lower profile strip.  The rest of the source image is untouched.
+    id_box = (
+        round(width * 0.225),
+        round(height * 0.755),
+        round(width * 0.515),
+        round(height * 0.855),
+    )
+    draw.rounded_rectangle(id_box, radius=8, fill=(42, 42, 42, 255))
+    draw.text(
+        (round(width * 0.245), round(height * 0.775)),
+        f"ID {id}",
+        fill=(225, 190, 100, 255),
+        font=id_font,
+    )
 
-    # Paste circular profile picture (left side)
-    pfp_position = (48, 88)
+    # Paste the user's PFP inside the template's circular frame.
+    pfp_position = (
+        round(width * 0.066),
+        round(height * 0.69),
+    )
     background.paste(pfp, pfp_position, pfp)
 
     out_path = f"downloads/welcome#{id}.png"
-    background.convert("RGB").save(out_path)
+    background.convert("RGB").save(out_path, optimize=True)
     return out_path
 
 
@@ -198,8 +221,12 @@ async def greet_new_member(_, member: ChatMemberUpdated):
             except Exception as e:
                 LOGGER.error(e)
 
-        # Pick random emojis from the palette
-        e1, e2, e3, e4 = random.choices(EMOJIS, k=4)
+        # Keep the welcome copy free from star/spark symbols.
+        welcome_emojis = [
+            emoji for emoji in EMOJIS
+            if emoji not in {"✨", "☄️"}
+        ]
+        e1, e2, e3, e4 = random.choices(welcome_emojis, k=4)
 
         try:
             welcomeimg = welcomepic(pic, user.first_name, member.chat.title, user.id, user.username)
@@ -208,15 +235,15 @@ async def greet_new_member(_, member: ChatMemberUpdated):
             add_link  = f"https://t.me/{app.username}?startgroup=true"
 
             caption = (
-                f"{tx(_TX_STAR,'⭐️')} {tx(_TX_BOOM,'💥')} <b>ᴡᴇʟᴄᴏᴍᴇ</b> {tx(_TX_BOOM,'💥')} {tx(_TX_STAR,'⭐️')}\n\n"
-                f"❤️‍🔥✨ <b>▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬</b> ✨❤️‍🔥\n\n"
+                f"{tx(_TX_BOOM,'💥')} <b>ᴡᴇʟᴄᴏᴍᴇ</b> {tx(_TX_BOOM,'💥')}\n\n"
+                f"❤️‍🔥 <b>▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬</b> ❤️‍🔥\n\n"
                 f"{tx(_TX_CROWN,'👑')} <b>ɴᴀᴍᴇ :</b> {user.mention}\n"
-                f"{tx(_TX_SPARK,'💫')} <b>ɪᴅ :</b> <code>{user.id}</code>\n"
+                f"{tx(_TX_OK,'✅')} <b>ɪᴅ :</b> <code>{user.id}</code>\n"
                 f"{tx(_TX_ROSE,'🌹')} <b>ᴜ_ɴᴀᴍᴇ :</b> @{user.username if user.username else 'None'}\n"
                 f"{tx(_TX_OK,'✅')} <b>ᴍᴇᴍʙᴇʀs :</b> {count}\n\n"
                 f"🤗😇 <b>▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬</b> 😇🤗\n\n"
                 f"🌚 <i>ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ɢʀᴏᴜᴘ! ᴍᴀᴋᴇ ʏᴏᴜʀsᴇʟғ ᴀᴛ ʜᴏᴍᴇ ᴀɴᴅ ʜᴀᴠᴇ ᴀ ɢʀᴇᴀᴛ ᴛɪᴍᴇ!</i> {e1}\n\n"
-                f"☄️ {tx(_TX_GEM,'💎')} {tx(_TX_STAR,'⭐️')} {tx(_TX_HEART,'❤️')} 👀 🌹 ✨ 👻"
+                f"{tx(_TX_HEART,'❤️')} {tx(_TX_GEM,'💎')} 👀 🌹 👻"
             )
 
             msg = await app.send_photo(
