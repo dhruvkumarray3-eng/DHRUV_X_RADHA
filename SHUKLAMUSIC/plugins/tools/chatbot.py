@@ -24,7 +24,7 @@ _ERR  = e(5978715546865112655, "🚩")
 _BOOK = e(6073117703965511893, "💐")
 _BELL = e(4956290155326473271, "🔔")
 
-_GROQ_MODEL = "llama-3.1-8b-instant"   # fast, current Groq model
+_GROQ_MODEL = "llama-3.3-70b-versatile"   # powerful multilingual model
 
 # ── Groq client (lazy) ───────────────────────────────────────────────────────
 _groq_client = None
@@ -50,17 +50,35 @@ async def ask_groq(user_text: str) -> str | None:
                 {
                     "role": "system",
                     "content": (
-                        "You are NOBITA X PRIME, a witty and friendly Telegram bot assistant. "
-                        "You are fun, helpful, and speak naturally — like a cool friend chatting. "
-                        "Keep replies short (1–3 sentences max), conversational, and avoid robotic filler phrases. "
-                        "You can talk about music, fun topics, jokes, or general questions. "
-                        "Never refuse a casual chat message — just engage naturally."
+                        "You are 𝗡𝗢𝗕𝗜𝗧𝗔 𝗫 𝗣𝗥𝗜𝗠𝗘 — a super-friendly, all-knowing Telegram bot!\n\n"
+                        "🌐 LANGUAGE RULE (CRITICAL): Detect the language of the user's message and ALWAYS "
+                        "reply in that EXACT same language. Hindi→Hindi, English→English, Hinglish→Hinglish, "
+                        "Arabic→Arabic, Punjabi→Punjabi, any language→same language. Never break this rule.\n\n"
+                        "😊 PERSONALITY: Act like a warm, helpful school friend who knows everything. "
+                        "Never say 'I am just an AI' or refuse to help. Always try your best!\n\n"
+                        "📚 YOU ANSWER EVERYTHING:\n"
+                        "• 🔢 Maths — calculations, algebra, geometry, trigonometry (show step-by-step working)\n"
+                        "• 🔬 Science — Physics, Chemistry, Biology with clear examples\n"
+                        "• 🌍 SST — History, Geography, Civics, Economics — factual & informative\n"
+                        "• 📖 Hindi & English — grammar, essays, poems, comprehension, translation\n"
+                        "• 🎨 Drawing & Art — how to draw, techniques, color theory\n"
+                        "• 💻 Coding — write working code in Python, JS, C++, Java, and any language; "
+                        "explain how to make Telegram bots step by step\n"
+                        "• 📰 News & Current Events — share your knowledge about events and topics\n"
+                        "• 🏠 Household — cooking recipes, home remedies, DIY tips, life advice\n"
+                        "• 😄 Fun — jokes, riddles, quotes, trivia, motivational messages, word games\n"
+                        "• 💬 Anything else — just be helpful and friendly!\n\n"
+                        "💻 CODE FORMATTING RULE: ALWAYS wrap code in triple backticks with the language:\n"
+                        "```python\nprint('Hello!')\n```\n\n"
+                        "📏 REPLY STYLE: Use emojis naturally. Be warm and clear. "
+                        "Show step-by-step for maths. Add comments in code. "
+                        "Keep replies helpful — not too long, not too short."
                     ),
                 },
                 {"role": "user", "content": user_text},
             ],
             model=_GROQ_MODEL,
-            max_tokens=250,
+            max_tokens=800,
             temperature=0.85,
         )
         return resp.choices[0].message.content.strip()
@@ -247,6 +265,24 @@ async def chatbot_auto_reply(client, message: Message):
             await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
             ai_reply = await ask_groq(txt)
             if ai_reply:
-                await message.reply_text(ai_reply)
+                # Apply user's preferred font (only for ASCII-heavy replies without code)
+                if message.from_user and '```' not in ai_reply:
+                    try:
+                        from SHUKLAMUSIC.core.mongo import mongodb as _mdb
+                        from SHUKLAMUSIC.utils.Shukla_font import Fonts as _Fonts
+                        _fdoc = await _mdb.user_font_prefs.find_one({"user_id": message.from_user.id})
+                        if _fdoc and _fdoc.get("font"):
+                            _ffunc = getattr(_Fonts, _fdoc["font"], None)
+                            if _ffunc:
+                                _ascii_ratio = sum(1 for c in ai_reply if ord(c) < 256) / max(len(ai_reply), 1)
+                                if _ascii_ratio > 0.65:
+                                    ai_reply = _ffunc(ai_reply)
+                    except Exception:
+                        pass
+                # Use MARKDOWN so ```code``` blocks render correctly
+                try:
+                    await message.reply_text(ai_reply, parse_mode=enums.ParseMode.MARKDOWN)
+                except Exception:
+                    await message.reply_text(ai_reply)
         except Exception:
             pass

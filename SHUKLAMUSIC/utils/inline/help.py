@@ -152,6 +152,11 @@ def help_pannel_page4(_, START: Union[bool, int] = None):
             InlineKeyboardButton(text=_["H_B_36"], callback_data="help_callback hb36", style=ButtonStyle.SUCCESS,   icon_custom_emoji_id=_E_INFO),
             InlineKeyboardButton(text=_["H_B_37"], callback_data="help_callback hb37", style=ButtonStyle.PRIMARY,   icon_custom_emoji_id=_E_VC),
         ],
+        # ── Language & Font selectors ─────────────────────────────────────────
+        [
+            InlineKeyboardButton(text="🌐 ʟᴀɴɢᴜᴀɢᴇ", callback_data="LG",            style=ButtonStyle.SUCCESS),
+            InlineKeyboardButton(text="🔤 ᴍʏ ꜰᴏɴᴛ",   callback_data="my_font_menu", style=ButtonStyle.PRIMARY),
+        ],
         _nav_row(_, "help_page_3", "settingsback_helper" if START else "close", "help_page_1", bool(START)),
     ])
 

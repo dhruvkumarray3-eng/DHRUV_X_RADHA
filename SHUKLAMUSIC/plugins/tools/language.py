@@ -30,17 +30,22 @@ from config import BANNED_USERS
 from strings import get_string, languages_present
 
 
+from pyrogram.enums import ButtonStyle as _BS
+
+_LANG_STYLES = [_BS.PRIMARY, _BS.SUCCESS, _BS.DANGER]
+
 def lanuages_keyboard(_):
+    lang_list = list(languages_present.keys())
     buttons = [
         InlineKeyboardButton(
             text=languages_present[i],
             callback_data=f"languages:{i}",
+            style=_LANG_STYLES[idx % len(_LANG_STYLES)],
         )
-        for i in languages_present
+        for idx, i in enumerate(lang_list)
     ]
 
     keyboard = []
-
     for i in range(0, len(buttons), 2):
         keyboard.append(buttons[i:i + 2])
 
@@ -49,10 +54,12 @@ def lanuages_keyboard(_):
             InlineKeyboardButton(
                 text=_["BACK_BUTTON"],
                 callback_data="settingsback_helper",
+                style=_BS.SUCCESS,
             ),
             InlineKeyboardButton(
                 text=_["CLOSE_BUTTON"],
                 callback_data="close",
+                style=_BS.DANGER,
             ),
         ]
     )
