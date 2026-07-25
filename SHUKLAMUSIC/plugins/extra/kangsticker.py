@@ -13,11 +13,13 @@
 # -----------------------------------------------
 import imghdr
 import os
+import re
 from asyncio import gather
 from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import (
+    PackShortNameInvalid,
     PeerIdInvalid,
     ShortnameOccupyFailed,
     StickerEmojiInvalid,
@@ -49,6 +51,29 @@ MAX_STICKERS = (
     120  # would be better if we could fetch this limit directly from telegram
 )
 SUPPORTED_TYPES = ["jpeg", "png", "webp"]
+
+
+def _pack_short_name(user_id: int, bot_username: str, pack_number: int = 0) -> str:
+    """Build a Telegram-valid sticker-set short name.
+
+    Telegram requires a short name to start with a letter, contain only
+    letters/numbers/underscores, have no consecutive underscores, and end in
+    ``_by_<bot_username>``.  Keep the generated name below Telegram's 64
+    character limit even when the username is long.
+    """
+    username = re.sub(r"[^A-Za-z0-9_]", "", bot_username or "").strip("_")
+    username = re.sub(r"_+", "_", username)
+    if not username:
+        raise ValueError("The bot must have a valid Telegram username.")
+
+    suffix = f"_by_{username}"
+    prefix = f"k{user_id}" if pack_number == 0 else f"k{user_id}_{pack_number}"
+    prefix = re.sub(r"_+", "_", prefix).strip("_")
+    max_prefix_length = 64 - len(suffix)
+    prefix = prefix[:max_prefix_length].rstrip("_")
+    return f"{prefix}{suffix}"
+
+
 # ------------------------------------------
 @app.on_message(filters.command("get_sticker"))
 @capture_err
@@ -144,7 +169,13 @@ async def kang(client, message: Message):
         return print(e)
 #-------
     packnum = 0
-    packname = "f" + str(message.from_user.id) + "_by_" + BOT_USERNAME
+    bot_username = getattr(client, "username", None)
+    if not bot_username:
+        bot_username = (await client.get_me()).username
+    try:
+        packname = _pack_short_name(message.from_user.id, bot_username, packnum)
+    except ValueError as error:
+        return await msg.edit_text(f"❌ {error}")
     limit = 0
     try:
         while True:
@@ -163,22 +194,25 @@ async def kang(client, message: Message):
                 else:
                     raise
             if not stickerset:
-                stickerset = await create_sticker_set(
-                    client,
-                    message.from_user.id,
-                    f"{message.from_user.first_name[:32]}'s kang pack",
-                    packname,
-                    [sticker],
-                )
+                try:
+                    stickerset = await create_sticker_set(
+                        client,
+                        message.from_user.id,
+                        f"{message.from_user.first_name[:32]}'s kang pack",
+                        packname,
+                        [sticker],
+                    )
+                except (PackShortNameInvalid, ShortnameOccupyFailed):
+                    packnum += 1
+                    packname = _pack_short_name(
+                        message.from_user.id, bot_username, packnum
+                    )
+                    limit += 1
+                    continue
             elif stickerset.set.count >= MAX_STICKERS:
                 packnum += 1
-                packname = (
-                    "f"
-                    + str(packnum)
-                    + "_"
-                    + str(message.from_user.id)
-                    + "_by_"
-                    + BOT_USERNAME
+                packname = _pack_short_name(
+                    message.from_user.id, bot_username, packnum
                 )
                 limit += 1
                 continue
@@ -194,6 +228,11 @@ async def kang(client, message: Message):
             "Sticker Kanged To [Pack](t.me/addstickers/{})\nEmoji: {}".format(
                 packname, sticker_emoji
             )
+        )
+    except PackShortNameInvalid:
+        await msg.edit(
+            "❌ Telegram rejected the sticker-pack name. "
+            "Please try `/kang` again."
         )
     except (PeerIdInvalid, UserIsBlocked):
         keyboard = InlineKeyboardMarkup(

@@ -67,6 +67,40 @@ cp .env.example .env   # fill in your values
 python3 -m SHUKLAMUSIC
 ```
 
+#### Railway variables
+
+In Railway, open **Variables** and add these values. Do not commit tokens,
+session strings, MongoDB URIs, or other secrets to GitHub.
+
+| Variable | Required | Value |
+|---|---:|---|
+| `BOT_TOKEN` | Yes | Token from `@BotFather` |
+| `MONGO_DB_URI` | Yes | MongoDB Atlas connection URI |
+| `STRING_SESSION` | Yes | Pyrogram assistant session string |
+| `API_ID` | Recommended | Telegram API ID from `my.telegram.org` |
+| `API_HASH` | Recommended | Telegram API hash from `my.telegram.org` |
+| `LOGGER_ID` | Yes | Numeric Telegram log group/channel ID |
+| `OWNER_ID` | Recommended | Your numeric Telegram user ID |
+| `OWNER_USERNAME` | Recommended | Your Telegram username without `@` |
+| `BOT_USERNAME` | Recommended | Bot username without `@` |
+| `BOT_NAME` | Optional | Display name, default `NOBITA X PRIME` |
+| `SUPPORT_CHAT` | Recommended | Support group/channel URL |
+| `SUPPORT_CHANNEL` | Recommended | Updates channel URL |
+| `GIT_TOKEN` | Optional | GitHub token for bot update/push features |
+| `UPSTREAM_REPO` | Optional | GitHub repository URL |
+| `UPSTREAM_BRANCH` | Optional | Repository branch, normally `main` |
+| `DURATION_LIMIT` | Optional | Maximum allowed song duration |
+| `AUTO_LEAVING_ASSISTANT` | Optional | `True` or `False` |
+| `ASSISTANT_LEAVE_TIME` | Optional | Assistant leave delay in seconds |
+| `API_URL` | Optional | External download API URL |
+| `API_KEY` | Optional | External download API key |
+
+Railway uses the included `Procfile` and starts the worker with:
+
+```bash
+python3 -m SHUKLAMUSIC
+```
+
 ---
 
 ## ⚙️ Configuration
@@ -109,6 +143,27 @@ Edit `config.py` or set the following environment variables:
 | `/queue` | Show current queue |
 | `/autoplay` | Toggle YouTube autoplay |
 | `/song [name]` | Download song as file |
+
+### 🧩 Stickers
+
+To use `/kang`, reply to any sticker, photo, or supported image document and
+send:
+
+```text
+/kang
+```
+
+You can provide an emoji after the command:
+
+```text
+/kang 🔥
+```
+
+The bot creates or reuses your personal sticker pack and returns an
+`addstickers` link. The pack name is generated from the running bot's real
+Telegram username, so it follows Telegram's required `_by_<bot_username>`
+format. The bot automatically tries the next pack when a pack is full or its
+name is already occupied.
 
 ### 🛡️ Moderation
 
