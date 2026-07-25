@@ -1,43 +1,46 @@
-# NOBITA X PRIME Music Bot
+# NOBITA X PRIME MUSIC BOT
 
-A feature-rich Telegram Music Bot that streams YouTube music in group/channel voice chats, built on Pyrogram + PyTgCalls.
+A powerful Telegram Music Bot that streams YouTube audio into Telegram group voice chats, with moderation, welcome messages, games, and more.
 
-## How to run
+## How to Run
+
+The bot starts automatically via the **Start application** workflow:
 
 ```
 python3 -m SHUKLAMUSIC
 ```
 
-The **Start application** workflow runs this automatically.
+## Required Secrets
 
-## Required secrets (set in Replit Secrets)
+Set these in Replit → Tools → Secrets:
 
 | Secret | Description |
 |---|---|
 | `BOT_TOKEN` | Telegram bot token from @BotFather |
 | `MONGO_DB_URI` | MongoDB Atlas connection string |
-| `STRING_SESSION` | Pyrogram string session for the assistant account (needed for VC streaming) |
-| `SESSION_SECRET` | Any random string (already set) |
-| `GIT_TOKEN` | GitHub token for `/update` autopush command |
-
-## Optional env vars (set in .replit [userenv.shared])
-
-| Key | Default / Current |
-|---|---|
-| `OWNER_ID` | 8245258112 |
-| `LOGGER_ID` | -1004458016685 (log group) |
-| `LOG_GROUP_ID` | -1004458016685 |
-| `UPSTREAM_REPO` | https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA |
-| `UPSTREAM_BRANCH` | main |
+| `STRING_SESSION` | Pyrogram string session (via @StringFetchBot) |
+| `LOGGER_ID` | Telegram chat ID for bot logs |
+| `SESSION_SECRET` | Random secret string |
+| `GIT_TOKEN` | GitHub personal access token (for `/update` auto-push) |
 
 ## Stack
 
-- **Python 3.12** + Pyrogram + PyTgCalls
-- **MongoDB** (via Motor async driver)
-- **yt-dlp** for YouTube audio/video fetching
-- **APScheduler** for nightmode & MongoDB size checks
-- **Heroku3, GitPython** for deployment/update features
+- **Python 3.12**
+- **Pyrogram** — Telegram bot framework
+- **py-tgcalls / PyTgCalls** — Voice chat streaming
+- **Motor / PyMongo** — MongoDB async driver
+- **yt-dlp** — YouTube audio download
+- **APScheduler** — Scheduled tasks (nightmode, etc.)
 
-## User preferences
+## Configuration
 
-- Include GIT_TOKEN when collecting secrets for this project (for `/update` autopush).
+All config is in `config.py` — reads from environment variables with sensible defaults. Key optional vars:
+
+- `OWNER_ID` — your Telegram user ID
+- `UPSTREAM_REPO` — GitHub repo for `/update` command
+- `LOGGER_ID` — group/channel for VC and bot event logs
+
+## User Preferences
+
+- Keep existing project structure; do not migrate or restructure.
+- GIT_TOKEN is set for GitHub auto-push via the `/update` command.
