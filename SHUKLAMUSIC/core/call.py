@@ -26,7 +26,9 @@ from SHUKLAMUSIC.misc import db
 from SHUKLAMUSIC.utils.database import (
     add_active_chat,
     add_active_video_chat,
+    add_autoplay_history,
     get_autoplay,
+    get_autoplay_history,
     get_lang,
     get_loop,
     group_assistant,
@@ -342,12 +344,16 @@ class Call(PyTgCalls):
                         original_chat_id = popped.get("chat_id", chat_id)
                         language_ap = await get_lang(chat_id)
                         _ap = get_string(language_ap)
+                        played_ids = await get_autoplay_history(chat_id)
                         # Prefer Radio-playlist related songs; fall back to title search
-                        details, new_vidid = await YouTube.related_track(last_vidid)
+                        details, new_vidid = await YouTube.related_track(last_vidid, played_ids=played_ids)
                         if not details and last_title:
                             details, new_vidid = await YouTube.track(last_title)
-                        if details and new_vidid and new_vidid != last_vidid:
+                        if details and new_vidid and new_vidid != last_vidid and new_vidid not in played_ids:
                             from SHUKLAMUSIC.utils.stream.queue import put_queue
+                            # Record both the outgoing and incoming song in history
+                            await add_autoplay_history(chat_id, last_vidid)
+                            await add_autoplay_history(chat_id, new_vidid)
                             file_path, direct = await YouTube.download(
                                 new_vidid, None, videoid=True, video=False
                             )

@@ -52,6 +52,7 @@ playtype = {}
 skipmode = {}
 autoplay = {}
 autoplay_owner = {}
+autoplay_history = {}  # chat_id -> set of already-played vidids (prevents repeats)
 
 
 async def get_assistant_number(chat_id: int) -> str:
@@ -248,6 +249,20 @@ async def set_autoplay(chat_id: int, mode: bool):
     autoplay[chat_id] = mode
     if not mode:
         autoplay_owner.pop(chat_id, None)
+        autoplay_history.pop(chat_id, None)   # clear history when autoplay is turned off
+
+
+async def get_autoplay_history(chat_id: int) -> set:
+    return autoplay_history.get(chat_id, set())
+
+
+async def add_autoplay_history(chat_id: int, vidid: str):
+    if chat_id not in autoplay_history:
+        autoplay_history[chat_id] = set()
+    autoplay_history[chat_id].add(vidid)
+    # Keep the history bounded — drop oldest after 50 songs
+    if len(autoplay_history[chat_id]) > 50:
+        autoplay_history[chat_id] = set(list(autoplay_history[chat_id])[-50:])
 
 
 async def get_autoplay_owner(chat_id: int) -> int:

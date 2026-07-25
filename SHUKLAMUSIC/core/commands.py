@@ -54,6 +54,15 @@ _USER_CMDS = [
     ("save",      "🫡 sᴀᴠᴇ ᴀ ɴᴏᴛᴇ ɪɴ ɢʀᴏᴜᴘ"),
     ("get",       "🫰 ɢᴇᴛ ᴀ sᴀᴠᴇᴅ ɴᴏᴛᴇ"),
     ("cleanmongo","🤕 ᴄʟᴇᴀɴ ᴊᴜɴᴋ ᴅᴀᴛᴀ ᴀɴᴅ ᴅʙ sᴛᴀᴛs"),
+    # ── Games & Rankings ──
+    ("wordgame",  "🎮 sᴛᴀʀᴛ ᴡᴏʀᴅ ɢᴜᴇss ɢᴀᴍᴇ"),
+    ("emojigame", "🎮 sᴛᴀʀᴛ ᴇᴍᴏᴊɪ ɢᴜᴇss ɢᴀᴍᴇ"),
+    ("flaggame",  "🎮 sᴛᴀʀᴛ ᴄᴏᴜɴᴛʀʏ ꜰʟᴀɢ ɢᴀᴍᴇ"),
+    ("triviabattle","⚔️ sᴛᴀʀᴛ ᴛʀɪᴠɪᴀ ʙᴀᴛᴛʟᴇ (ɢʀᴏᴜᴘ)"),
+    ("rankings",  "🏆 ᴄʜᴀᴛꜰɪɢʜᴛ ɢʟᴏʙᴀʟ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ"),
+    ("triviatop", "🏆 ᴛʀɪᴠɪᴀ ʙᴀᴛᴛʟᴇ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ"),
+    ("chatfighton","✅ ᴇɴᴀʙʟᴇ ᴀᴜᴛᴏ ᴄʜᴀᴛꜰɪɢʜᴛ ɢᴀᴍᴇs"),
+    ("chatfightoff","❌ ᴅɪsᴀʙʟᴇ ᴀᴜᴛᴏ ᴄʜᴀᴛꜰɪɢʜᴛ"),
 ]
 
 # ── Admin commands — shown only to group admins ──────────────────────────────

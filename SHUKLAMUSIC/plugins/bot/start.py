@@ -231,31 +231,55 @@ async def start_pm(client, message: Message, _):
         elif name[0:3] == "sud":
             await sudoers_list(client=client, message=message, _=_)
         elif name[0:3] == "inf":
-            # ── Info handler: uses oEmbed (no auth needed) ──
-            m = await message.reply_text("🔎")
+            # ── Info handler: full yt-dlp metadata + colorful download buttons ──
+            m = await message.reply_text("🔎 ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ...")
             vidid = str(name).replace("info_", "", 1)
             video_url = f"https://www.youtube.com/watch?v={vidid}"
             try:
+                def _ytdlp_info():
+                    opts = {"quiet": True, "no_warnings": True, "skip_download": True}
+                    with yt_dlp.YoutubeDL(opts) as ydl:
+                        return ydl.extract_info(video_url, download=False)
                 loop = asyncio.get_event_loop()
-                def _oembed_fetch():
-                    oe_url = f"https://www.youtube.com/oembed?url={video_url}&format=json"
-                    with urllib.request.urlopen(oe_url, timeout=8) as r:
-                        return _json.loads(r.read())
-                oembed = await loop.run_in_executor(None, _oembed_fetch)
-                title     = oembed.get("title") or "Unknown"
-                channel   = oembed.get("author_name") or "Unknown"
-                thumbnail = oembed.get("thumbnail_url") or ""
-                channellink = f"https://www.youtube.com/results?search_query={vidid}"
-                duration  = "N/A"
-                views     = "N/A"
-                published = "N/A"
-                searched_text = _["start_6"].format(
-                    title, duration, views, published, channellink, channel, app.mention
+                info = await loop.run_in_executor(None, _ytdlp_info)
+                title     = info.get("title") or "Unknown"
+                channel   = info.get("uploader") or info.get("channel") or "Unknown"
+                channel_url = info.get("uploader_url") or info.get("channel_url") or \
+                              f"https://www.youtube.com/results?search_query={vidid}"
+                raw_dur   = info.get("duration")
+                duration  = f"{int(raw_dur)//60}:{int(raw_dur)%60:02d}" if raw_dur else "N/A"
+                raw_views = info.get("view_count")
+                views     = f"{raw_views:,}" if raw_views else "N/A"
+                raw_date  = info.get("upload_date") or ""          # "YYYYMMDD"
+                if len(raw_date) == 8:
+                    published = f"{raw_date[6:]}/{raw_date[4:6]}/{raw_date[:4]}"
+                else:
+                    published = "N/A"
+                thumbnail = (
+                    next((t["url"] for t in (info.get("thumbnails") or [])[::-1] if t.get("url")), "")
+                    or f"https://i.ytimg.com/vi/{vidid}/hqdefault.jpg"
                 )
-                key = InlineKeyboardMarkup([[
-                    InlineKeyboardButton(text=_["S_B_8"], url=video_url),
-                    InlineKeyboardButton(text=_["S_B_9"], url=config.SUPPORT_CHAT),
-                ]])
+                searched_text = _["start_6"].format(
+                    title, duration, views, published, channel_url, channel, app.mention
+                )
+                key = InlineKeyboardMarkup([
+                    [
+                        InlineKeyboardButton(text=_["S_B_8"], url=video_url),
+                        InlineKeyboardButton(text=_["S_B_9"], url=config.SUPPORT_CHAT),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            text="🎵 ᴅᴏᴡɴʟᴏᴀᴅ ᴀᴜᴅɪᴏ",
+                            url=f"https://t.me/{app.username}?start=dl_{vidid}_a",
+                            style=ButtonStyle.SUCCESS,
+                        ),
+                        InlineKeyboardButton(
+                            text="🎬 ᴅᴏᴡɴʟᴏᴀᴅ ᴠɪᴅᴇᴏ",
+                            url=f"https://t.me/{app.username}?start=dl_{vidid}_v",
+                            style=ButtonStyle.PRIMARY,
+                        ),
+                    ],
+                ])
                 await m.delete()
                 try:
                     await app.send_photo(

@@ -400,16 +400,19 @@ class YouTubeAPI:
             ids.append(vid)
         return ids
 
-    async def related_track(self, vidid: str):
+    async def related_track(self, vidid: str, played_ids: set = None):
         """Fetch a YouTube-related track using the YouTube Radio/Mix playlist.
+        Skips vidids in `played_ids` to prevent autoplay repeats.
         Returns (details_dict, vidid) or (None, None) on failure."""
+
+        _played = played_ids or set()
 
         def _fetch():
             ydl_opts = {
                 "quiet": True,
                 "no_warnings": True,
                 "extract_flat": True,
-                "playlist_items": "2-8",   # skip seed (item 1), try next 7
+                "playlist_items": "2-15",   # broader pool to avoid repeats
             }
             url = f"https://www.youtube.com/watch?v={vidid}&list=RD{vidid}"
             try:
@@ -420,10 +423,11 @@ class YouTubeAPI:
                         eid = entry.get("id") or ""
                         etitle = entry.get("title") or ""
                         edur = entry.get("duration")
-                        # skip seed, private/deleted, or shorts (<60 s)
+                        # skip seed, already-played, private/deleted, or shorts (<60 s)
                         if (
                             not eid
                             or eid == vidid
+                            or eid in _played
                             or not etitle
                             or etitle in ("[Private video]", "[Deleted video]")
                             or (edur and int(edur) < 60)

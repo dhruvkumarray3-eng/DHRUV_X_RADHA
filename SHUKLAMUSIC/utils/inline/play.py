@@ -113,6 +113,26 @@ def stream_markup_timer(_, chat_id, played, dur):
     return buttons
 
 
+def _dl_buttons(app_username, videoid):
+    """Return a [audio, video] download button row, or [] if videoid is invalid."""
+    if not videoid or videoid in {"telegram", "soundcloud"}:
+        return []
+    return [[
+        InlineKeyboardButton(
+            text="🎵 ᴀᴜᴅɪᴏ",
+            url=f"https://t.me/{app_username}?start=dl_{videoid}_a",
+            style=ButtonStyle.SUCCESS,
+            icon_custom_emoji_id=5309984423003823246,
+        ),
+        InlineKeyboardButton(
+            text="🎬 ᴠɪᴅᴇᴏ",
+            url=f"https://t.me/{app_username}?start=dl_{videoid}_v",
+            style=ButtonStyle.PRIMARY,
+            icon_custom_emoji_id=5404870433093048964,
+        ),
+    ]]
+
+
 def stream_markup(_, chat_id, videoid=None):
     buttons = [
         [
@@ -132,10 +152,17 @@ def stream_markup(_, chat_id, videoid=None):
             [
                 [
                     InlineKeyboardButton(
-                        text="⬇️ ᴅᴏᴡɴʟᴏᴀᴅ ᴛʜɪs sᴏɴɢ",
+                        text="🎵 ᴀᴜᴅɪᴏ",
                         url=f"https://t.me/{app.username}?start=dl_{videoid}_a",
                         style=ButtonStyle.SUCCESS,
-                    )
+                        icon_custom_emoji_id=5309984423003823246,
+                    ),
+                    InlineKeyboardButton(
+                        text="🎬 ᴠɪᴅᴇᴏ",
+                        url=f"https://t.me/{app.username}?start=dl_{videoid}_v",
+                        style=ButtonStyle.PRIMARY,
+                        icon_custom_emoji_id=5404870433093048964,
+                    ),
                 ]
             ]
             if videoid and videoid not in {"telegram", "soundcloud"}
