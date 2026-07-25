@@ -1,1 +1,2 @@
 - [Telegram channel additions](telegram-channel-additions.md) — channel bot installs need ChatMemberUpdated handling; new_chat_members alone is not reliable.
+- [Telegram sticker pack names](telegram-sticker-pack-names.md) — generate short names from the running bot username and always end with `_by_<bot_username>`.
