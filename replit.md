@@ -1,6 +1,14 @@
 # NOBITA X PRIME MUSIC BOT
 
-A feature-rich Telegram Music Bot that streams YouTube audio/video in group & channel voice chats. Built on Pyrogram + PyTgCalls.
+A feature-rich Telegram Music Bot that streams YouTube music in group/channel voice chats, with moderation, fun commands, AI chatbot, and more.
+
+## Stack
+
+- **Language:** Python 3.12
+- **Telegram framework:** kurigram (pyrogram fork — installed as `pyrogram`)
+- **Voice calls:** py-tgcalls / PyTgCalls
+- **Database:** MongoDB (via motor/pymongo)
+- **Task scheduler:** APScheduler
 
 ## How to run
 
@@ -8,38 +16,33 @@ A feature-rich Telegram Music Bot that streams YouTube audio/video in group & ch
 python3 -m SHUKLAMUSIC
 ```
 
-The workflow **Start application** is configured and runs automatically when you press the Run button.
+Workflow `Start application` runs this automatically.
 
 ## Required secrets (set in Replit Secrets)
 
-| Secret | Description |
+| Secret | Purpose |
 |---|---|
-| `BOT_TOKEN` | From [@BotFather](https://t.me/BotFather) |
-| `API_ID` | From [my.telegram.org](https://my.telegram.org) → Apps |
-| `API_HASH` | From [my.telegram.org](https://my.telegram.org) → Apps |
+| `BOT_TOKEN` | From @BotFather |
+| `API_ID` | From my.telegram.org |
+| `API_HASH` | From my.telegram.org |
 | `MONGO_DB_URI` | MongoDB Atlas connection string |
-| `OWNER_ID` | Your Telegram numeric user ID |
-| `STRING_SESSION` | Pyrogram session string for the VC assistant account |
-| `LOGGER_ID` | Telegram group/channel ID for bot logs (use `0` to disable) |
-| `GIT_TOKEN` | GitHub PAT — enables `/update` auto-push (optional) |
+| `STRING_SESSION` | Pyrogram user session (assistant account for VC) |
+| `LOGGER_ID` | Telegram chat ID for bot logs (bot must be admin there) |
+| `SESSION_SECRET` | Random secret string |
 
-## Optional env vars (set in .replit `[userenv.shared]`)
+## Optional secrets
 
-| Variable | Default | Description |
-|---|---|---|
-| `UPSTREAM_REPO` | dhruvkumarray3-eng/DHRUV_X_RADHA | GitHub repo used by `/update` |
-| `UPSTREAM_BRANCH` | `main` | Branch to pull/push |
+| Secret | Purpose |
+|---|---|
+| `GROQ_API_KEY` | Enables AI chatbot mode |
+| `GIT_TOKEN` | GitHub token for `/update` autopush command |
 
-## Stack
+## Notes
 
-- **Python 3.12**
-- **Pyrogram** — Telegram MTProto client
-- **PyTgCalls / NTgCalls** — voice chat streaming
-- **Motor / MongoDB** — async database
-- **yt-dlp** — YouTube download backend
-- **APScheduler** — nightmode & mongo-size jobs
+- `kurigram` must be installed **without** standard `pyrogram` alongside it. kurigram is a drop-in fork that installs itself as the `pyrogram` package and adds `ButtonStyle` enum support.
+- `LOGGER_ID` must be a valid Telegram chat ID (e.g. `-1001234567890`). The bot must be an admin in that group/channel before starting.
+- `STRING_SESSION` is the Pyrogram string session for the assistant user account that joins voice chats.
 
 ## User preferences
 
-- Keep the project's existing module structure (`SHUKLAMUSIC/` package).
-- Do not migrate the database away from MongoDB.
+- Wants GitHub autopush via `/update` command (GIT_TOKEN configured).
