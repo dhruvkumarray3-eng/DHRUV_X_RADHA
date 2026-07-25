@@ -1,6 +1,6 @@
 # NOBITA X PRIME Music Bot
 
-A feature-rich Telegram Music Bot that streams YouTube music directly into group and channel voice chats. Built on Pyrogram + PyTgCalls.
+A feature-rich Telegram Music Bot that streams YouTube music in group/channel voice chats, built on Pyrogram + PyTgCalls.
 
 ## How to run
 
@@ -8,36 +8,36 @@ A feature-rich Telegram Music Bot that streams YouTube music directly into group
 python3 -m SHUKLAMUSIC
 ```
 
-The **Start application** workflow runs this automatically on startup.
+The **Start application** workflow runs this automatically.
 
-## Required Secrets (Replit → Tools → Secrets)
+## Required secrets (set in Replit Secrets)
 
 | Secret | Description |
 |---|---|
-| `BOT_TOKEN` | From [@BotFather](https://t.me/BotFather) |
+| `BOT_TOKEN` | Telegram bot token from @BotFather |
 | `MONGO_DB_URI` | MongoDB Atlas connection string |
-| `STRING_SESSION` | Pyrogram string session for assistant account |
+| `STRING_SESSION` | Pyrogram string session for the assistant account (needed for VC streaming) |
 | `SESSION_SECRET` | Any random string (already set) |
-| `GIT_TOKEN` | GitHub personal access token (for `/update` auto-push) |
+| `GIT_TOKEN` | GitHub token for `/update` autopush command |
+
+## Optional env vars (set in .replit [userenv.shared])
+
+| Key | Default / Current |
+|---|---|
+| `OWNER_ID` | 8245258112 |
+| `LOGGER_ID` | -1004458016685 (log group) |
+| `LOG_GROUP_ID` | -1004458016685 |
+| `UPSTREAM_REPO` | https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA |
+| `UPSTREAM_BRANCH` | main |
 
 ## Stack
 
-- **Python 3.12**
-- **Pyrogram** — Telegram MTProto client (bot)
-- **PyTgCalls / ntgcalls** — Voice chat streaming
-- **MongoDB / Motor** — Async database
-- **yt-dlp** — YouTube audio downloading
-- **APScheduler** — Scheduled tasks (nightmode, DB cleanup)
-
-## Key configuration
-
-Edit `config.py` or set environment variables for optional tuning:
-
-- `LOGGER_ID` — Telegram chat ID for bot logs
-- `OWNER_ID` — Your Telegram user ID
-- `DURATION_LIMIT` — Max song duration in minutes (default: 17000)
-- `UPSTREAM_REPO` / `GIT_TOKEN` — GitHub repo for `/update` auto-push
+- **Python 3.12** + Pyrogram + PyTgCalls
+- **MongoDB** (via Motor async driver)
+- **yt-dlp** for YouTube audio/video fetching
+- **APScheduler** for nightmode & MongoDB size checks
+- **Heroku3, GitPython** for deployment/update features
 
 ## User preferences
 
-- GitHub token (`GIT_TOKEN`) should be set so every code change can be auto-pushed via the `/update` command.
+- Include GIT_TOKEN when collecting secrets for this project (for `/update` autopush).
