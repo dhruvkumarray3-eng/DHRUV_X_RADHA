@@ -412,7 +412,7 @@ class YouTubeAPI:
                 "quiet": True,
                 "no_warnings": True,
                 "extract_flat": True,
-                "playlist_items": "2-15",   # broader pool to avoid repeats
+                "playlist_items": "2-50",   # large pool to prevent repeats
             }
             url = f"https://www.youtube.com/watch?v={vidid}&list=RD{vidid}"
             try:

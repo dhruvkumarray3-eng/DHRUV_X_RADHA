@@ -31,8 +31,18 @@ async def video_downloader(_, message: Message):
         if "medias" not in data or not data["medias"]:
             return await msg.edit("❌ No downloadable video found.")
 
-        # Step 2: Get best quality video URL
-        best_video = sorted(data["medias"], key=lambda x: x.get("quality", ""), reverse=True)[0]
+        # Step 2: Get best HD quality video URL (prefer 1080p > 720p > highest available)
+        def _quality_rank(m):
+            q = (m.get("quality") or m.get("extension") or "").lower()
+            if "1080" in q: return 100
+            if "720" in q:  return 90
+            if "480" in q:  return 70
+            if "360" in q:  return 50
+            try:
+                return int("".join(filter(str.isdigit, q)) or "0")
+            except Exception:
+                return 0
+        best_video = sorted(data["medias"], key=_quality_rank, reverse=True)[0]
         video_link = best_video["url"]
 
         # Step 3: Download the video to temp file
