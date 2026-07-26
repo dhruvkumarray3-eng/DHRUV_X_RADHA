@@ -34,8 +34,16 @@ from pyrogram.enums import ButtonStyle as _BS
 
 _LANG_STYLES = [_BS.PRIMARY, _BS.SUCCESS, _BS.DANGER]
 
-def lanuages_keyboard(_):
-    lang_list = list(languages_present.keys())
+def lanuages_keyboard(_, filter_query: str = ""):
+    """Build language keyboard, optionally filtered by search query."""
+    query = filter_query.strip().lower()
+    lang_list = [
+        k for k in languages_present.keys()
+        if not query
+        or query in k.lower()
+        or query in languages_present[k].lower()
+    ]
+
     buttons = [
         InlineKeyboardButton(
             text=languages_present[i],
@@ -64,17 +72,35 @@ def lanuages_keyboard(_):
         ]
     )
 
-    return InlineKeyboardMarkup(keyboard)
+    return InlineKeyboardMarkup(keyboard), len(lang_list)
 
 
 @app.on_message(filters.command(["lang", "setlang", "language"]) & ~BANNED_USERS)
 @language
 async def langs_command(client, message: Message, _):
-    keyboard = lanuages_keyboard(_)
-    await message.reply_text(
-        _["lang_1"],
-        reply_markup=keyboard,
-    )
+    # Support: /lang <search> to filter languages
+    query = ""
+    if len(message.command) > 1:
+        query = " ".join(message.command[1:])
+
+    keyboard, count = lanuages_keyboard(_, filter_query=query)
+
+    total = len(languages_present)
+    if query:
+        header = (
+            f"🔍 <b>Search:</b> <code>{query}</code> — {count}/{total} language(s) found\n\n"
+            + _["lang_1"]
+        )
+    else:
+        header = f"🌐 <b>{total} languages available</b>\n\n" + _["lang_1"] + \
+                 "\n\n💡 <i>Tip: Use <code>/lang &lt;name&gt;</code> to search. E.g. <code>/lang hindi</code></i>"
+
+    if count == 0:
+        return await message.reply_text(
+            f"❌ No language found for <code>{query}</code>.\n\nUse /lang to see all languages."
+        )
+
+    await message.reply_text(header, reply_markup=keyboard)
 
 
 @app.on_callback_query(filters.regex("LG") & ~BANNED_USERS)
@@ -85,7 +111,7 @@ async def lanuagecb(client, CallbackQuery, _):
     except Exception:
         pass
 
-    keyboard = lanuages_keyboard(_)
+    keyboard, _ = lanuages_keyboard(_)
     return await CallbackQuery.edit_message_reply_markup(
         reply_markup=keyboard
     )
@@ -122,7 +148,7 @@ async def language_markup(client, CallbackQuery, _):
         langauge,
     )
 
-    keyboard = lanuages_keyboard(_)
+    keyboard, _ = lanuages_keyboard(_)
 
     return await CallbackQuery.edit_message_reply_markup(
         reply_markup=keyboard
