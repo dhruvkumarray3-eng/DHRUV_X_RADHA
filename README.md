@@ -92,10 +92,8 @@ The bot runs a built-in HTTP server on port **8080**.
 Use the following URL in [UptimeRobot](https://uptimerobot.com), [BetterStack](https://betterstack.com), or any uptime monitor:
 
 ```
-https://<your-replit-app-name>.<your-username>.repl.co/ping
+https://99ba27f5-641a-47cd-b312-5110070e0be0-00-369v6s0lclrz8.sisko.replit.dev/ping
 ```
-
-> **How to find your URL:** In Replit, click **Webview** (the browser icon) → copy the URL shown → append `/ping`.
 
 Set the monitor to ping every **5 minutes**. This keeps the bot alive 24/7 on Replit's free tier.
 
