@@ -1,52 +1,44 @@
-# NOBITA X PRIME — Telegram Music Bot
+# SHUKLAMUSIC — Nobita X Prime Music Bot
 
-A feature-rich Telegram Music Bot that streams YouTube audio into Telegram group voice chats using Pyrogram and py-tgcalls.
+A feature-rich Telegram Music Bot that streams YouTube audio in group/channel voice chats, with moderation, AI chatbot, welcome messages, and more.
 
-## How to run
+## Tech Stack
+- **Python 3.12**
+- **Pyrogram** — Telegram MTProto client
+- **py-tgcalls / ntgcalls** — Voice chat streaming
+- **yt-dlp** — YouTube audio/video downloader
+- **Motor / MongoDB** — Async database
+- **APScheduler** — Nightmode & scheduled tasks
+- **Groq LLaMA 3.3 70B** — AI chatbot engine
+- **aiohttp** — Built-in keep-alive web server (port 8080)
+
+## How to Run
 
 ```
 python3 -m SHUKLAMUSIC
 ```
 
-The **Start application** workflow runs this automatically on Replit.
+The workflow **"Start application"** handles this automatically.
 
-## Required secrets (set in Replit Secrets)
+## Required Secrets (set in Replit Secrets)
 
 | Secret | Description |
 |---|---|
-| `API_ID` | Telegram API ID — from [my.telegram.org](https://my.telegram.org) |
-| `API_HASH` | Telegram API hash — from [my.telegram.org](https://my.telegram.org) |
-| `BOT_TOKEN` | Bot token — from [@BotFather](https://t.me/BotFather) |
+| `API_ID` | Telegram API ID from my.telegram.org |
+| `API_HASH` | Telegram API Hash from my.telegram.org |
+| `BOT_TOKEN` | Bot token from @BotFather |
 | `MONGO_DB_URI` | MongoDB Atlas connection string |
-| `STRING_SESSION` | Pyrogram userbot string session — from [@StringFetchBot](https://t.me/StringFetchBot) |
-| `LOGGER_ID` | Telegram group/channel ID where the bot sends startup logs |
+| `STRING_SESSION` | Pyrogram userbot string session |
+| `LOGGER_ID` | Telegram group/channel ID for logs |
 | `OWNER_ID` | Your Telegram user ID |
+| `GIT_TOKEN` | GitHub token for auto-push (optional) |
+| `GROQ_API_KEY` | Groq API key for AI chatbot (optional) |
 
-## Optional secrets
+## Entry Points
+- `SHUKLAMUSIC/__main__.py` — main startup (calls `init()`)
+- `config.py` — all environment variable definitions
+- `SHUKLAMUSIC/plugins/` — all bot command handlers
 
-| Secret | Description |
-|---|---|
-| `GIT_TOKEN` | GitHub personal access token — enables `/update` autopush to your fork |
-| `GROQ_API_KEY` | Groq API key — enables AI chatbot mode |
-
-## Key environment variables (set in Replit env)
-
-| Variable | Default | Description |
-|---|---|---|
-| `UPSTREAM_REPO` | github.com/dhruvkumarray3-eng/DHRUV_X_RADHA | Repo for `/update` command |
-| `UPSTREAM_BRANCH` | `main` | Branch to pull from |
-
-## Tech stack
-
-- **Python 3.12**
-- **Pyrogram** — Telegram MTProto client
-- **py-tgcalls / ntgcalls** — Voice chat streaming
-- **yt-dlp** — YouTube audio downloading
-- **Motor / MongoDB** — Async database
-- **APScheduler** — Nightmode & cleanup jobs
-- **Groq** — AI chatbot (optional)
-
-## User preferences
-
-- Keep existing project structure intact.
-- GitHub auto-push via GIT_TOKEN is configured (used by `/update` command).
+## User Preferences
+- Keep Heroku-related code as-is (it gracefully no-ops on Replit)
+- GIT_TOKEN and GROQ_API_KEY are configured for GitHub push and AI chatbot
