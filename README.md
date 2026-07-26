@@ -7,8 +7,9 @@
 **A powerful, feature-rich Telegram Music Bot — stream YouTube music directly in your group & channel voice chats.**
 
 [![Telegram](https://img.shields.io/badge/Support-Telegram-blue?logo=telegram)](https://t.me/II_NOBITA_X_PRIME_II)
-[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.12+-blue?logo=python)](https://python.org)
 [![License](https://img.shields.io/badge/License-Educational-orange)](#license)
+[![Uptime](https://img.shields.io/badge/Uptime-24%2F7-green)](#uptime-monitoring)
 
 </div>
 
@@ -27,8 +28,10 @@
 | 💑 Fun | Couple of the Day, Truth & Dare, Group Games |
 | 📋 Utility | Notes, Filters, AFK, User Info, Crypto & UPI tools |
 | 🔊 VC Logger | Log VC join/leave events to a dedicated chat |
-| 🌐 Multilingual | Language support per group |
-| 🤖 ChatBot | Integrated AI chat mode |
+| 🌐 Multilingual | 180+ country language support, auto-detected per group |
+| 🤖 ChatBot | Groq AI chatbot — human-like replies in any language |
+| 📡 Traffic Control | Owner-only remote flood guard & rate limiter |
+| 💓 Uptime | Built-in `/ping` endpoint for 24/7 uptime monitoring |
 
 ---
 
@@ -38,24 +41,37 @@
 
 | Requirement | Where to get |
 |---|---|
+| `API_ID` | [my.telegram.org](https://my.telegram.org) |
+| `API_HASH` | [my.telegram.org](https://my.telegram.org) |
 | `BOT_TOKEN` | [@BotFather](https://t.me/BotFather) |
 | `MONGO_DB_URI` | [MongoDB Atlas](https://cloud.mongodb.com) |
-| `STRING1` | Generate via `/genstring` command or [@StringFetchBot](https://t.me/StringFetchBot) |
-| `SESSION_SECRET` | Any random secret string |
+| `STRING_SESSION` | [@StringFetchBot](https://t.me/StringFetchBot) or `/genstring` |
+| `LOGGER_ID` | Your Telegram group/channel ID |
+| `OWNER_ID` | Your Telegram user ID |
 
-### Deploy on Replit
+### Deploy on Replit *(Recommended)*
 
-1. Fork this repo or import it to Replit.
-2. Add the following **Secrets** in Replit → Tools → Secrets:
+1. Import this repo into Replit.
+2. Go to **Tools → Secrets** and add:
 
 ```
-BOT_TOKEN       = your bot token
-MONGO_DB_URI    = your MongoDB URI
-STRING1         = your Pyrogram string session
-SESSION_SECRET  = any random string
+API_ID           = your telegram api id
+API_HASH         = your telegram api hash
+BOT_TOKEN        = your bot token
+MONGO_DB_URI     = your mongodb atlas uri
+STRING_SESSION   = your pyrogram string session
+LOGGER_ID        = your logger group/channel id
+OWNER_ID         = your telegram user id
 ```
 
-3. Click **Run** — the workflow `Start application` will launch automatically.
+3. **Optional but recommended:**
+
+```
+GIT_TOKEN        = github personal access token (for /update autopush)
+GROQ_API_KEY     = groq api key (for AI chatbot)
+```
+
+4. Click **Run** — the bot starts automatically.
 
 ### Deploy on VPS / Railway
 
@@ -67,230 +83,191 @@ cp .env.example .env   # fill in your values
 python3 -m SHUKLAMUSIC
 ```
 
-#### Railway variables
+---
 
-In Railway, open **Variables** and add these values. Do not commit tokens,
-session strings, MongoDB URIs, or other secrets to GitHub.
+## 💓 Uptime Monitoring
 
-| Variable | Required | Value |
-|---|---:|---|
-| `BOT_TOKEN` | Yes | Token from `@BotFather` |
-| `MONGO_DB_URI` | Yes | MongoDB Atlas connection URI |
-| `STRING_SESSION` | Yes | Pyrogram assistant session string |
-| `API_ID` | Recommended | Telegram API ID from `my.telegram.org` |
-| `API_HASH` | Recommended | Telegram API hash from `my.telegram.org` |
-| `LOGGER_ID` | Yes | Numeric Telegram log group/channel ID |
-| `OWNER_ID` | Recommended | Your numeric Telegram user ID |
-| `OWNER_USERNAME` | Recommended | Your Telegram username without `@` |
-| `BOT_USERNAME` | Recommended | Bot username without `@` |
-| `BOT_NAME` | Optional | Display name, default `NOBITA X PRIME` |
-| `SUPPORT_CHAT` | Recommended | Support group/channel URL |
-| `SUPPORT_CHANNEL` | Recommended | Updates channel URL |
-| `GIT_TOKEN` | Optional | GitHub token for bot update/push features |
-| `UPSTREAM_REPO` | Optional | GitHub repository URL |
-| `UPSTREAM_BRANCH` | Optional | Repository branch, normally `main` |
-| `DURATION_LIMIT` | Optional | Maximum allowed song duration |
-| `AUTO_LEAVING_ASSISTANT` | Optional | `True` or `False` |
-| `ASSISTANT_LEAVE_TIME` | Optional | Assistant leave delay in seconds |
-| `API_URL` | Optional | External download API URL |
-| `API_KEY` | Optional | External download API key |
+The bot runs a built-in HTTP server on port **8080**.
 
-Railway uses the included `Procfile` and starts the worker with:
+Use the following URL in [UptimeRobot](https://uptimerobot.com), [BetterStack](https://betterstack.com), or any uptime monitor:
 
-```bash
-python3 -m SHUKLAMUSIC
 ```
+https://<your-replit-app-name>.<your-username>.repl.co/ping
+```
+
+> **How to find your URL:** In Replit, click **Webview** (the browser icon) → copy the URL shown → append `/ping`.
+
+Set the monitor to ping every **5 minutes**. This keeps the bot alive 24/7 on Replit's free tier.
 
 ---
 
-## ⚙️ Configuration
+## 🌐 Language System (180+ Countries)
 
-Edit `config.py` or set the following environment variables:
+Every group can set its own language:
 
-| Variable | Required | Description |
-|---|---|---|
-| `BOT_TOKEN` | ✅ | Telegram Bot Token |
-| `MONGO_DB_URI` | ✅ | MongoDB connection URI |
-| `STRING1` | ✅ | Pyrogram assistant session string |
-| `SESSION_SECRET` | ✅ | Flask/webhook session secret |
-| `OWNER_ID` | ✅ | Your Telegram user ID |
-| `OWNER_USERNAME` | ✅ | Your Telegram username (without @) |
-| `SUPPORT_CHAT` | ✅ | Support group username |
-| `LOG_GROUP_ID` | ✅ | Chat ID for bot logs |
-| `UPSTREAM_REPO` | ✅ | GitHub repo URL for `/update` |
-| `GITHUB_TOKEN` | ⭐ | GitHub PAT for auto-push via `/update` |
-| `API_URL` | ❌ | External download API (default: ShrutiBots) |
-| `API_KEY` | ❌ | API key for external download API |
+```
+/lang              → show all 17 supported languages
+/lang hindi        → search by language name
+/lang india        → search by country name
+/lang russia       → set Russian (Русский)
+/lang arabic       → set Arabic
+```
+
+**Supported languages:** English, Hindi, Arabic, Russian, French, Spanish, Turkish, Indonesian, Bengali, Punjabi, Telugu, Tamil, Marathi, Gujarati, Malayalam, Kannada, Urdu — with 180+ country→language mappings.
+
+When a language is set, **all bot messages** (including "Powered by" and start messages) are shown in that language.
 
 ---
 
-## 📋 Commands
+## 🤖 AI ChatBot
 
-### 🎵 Music
+Powered by **Groq LLaMA 3.3 70B** — responds like a real human friend.
 
-| Command | Description |
-|---|---|
-| `/play [song]` | Play a song in VC |
-| `/cplay [song]` | Play in linked channel VC |
-| `/vplay [song]` | Play video in VC |
-| `/pause` | Pause the stream |
-| `/resume` | Resume the stream |
-| `/skip` | Skip to next track |
-| `/stop` | Stop and leave VC |
-| `/seek [seconds]` | Seek forward/backward |
-| `/loop [count]` | Loop current track |
-| `/shuffle` | Shuffle the queue |
-| `/queue` | Show current queue |
-| `/autoplay` | Toggle YouTube autoplay |
-| `/song [name]` | Download song as file |
-
-### 🧩 Stickers
-
-To use `/kang`, reply to any sticker, photo, or supported image document and
-send:
-
-```text
-/kang
+```
+/chatbot on        → enable in your group
+/chatbot off       → disable
+/chatbot status    → check current status
+/teach hi | Hello! → teach a keyword reply
+/unlearn hi        → forget a keyword
+/learned           → list all keywords
+/chatbothelp       → full help
 ```
 
-You can provide an emoji after the command:
+**Owner-only — User Profiles (AI memory for specific users):**
 
-```text
-/kang 🔥
+```
+/addprofile @username This is my best friend Rahul, he loves cricket
+/delprofile @username
+/profiles
 ```
 
-The bot creates or reuses your personal sticker pack and returns an
-`addstickers` link. The pack name is generated from the running bot's real
-Telegram username, so it follows Telegram's required `_by_<bot_username>`
-format. The bot automatically tries the next pack when a pack is full or its
-name is already occupied.
-
-### ✅ Auto-approve join requests
-
-Add the bot to your group or supergroup as an administrator with the
-**Add Members / Invite Users** permission. Then run:
-
-```text
-/autoapprove on
-```
-
-To turn it off:
-
-```text
-/autoapprove off
-```
-
-The setting is stored per chat in MongoDB. The bot must remain an administrator
-with **Add Members** permission; otherwise Telegram will reject approvals and
-the bot will report the failure in its logs.
-
-### 🛡️ Moderation
-
-| Command | Description |
-|---|---|
-| `/ban` | Ban a user |
-| `/unban` | Unban a user |
-| `/mute` | Mute a user |
-| `/unmute` | Unmute a user |
-| `/tmute [time]` | Temporarily mute |
-| `/kick` | Kick a user |
-| `/promote` | Promote to admin |
-| `/demote` | Demote admin |
-| `/warn` | Warn a user (3 warns = ban) |
-| `/purge` | Purge messages |
-
-### 📌 Tags
-
-| Command | Description |
-|---|---|
-| `/tagall` | Tag all members |
-| `/admintag` | Tag all admins |
-| `/hitag` | Tag one-by-one with delay |
-| `/mention [msg]` | Tag all with custom message |
-| `/cancel` | Stop ongoing tag |
-
-### 🔧 Settings & Tools
-
-| Command | Description |
-|---|---|
-| `/settings` | Open bot settings panel |
-| `/channelplay` | Link channel to group |
-| `/welcome on/off` | Toggle welcome message |
-| `/nightmode on/off` | Toggle night auto-lock |
-| `/afk [reason]` | Set AFK status |
-| `/info` | Get user info |
-| `/id` | Get user/chat ID |
-| `/truth` | Random truth question |
-| `/dare` | Random dare challenge |
-| `/couples` | Couple of the day |
-| `/ton` | Live TON price |
-| `/usdt` | Live USDT price |
-| `/balance [wallet]` | TON wallet balance |
-| `/setupi [upi-id]` | Save UPI ID |
-| `/gen [amount]` | Generate UPI QR code |
-| `/vclogger on/off` | Toggle VC logging |
-
-### 📝 Notes & Filters
-
-| Command | Description |
-|---|---|
-| `/save [name] [content]` | Save a note |
-| `/get [name]` or `#name` | Get a note |
-| `/notes` | List all notes |
-| `/filter [keyword]` | Set auto-reply filter |
-| `/filters` | List all filters |
-| `/stopfilter [keyword]` | Remove a filter |
-
-### 👑 Sudo Only
-
-| Command | Description |
-|---|---|
-| `/broadcast` | Broadcast to all chats |
-| `/gban` | Globally ban a user |
-| `/update` | Pull latest code from GitHub & restart |
-| `/logs` | Get bot logs |
-| `/stats` | Bot statistics |
-| `/maintenance on/off` | Toggle maintenance mode |
+When a user with a saved profile chats with the bot, the AI automatically uses that context for personalised replies.
 
 ---
 
-## 🤖 Autoplay (YouTube Radio)
+## 📡 Traffic Control *(Owner Only)*
 
-When autoplay is enabled (`/autoplay`), once the queue runs out the bot automatically fetches a **related song** from YouTube's Radio/Mix system — the same technology YouTube uses for autoplay. No manual searching required.
+Protect your groups from Telegram flood limits:
 
 ```
-/autoplay    → toggle on/off
+/traffic                      → stats for current chat
+/traffic global               → stats for all chats
+/traffic <chat_id>            → stats for specific chat
+/floodctrl on                 → enable flood guard (this chat)
+/floodctrl on <chat_id>       → enable remotely
+/floodctrl off <chat_id>      → disable remotely
+/setflood 20 60               → max 20 msg per 60 seconds
+/setfloodaction warn|slow     → action when limit hit
 ```
-
-When ON, the bot will:
-1. Detect when the queue is about to end
-2. Fetch a related song from YouTube Radio (`RD{videoId}`)
-3. Automatically queue and stream it
-4. Continue indefinitely until stopped
-
----
-
-## 📢 Channel Play Setup
-
-1. Add the bot to your **channel** as admin
-2. Add the bot to your **group** as admin  
-3. In the group, use `/channelplay` to link the channel
-4. Play music in the group — it streams to the **channel's voice chat**
 
 ---
 
 ## 🔄 Auto-Update via GitHub
 
-If `GITHUB_TOKEN` is set, the `/update` command will:
+If `GIT_TOKEN` is set, use `/update` to:
 1. Pull latest code from `UPSTREAM_REPO`
-2. Push any local changes to your GitHub fork
+2. Push changes to your GitHub fork
 3. Restart the bot automatically
+
+Environment variables for update:
+
+```
+UPSTREAM_REPO    = https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA
+UPSTREAM_BRANCH  = main
+GIT_TOKEN        = your github personal access token
+```
+
+---
+
+## 🎵 Music Features
+
+### Autoplay (YouTube Radio)
+
+```
+/autoplay    → toggle on/off
+```
+
+When ON, the bot auto-fetches related songs from YouTube Radio when the queue ends — streams indefinitely.
+
+### Channel Play Setup
+
+1. Add the bot to your **channel** as admin
+2. Add the bot to your **group** as admin
+3. In the group, use `/channelplay` to link the channel
+4. Play music — streams to the **channel's voice chat**
+
+### Commands
+
+| Command | Description |
+|---|---|
+| `/play <song>` | Play audio in voice chat |
+| `/vplay <song>` | Play video in voice chat |
+| `/pause` | Pause stream |
+| `/resume` | Resume stream |
+| `/skip` | Skip to next track |
+| `/stop` / `/end` | Stop and clear queue |
+| `/queue` | View current queue |
+| `/loop enable/disable` | Loop current track |
+| `/shuffle` | Shuffle queue |
+| `/seek <seconds>` | Seek forward |
+| `/seekback <seconds>` | Seek backward |
+| `/song <name>` | Download MP3/MP4 |
+
+---
+
+## 🛡️ Owner Commands
+
+| Command | Description |
+|---|---|
+| `/addsudo @user` | Add sudo user |
+| `/delsudo @user` | Remove sudo user |
+| `/sudolist` | View sudo list (owner only) |
+| `/broadcast <msg>` | Broadcast to all chats |
+| `/gban @user` | Global ban |
+| `/ungban @user` | Remove global ban |
+| `/maintenance enable/disable` | Toggle maintenance mode |
+| `/logs` | Get bot logs |
+| `/traffic` | Traffic control panel |
+| `/addprofile @user <info>` | Add AI user profile |
+| `/update` | Pull latest code & restart |
+
+---
+
+## ⚙️ Environment Variables
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `API_ID` | ✅ | — | Telegram API ID |
+| `API_HASH` | ✅ | — | Telegram API Hash |
+| `BOT_TOKEN` | ✅ | — | Bot Token |
+| `MONGO_DB_URI` | ✅ | — | MongoDB connection string |
+| `STRING_SESSION` | ✅ | — | Pyrogram userbot session |
+| `LOGGER_ID` | ✅ | — | Log group/channel ID |
+| `OWNER_ID` | ✅ | `6670240589` | Bot owner's Telegram ID |
+| `GIT_TOKEN` | ⚙️ | — | GitHub token for auto-push |
+| `GROQ_API_KEY` | ⚙️ | — | Groq API key for AI chatbot |
+| `DURATION_LIMIT` | ⚙️ | `17000` | Max song duration (minutes) |
+| `SUPPORT_CHANNEL` | ⚙️ | Nobita channel | Support channel URL |
+| `SUPPORT_CHAT` | ⚙️ | Nobita group | Support group URL |
+
+---
+
+## 📚 Tech Stack
+
+- **Python 3.12**
+- **Pyrogram** — Telegram MTProto client
+- **py-tgcalls / ntgcalls** — Voice chat streaming engine
+- **yt-dlp** — YouTube audio/video downloader
+- **Motor / MongoDB** — Async database
+- **APScheduler** — Nightmode & scheduled tasks
+- **Groq LLaMA 3.3 70B** — AI chatbot engine
+- **aiohttp** — Built-in keep-alive web server
 
 ---
 
 ## 📜 License
 
-This project is based on [StrangerMusic](https://github.com/itzshukla) and [ShrutiMusic](https://github.com/NoxxOP/ShrutiMusic).  
+Based on [StrangerMusic](https://github.com/itzshukla) and [ShrutiMusic](https://github.com/NoxxOP/ShrutiMusic).  
 Open for **educational and non-commercial use only**.  
 You must retain all credit headers in source files.  
 Commercial use or removal of credits is **strictly prohibited**.

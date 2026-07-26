@@ -72,7 +72,7 @@ async def sudoers_list(client, message: Message):
         [InlineKeyboardButton("👁 ᴠɪᴇᴡ sᴜᴅᴏ ʟɪsᴛ", callback_data="check_sudo_list", style=_G)],
     ])
     await message.reply_video(
-        video="https://telegra.ph/file/7fceefa2fb3e21f5fd84e.mp4",
+        video="https://files.catbox.moe/56u1wc.mp4",
         caption=(
             "**🔐 sᴜᴅᴏ ʟɪsᴛ — ᴏᴡɴᴇʀ ᴏɴʟʏ**\n\n"
             "**»** ʙᴜᴛᴛᴏɴ ᴅᴀʙᴀᴋᴇ sᴜᴅᴏ ʟɪsᴛ ᴅᴇᴋʜᴏ.\n\n"

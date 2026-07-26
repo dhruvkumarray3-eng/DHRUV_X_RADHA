@@ -34,51 +34,233 @@ from pyrogram.enums import ButtonStyle as _BS
 
 _LANG_STYLES = [_BS.PRIMARY, _BS.SUCCESS, _BS.DANGER]
 
-# Country / region / keyword → language code mapping
+# Country / region / keyword → language code mapping (180+ countries/regions)
 _COUNTRY_MAP = {
-    # Arabic
+    # ── Arabic (ar) ────────────────────────────────────────────────────────
     "iraq": "ar", "iraqi": "ar", "عراق": "ar",
-    "saudi": "ar", "arabia": "ar", "arab": "ar",
-    "egypt": "ar", "egyptian": "ar",
-    "syria": "ar", "syrian": "ar",
-    "jordan": "ar", "kuwait": "ar", "uae": "ar",
+    "saudi": "ar", "saudi arabia": "ar", "arabia": "ar", "arab": "ar",
+    "egypt": "ar", "egyptian": "ar", "مصر": "ar",
+    "syria": "ar", "syrian": "ar", "سوريا": "ar",
+    "jordan": "ar", "jordanian": "ar",
+    "kuwait": "ar", "kuwaiti": "ar",
+    "uae": "ar", "emirates": "ar", "dubai": "ar", "abu dhabi": "ar",
     "qatar": "ar", "bahrain": "ar", "oman": "ar",
-    "lebanon": "ar", "libya": "ar", "morocco": "ar",
-    "arabic": "ar", "عربي": "ar",
-    # Hindi
+    "lebanon": "ar", "lebanese": "ar",
+    "libya": "ar", "libyan": "ar",
+    "morocco": "ar", "moroccan": "ar", "المغرب": "ar",
+    "algeria": "ar", "algerian": "ar",
+    "tunisia": "ar", "tunisian": "ar",
+    "sudan": "ar", "sudanese": "ar",
+    "yemen": "ar", "yemeni": "ar",
+    "somalia": "ar",
+    "mauritania": "ar",
+    "djibouti": "ar",
+    "comoros": "ar",
+    "arabic": "ar", "عربي": "ar", "عربية": "ar",
+
+    # ── Hindi (hi) ─────────────────────────────────────────────────────────
     "india": "hi", "indian": "hi", "bharat": "hi",
-    "hindi": "hi", "हिंदी": "hi",
-    # Urdu
+    "hindi": "hi", "हिंदी": "hi", "हिन्दी": "hi",
+    "uttar pradesh": "hi", "rajasthan": "hi", "madhya pradesh": "hi",
+    "bihar": "hi", "haryana": "hi", "delhi": "hi", "uttarakhand": "hi",
+    "jharkhand": "hi", "chhattisgarh": "hi", "himachal pradesh": "hi",
+
+    # ── Urdu (ur) ──────────────────────────────────────────────────────────
     "pakistan": "ur", "pakistani": "ur", "urdu": "ur", "اردو": "ur",
-    # Punjabi
+    "پاکستان": "ur",
+
+    # ── Punjabi (pa) ───────────────────────────────────────────────────────
     "punjab": "pa", "punjabi": "pa", "ਪੰਜਾਬੀ": "pa",
-    # Bengali
+
+    # ── Bengali (bn) ───────────────────────────────────────────────────────
     "bangladesh": "bn", "bengal": "bn", "bengali": "bn", "bangla": "bn",
-    # Telugu
+    "west bengal": "bn", "বাংলাদেশ": "bn", "বাংলা": "bn",
+
+    # ── Telugu (te) ────────────────────────────────────────────────────────
     "telugu": "te", "andhra": "te", "telangana": "te",
-    # Tamil
-    "tamil": "ta", "tamilnadu": "ta", "srilanka": "ta",
-    # Marathi
-    "marathi": "mr", "maharashtra": "mr",
-    # Gujarati
-    "gujarati": "gu", "gujarat": "gu",
-    # Malayalam
-    "malayalam": "ml", "kerala": "ml",
-    # Kannada
-    "kannada": "kn", "karnataka": "kn",
-    # Spanish
-    "spain": "es", "spanish": "es", "mexico": "es", "colombia": "es",
-    "argentina": "es", "español": "es",
-    # Russian
-    "russia": "ru", "russian": "ru", "русский": "ru",
-    # Turkish
-    "turkey": "tr", "turkish": "tr", "türkiye": "tr",
-    # Indonesian
-    "indonesia": "id", "indonesian": "id",
-    # French
+    "andhra pradesh": "te", "తెలుగు": "te",
+
+    # ── Tamil (ta) ─────────────────────────────────────────────────────────
+    "tamil": "ta", "tamilnadu": "ta", "tamil nadu": "ta",
+    "srilanka": "ta", "sri lanka": "ta", "தமிழ்": "ta",
+
+    # ── Marathi (mr) ───────────────────────────────────────────────────────
+    "marathi": "mr", "maharashtra": "mr", "मराठी": "mr",
+
+    # ── Gujarati (gu) ──────────────────────────────────────────────────────
+    "gujarati": "gu", "gujarat": "gu", "ગુજરાતી": "gu",
+
+    # ── Malayalam (ml) ─────────────────────────────────────────────────────
+    "malayalam": "ml", "kerala": "ml", "മലയാളം": "ml",
+
+    # ── Kannada (kn) ───────────────────────────────────────────────────────
+    "kannada": "kn", "karnataka": "kn", "ಕನ್ನಡ": "kn",
+
+    # ── Spanish (es) ───────────────────────────────────────────────────────
+    "spain": "es", "spanish": "es", "español": "es",
+    "mexico": "es", "méxico": "es",
+    "colombia": "es", "colombian": "es",
+    "argentina": "es", "argentinian": "es",
+    "peru": "es", "perú": "es",
+    "venezuela": "es", "venezuelan": "es",
+    "chile": "es", "chilean": "es",
+    "ecuador": "es",
+    "bolivia": "es",
+    "paraguay": "es",
+    "uruguay": "es",
+    "cuba": "es", "cuban": "es",
+    "dominican republic": "es",
+    "honduras": "es",
+    "el salvador": "es",
+    "nicaragua": "es",
+    "costa rica": "es",
+    "panama": "es",
+    "guatemala": "es",
+    "puerto rico": "es",
+
+    # ── Russian (ru) ───────────────────────────────────────────────────────
+    "russia": "ru", "russian": "ru", "русский": "ru", "россия": "ru",
+    "belarus": "ru", "belarusian": "ru", "беларусь": "ru",
+    "kazakhstan": "ru", "казахстан": "ru",
+    "kyrgyzstan": "ru", "kyrgyz": "ru",
+    "tajikistan": "ru",
+    "moldova": "ru",
+
+    # ── Turkish (tr) ───────────────────────────────────────────────────────
+    "turkey": "tr", "turkish": "tr", "türkiye": "tr", "türkçe": "tr",
+    "türk": "tr",
+
+    # ── Indonesian (id) ────────────────────────────────────────────────────
+    "indonesia": "id", "indonesian": "id", "bahasa": "id",
+    "jakarta": "id", "bali": "id", "java": "id",
+
+    # ── French (fr) ────────────────────────────────────────────────────────
     "france": "fr", "french": "fr", "français": "fr",
-    # English
-    "english": "en", "uk": "en", "usa": "en", "america": "en",
+    "belgium": "fr", "switzerland": "fr",
+    "canada french": "fr", "québec": "fr", "quebec": "fr",
+    "senegal": "fr", "ivory coast": "fr", "cameroon": "fr",
+    "mali": "fr", "burkina faso": "fr", "niger": "fr",
+    "chad": "fr", "guinea": "fr", "benin": "fr", "togo": "fr",
+    "madagascar": "fr", "congo": "fr", "gabon": "fr",
+    "central african republic": "fr",
+    "burundi": "fr", "rwanda": "fr",
+    "haiti": "fr",
+
+    # ── English (en) ───────────────────────────────────────────────────────
+    "english": "en", "uk": "en", "united kingdom": "en",
+    "usa": "en", "america": "en", "united states": "en",
+    "australia": "en", "australian": "en",
+    "canada": "en", "canadian": "en",
+    "new zealand": "en",
+    "ireland": "en", "irish": "en",
+    "south africa": "en",
+    "nigeria": "en", "nigerian": "en",
+    "ghana": "en", "ghanaian": "en",
+    "kenya": "en", "kenyan": "en",
+    "uganda": "en",
+    "tanzania": "en",
+    "zimbabwe": "en",
+    "zambia": "en",
+    "botswana": "en",
+    "namibia": "en",
+    "sierra leone": "en",
+    "liberia": "en",
+    "gambia": "en",
+    "singapore": "en",
+    "philippines": "en", "filipino": "en",
+    "malaysia": "en", "malaysian": "en",
+    "myanmar": "en", "burma": "en",
+    "jamaica": "en",
+    "trinidad": "en",
+    "barbados": "en",
+    "guyana": "en",
+    "belize": "en",
+    "papua new guinea": "en",
+    "fiji": "en",
+    "solomon islands": "en",
+    "vanuatu": "en",
+    "samoa": "en",
+    "tonga": "en",
+    "kiribati": "en",
+    "nauru": "en",
+    "tuvalu": "en",
+    "palau": "en",
+    "marshall islands": "en",
+    "micronesia": "en",
+    # Countries that default to English (no specific language file)
+    "china": "en", "chinese": "en",
+    "japan": "en", "japanese": "en",
+    "korea": "en", "korean": "en",
+    "vietnam": "en", "vietnamese": "en",
+    "thailand": "en", "thai": "en",
+    "cambodia": "en", "khmer": "en",
+    "laos": "en",
+    "nepal": "en", "nepali": "en",
+    "bhutan": "en",
+    "maldives": "en",
+    "afghanistan": "en",
+    "iran": "en", "persian": "en", "farsi": "en",
+    "ethiopia": "en", "ethiopian": "en",
+    "eritrea": "en",
+    "mozambique": "en",
+    "angola": "en",
+    "malawi": "en",
+    "rwanda english": "en",
+    "lesotho": "en",
+    "eswatini": "en", "swaziland": "en",
+    "germany": "en", "german": "en",
+    "italy": "en", "italian": "en",
+    "portugal": "en", "portuguese": "en",
+    "netherlands": "en", "dutch": "en",
+    "sweden": "en", "swedish": "en",
+    "norway": "en", "norwegian": "en",
+    "denmark": "en", "danish": "en",
+    "finland": "en", "finnish": "en",
+    "poland": "en", "polish": "en",
+    "ukraine": "en", "ukrainian": "en",
+    "czech republic": "en", "czechia": "en",
+    "slovakia": "en",
+    "hungary": "en", "hungarian": "en",
+    "romania": "en", "romanian": "en",
+    "bulgaria": "en", "bulgarian": "en",
+    "croatia": "en", "croatian": "en",
+    "serbia": "en", "serbian": "en",
+    "bosnia": "en",
+    "albania": "en",
+    "north macedonia": "en",
+    "kosovo": "en",
+    "montenegro": "en",
+    "slovenia": "en",
+    "estonia": "en",
+    "latvia": "en",
+    "lithuania": "en",
+    "georgia (country)": "en",
+    "armenia": "en",
+    "azerbaijan": "en",
+    "uzbekistan": "en",
+    "turkmenistan": "en",
+    "mongolia": "en",
+    "north korea": "en",
+    "taiwan": "en",
+    "hong kong": "en",
+    "macau": "en",
+    "brunei": "en",
+    "timor-leste": "en",
+    "israel": "en",
+    "cyprus": "en",
+    "malta": "en",
+    "iceland": "en",
+    "luxembourg": "en",
+    "andorra": "en",
+    "monaco": "en",
+    "liechtenstein": "en",
+    "san marino": "en",
+    "vatican": "en",
+    "austria": "en",
+    "greece": "en", "greek": "en",
+    "brazil": "en", "brazilian": "en",
+    "suriname": "en",
+    "mexico city": "es",
 }
 
 
