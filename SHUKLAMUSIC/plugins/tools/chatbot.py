@@ -232,11 +232,35 @@ async def chatbot_auto_reply(client, message: Message):
         return
     # Skip messages from the bot itself
     try:
-        if message.from_user and message.from_user.id == (await client.get_me()).id:
+        me = await client.get_me()
+        if message.from_user and message.from_user.id == me.id:
             return
     except Exception:
-        pass
+        me = None
+
     if not await is_chatbot_enabled(message.chat.id):
+        return
+
+    # ── Only reply when bot is tagged OR someone replies to the bot's message ──
+    is_mentioned = False
+    # Check @mention in text
+    try:
+        me = me or await client.get_me()
+        bot_username = (me.username or "").lower()
+        if bot_username and f"@{bot_username}" in message.text.lower():
+            is_mentioned = True
+    except Exception:
+        pass
+    # Check if replying to a bot message
+    if not is_mentioned and message.reply_to_message:
+        try:
+            reply_from = message.reply_to_message.from_user
+            me = me or await client.get_me()
+            if reply_from and reply_from.id == me.id:
+                is_mentioned = True
+        except Exception:
+            pass
+    if not is_mentioned:
         return
 
     txt = message.text.strip()
