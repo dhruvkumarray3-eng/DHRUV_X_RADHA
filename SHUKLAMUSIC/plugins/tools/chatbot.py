@@ -361,27 +361,7 @@ async def chatbot_auto_reply(client, message: Message):
     if not await is_chatbot_enabled(message.chat.id):
         return
 
-    # Only reply when bot is tagged OR someone replies to the bot's message
-    is_mentioned = False
-    try:
-        me = me or await client.get_me()
-        bot_username = (me.username or "").lower()
-        if bot_username and f"@{bot_username}" in message.text.lower():
-            is_mentioned = True
-    except Exception:
-        pass
-    if not is_mentioned and message.reply_to_message:
-        try:
-            reply_from = message.reply_to_message.from_user
-            me = me or await client.get_me()
-            if reply_from and reply_from.id == me.id:
-                is_mentioned = True
-        except Exception:
-            pass
-    if not is_mentioned:
-        return
-
-    # Strip the bot mention from the text
+    # Strip the bot mention from the text (if present)
     txt = message.text.strip()
     try:
         me = me or await client.get_me()
@@ -389,6 +369,9 @@ async def chatbot_auto_reply(client, message: Message):
             txt = re.sub(rf"@{re.escape(me.username)}", "", txt, flags=re.IGNORECASE).strip()
     except Exception:
         pass
+
+    if not txt:
+        return
 
     txt_low   = txt.lower()
     txt_clean = re.sub(r"[^\w\s]", "", txt_low)
