@@ -12,7 +12,7 @@ from config import BANNED_USERS, OWNER_ID, GROQ_API_KEY
 
 chatbot_settings = mongodb.chatbot_settings
 chatbot_replies  = mongodb.chatbot_replies
-user_profiles    = mongodb.chatbot_user_profiles   # owner-defined user context
+user_profiles    = mongodb.chatbot_user_profiles   # owner/admin-defined user context
 
 # ── Emoji helpers ────────────────────────────────────────────────────────────
 def e(eid, fb):
@@ -43,12 +43,22 @@ def _get_groq():
 
 
 # ── Build system prompt ───────────────────────────────────────────────────────
-def _build_system_prompt(user_context: str = "") -> str:
+def _build_system_prompt(user_context: str = "", about_context: str = "") -> str:
+    """
+    user_context  — profile of the SENDER (so AI remembers who they are)
+    about_context — profile of a THIRD PERSON being asked about
+    """
     profile_block = ""
     if user_context:
-        profile_block = (
-            f"\n\n👤 USER PROFILE (provided by the bot owner):\n{user_context}\n"
+        profile_block += (
+            f"\n\n👤 SENDER PROFILE (provided by group admin):\n{user_context}\n"
             "Use this context naturally when responding — act like you already know this person."
+        )
+    if about_context:
+        profile_block += (
+            f"\n\n🔍 ABOUT THIS PERSON (user is asking about them):\n{about_context}\n"
+            "Share this info naturally in your reply as if you personally know them. "
+            "Don't reveal that it was 'saved by admin' — just speak naturally."
         )
 
     return (
@@ -88,14 +98,14 @@ def _build_system_prompt(user_context: str = "") -> str:
     )
 
 
-async def ask_groq(user_text: str, user_context: str = "") -> str | None:
+async def ask_groq(user_text: str, user_context: str = "", about_context: str = "") -> str | None:
     client = _get_groq()
     if not client:
         return None
     try:
         resp = await client.chat.completions.create(
             messages=[
-                {"role": "system", "content": _build_system_prompt(user_context)},
+                {"role": "system", "content": _build_system_prompt(user_context, about_context)},
                 {"role": "user",   "content": user_text},
             ],
             model=_GROQ_MODEL,
@@ -116,7 +126,7 @@ def _on_msg():
         f"║  {_STAR} Mode  : {mode}\n"
         f"║  {_BELL} Status : <b>Online & Listening</b>\n"
         f"║\n"
-        f"╚═══ ✨ <i>Mention me or reply to my message to chat!</i>"
+        f"╚═══ ✨ <i>Ab group mein kuch bhi likho, main sunuunga! 😊</i>"
     )
 
 
@@ -135,17 +145,22 @@ CB_HELP = (
     f"║\n"
     f"║  {'🟢 Groq AI active' if GROQ_API_KEY else '🟡 Keyword-only mode'}\n"
     f"║\n"
+    f"║  <b>👤 Group Admin Commands:</b>\n"
     f"║  <code>/chatbot on</code>   — enable in this group\n"
     f"║  <code>/chatbot off</code>  — disable in this group\n"
     f"║  <code>/chatbot status</code> — check status\n"
-    f"║  <code>/teach kw | reply</code> — teach a keyword (admin)\n"
-    f"║  <code>/unlearn kw</code>   — forget a keyword (admin)\n"
+    f"║  <code>/teach kw | reply</code> — teach a keyword\n"
+    f"║  <code>/unlearn kw</code>   — forget a keyword\n"
     f"║  <code>/learned</code>      — list all keywords\n"
     f"║\n"
-    f"║  👑 <b>Owner commands:</b>\n"
-    f"║  <code>/addprofile @user info</code> — add user context for AI\n"
-    f"║  <code>/delprofile @user</code>      — remove user context\n"
-    f"║  <code>/profiles</code>              — list all user profiles\n"
+    f"║  <b>🧠 Profile Commands (Admin/Owner):</b>\n"
+    f"║  <code>/addprofile @user info</code> — save user info for AI memory\n"
+    f"║  <code>/delprofile @user</code>      — remove user profile\n"
+    f"║  <code>/profiles</code>              — list all saved profiles\n"
+    f"║\n"
+    f"║  <i>When chatbot is ON, just send any message</i>\n"
+    f"║  <i>and bot will reply. Ask about a saved user</i>\n"
+    f"║  <i>by @mention or name — bot will remember them!</i>\n"
     f"╚════════════════════════"
 )
 
@@ -183,6 +198,51 @@ async def is_admin(client, message: Message) -> bool:
         return m.status in ("administrator", "creator")
     except Exception:
         return False
+
+
+# ── Smart profile search from message text ───────────────────────────────────
+async def _find_asked_profile(client, message: Message) -> str:
+    """
+    When a user asks about someone in chat, try to find their saved profile.
+    Searches by: @username mention in text, user_id in text, or saved name match.
+    Returns the profile info string, or "" if nothing found.
+    """
+    txt = message.text or ""
+
+    # 1. Check Telegram @mention entities in message
+    if message.entities:
+        for ent in message.entities:
+            if ent.type.value == "mention":
+                username = txt[ent.offset + 1: ent.offset + ent.length]  # strip @
+                # Try to resolve the username to a user_id
+                try:
+                    user = await client.get_users(username)
+                    doc = await user_profiles.find_one({"user_id": user.id})
+                    if doc:
+                        return doc.get("info", "")
+                except Exception:
+                    pass
+                # Fallback: search by username field in DB (if stored)
+                doc = await user_profiles.find_one({"username": username.lower()})
+                if doc:
+                    return doc.get("info", "")
+
+    # 2. Check for a raw numeric user_id in text (e.g. "1234567 ke baare mein bata")
+    id_match = re.search(r"\b(\d{6,12})\b", txt)
+    if id_match:
+        uid = int(id_match.group(1))
+        doc = await user_profiles.find_one({"user_id": uid})
+        if doc:
+            return doc.get("info", "")
+
+    # 3. Check if any saved profile's name appears in the message text
+    txt_lower = txt.lower()
+    async for doc in user_profiles.find():
+        saved_name = (doc.get("name") or "").lower()
+        if saved_name and len(saved_name) >= 3 and saved_name in txt_lower:
+            return doc.get("info", "")
+
+    return ""
 
 
 # ── Commands ─────────────────────────────────────────────────────────────────
@@ -257,25 +317,31 @@ async def learned_cmd(_, message: Message):
     )
 
 
-# ── Owner: user profile management ───────────────────────────────────────────
-@app.on_message(filters.command("addprofile") & filters.user(OWNER_ID))
+# ── Profile management (owner + group admins) ─────────────────────────────────
+@app.on_message(filters.command("addprofile") & filters.group & ~BANNED_USERS)
 async def addprofile_cmd(client, message: Message):
     """
-    /addprofile @username or user_id <info about this person>
-    Owner sets context about a specific user so AI can personalise replies.
+    /addprofile @username|user_id <info about this person>
+    Group admins & owner can save context about a user so AI remembers them.
     """
+    if not await is_admin(client, message):
+        return await message.reply_text(f"{_ERR} Only admins can add user profiles.")
+
     args = message.text.split(None, 2)
     if len(args) < 3:
         return await message.reply_text(
             f"{_ERR} Usage: <code>/addprofile @user|user_id info about this person</code>\n\n"
-            "Example: <code>/addprofile @rahul Rahul is my best friend, loves cricket, "
-            "studies in class 10, funny guy</code>"
+            "Example:\n"
+            "<code>/addprofile @rahul Rahul mera best friend hai, cricket khelta hai, class 10 mein hai</code>\n"
+            "<code>/addprofile 1234567 Ye Priya hai, group ki admin hai</code>"
         )
     target_raw = args[1]
     info = args[2].strip()
 
     # Resolve user
     user_id = None
+    name = target_raw
+    username_stored = None
     try:
         if target_raw.lstrip("-").isdigit():
             user_id = int(target_raw)
@@ -284,28 +350,87 @@ async def addprofile_cmd(client, message: Message):
             user = await client.get_users(target_raw.lstrip("@"))
             user_id = user.id
         name = user.first_name
+        username_stored = (user.username or "").lower() or None
     except Exception:
-        # Just store by whatever ID/username was given
         if target_raw.lstrip("-").isdigit():
             user_id = int(target_raw)
             name = str(user_id)
         else:
             return await message.reply_text(f"{_ERR} Could not find user <code>{target_raw}</code>.")
 
+    update_doc = {"user_id": user_id, "name": name, "info": info}
+    if username_stored:
+        update_doc["username"] = username_stored
+
     await user_profiles.update_one(
         {"user_id": user_id},
-        {"$set": {"user_id": user_id, "name": name, "info": info}},
+        {"$set": update_doc},
         upsert=True,
     )
     await message.reply_text(
         f"{_ON} Profile saved for <b>{name}</b> (<code>{user_id}</code>)!\n\n"
-        f"📝 <b>Context:</b> {info}\n\n"
-        f"The AI will now remember this when <b>{name}</b> chats with the bot. ✨"
+        f"📝 <b>Info:</b> {info}\n\n"
+        f"✨ Ab jab bhi koi is group mein <b>{name}</b> ke baare mein puchega, "
+        f"bot usse personally jaanta hua reply karega!"
     )
 
 
-@app.on_message(filters.command("delprofile") & filters.user(OWNER_ID))
+@app.on_message(filters.command("addprofile") & filters.private & ~BANNED_USERS)
+async def addprofile_private_cmd(client, message: Message):
+    """Owner can also use /addprofile in private chat."""
+    uid = message.from_user.id if message.from_user else 0
+    if str(uid) != str(OWNER_ID) and uid not in SUDOERS:
+        return await message.reply_text(f"{_ERR} Owner only in private chat.")
+
+    args = message.text.split(None, 2)
+    if len(args) < 3:
+        return await message.reply_text(
+            f"{_ERR} Usage: <code>/addprofile @user|user_id info about this person</code>"
+        )
+    target_raw = args[1]
+    info = args[2].strip()
+
+    user_id = None
+    name = target_raw
+    username_stored = None
+    try:
+        if target_raw.lstrip("-").isdigit():
+            user_id = int(target_raw)
+            user = await client.get_users(user_id)
+        else:
+            user = await client.get_users(target_raw.lstrip("@"))
+            user_id = user.id
+        name = user.first_name
+        username_stored = (user.username or "").lower() or None
+    except Exception:
+        if target_raw.lstrip("-").isdigit():
+            user_id = int(target_raw)
+            name = str(user_id)
+        else:
+            return await message.reply_text(f"{_ERR} Could not find user <code>{target_raw}</code>.")
+
+    update_doc = {"user_id": user_id, "name": name, "info": info}
+    if username_stored:
+        update_doc["username"] = username_stored
+
+    await user_profiles.update_one({"user_id": user_id}, {"$set": update_doc}, upsert=True)
+    await message.reply_text(
+        f"{_ON} Profile saved for <b>{name}</b> (<code>{user_id}</code>)!\n"
+        f"📝 {info}"
+    )
+
+
+@app.on_message(filters.command("delprofile") & ~BANNED_USERS)
 async def delprofile_cmd(client, message: Message):
+    # Allow in group (admin) or private (owner/sudo)
+    if message.chat.type.value in ("group", "supergroup"):
+        if not await is_admin(client, message):
+            return await message.reply_text(f"{_ERR} Only admins can delete profiles.")
+    else:
+        uid = message.from_user.id if message.from_user else 0
+        if str(uid) != str(OWNER_ID) and uid not in SUDOERS:
+            return await message.reply_text(f"{_ERR} Owner only.")
+
     args = message.command
     if len(args) < 2:
         return await message.reply_text(f"{_ERR} Usage: <code>/delprofile @user|user_id</code>")
@@ -325,19 +450,31 @@ async def delprofile_cmd(client, message: Message):
         await message.reply_text(f"{_ERR} No profile found for <code>{user_id}</code>.")
 
 
-@app.on_message(filters.command("profiles") & filters.user(OWNER_ID))
-async def profiles_cmd(_, message: Message):
+@app.on_message(filters.command("profiles") & ~BANNED_USERS)
+async def profiles_cmd(client, message: Message):
+    # Group admins or owner/sudo in private
+    if message.chat.type.value in ("group", "supergroup"):
+        if not await is_admin(client, message):
+            return await message.reply_text(f"{_ERR} Only admins can view profiles.")
+    else:
+        uid = message.from_user.id if message.from_user else 0
+        if str(uid) != str(OWNER_ID) and uid not in SUDOERS:
+            return await message.reply_text(f"{_ERR} Owner only.")
+
     docs = [d async for d in user_profiles.find().limit(50)]
     if not docs:
-        return await message.reply_text("No user profiles saved yet. Use /addprofile to add one.")
+        return await message.reply_text(
+            f"📭 Koi profile save nahi hai abhi.\n"
+            f"Use <code>/addprofile @user info</code> to add one."
+        )
     lines = []
     for d in docs:
         lines.append(
             f"• <b>{d.get('name', 'Unknown')}</b> (<code>{d['user_id']}</code>)\n"
-            f"  📝 {d.get('info','')[:80]}"
+            f"  📝 {d.get('info','')[:100]}"
         )
     await message.reply_text(
-        f"{_BOOK} <b>Saved User Profiles ({len(docs)}):</b>\n\n" + "\n\n".join(lines)
+        f"{_BOOK} <b>Saved Profiles ({len(docs)}):</b>\n\n" + "\n\n".join(lines)
     )
 
 
@@ -391,7 +528,7 @@ async def chatbot_auto_reply(client, message: Message):
     if doc:
         return await message.reply_text(doc["reply"])
 
-    # 2️⃣ Groq AI fallback
+    # 2️⃣ Groq AI
     if GROQ_API_KEY:
         # Typing indicator — non-blocking
         try:
@@ -399,7 +536,7 @@ async def chatbot_auto_reply(client, message: Message):
         except Exception:
             pass
 
-        # Get user profile context
+        # Get sender's profile context (AI remembers who they are)
         user_context = ""
         try:
             if message.from_user:
@@ -407,7 +544,14 @@ async def chatbot_auto_reply(client, message: Message):
         except Exception:
             pass
 
-        ai_reply = await ask_groq(txt, user_context)
+        # Smart: check if message is asking ABOUT a specific saved person
+        about_context = ""
+        try:
+            about_context = await _find_asked_profile(client, message)
+        except Exception:
+            pass
+
+        ai_reply = await ask_groq(txt, user_context, about_context)
 
         if ai_reply:
             # Apply user's preferred font (only for ASCII-heavy replies without code)
@@ -441,10 +585,7 @@ async def chatbot_auto_reply(client, message: Message):
                 except Exception:
                     pass
         else:
-            # AI failed — send a friendly fallback so chat isn't dead silent
             try:
-                await message.reply_text(
-                    "🤖 Hmm, kuch gadbad ho gayi abhi! Thodi der baad try karo 😅"
-                )
+                await message.reply_text("🤖 Hmm, kuch gadbad ho gayi abhi! Thodi der baad try karo 😅")
             except Exception:
                 pass
