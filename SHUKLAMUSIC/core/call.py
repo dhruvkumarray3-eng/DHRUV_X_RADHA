@@ -298,16 +298,42 @@ class Call(PyTgCalls):
         language = await get_lang(chat_id)
         _ = get_string(language)
         stream = self._build_stream(link, video=bool(video))
-        try:
-            await self._play_on_assistant(assistant, chat_id, stream)
-        except exceptions.NoActiveGroupCall:
-            raise AssistantErr(_["call_8"])
-        except exceptions.NoAudioSourceFound:
-            raise AssistantErr(_["call_10"])
-        except (ConnectionNotFound, TelegramServerError):
-            raise AssistantErr(_["call_10"])
-        except Exception:
-            raise AssistantErr(_["call_10"])
+
+        # ── Auto-retry for transient Telegram/connection errors (up to 3 tries) ──
+        last_exc = None
+        for attempt in range(1, 4):
+            try:
+                await self._play_on_assistant(assistant, chat_id, stream)
+                last_exc = None
+                break  # success
+            except exceptions.NoActiveGroupCall:
+                raise AssistantErr(_["call_8"])
+            except exceptions.NoAudioSourceFound:
+                raise AssistantErr(_["call_11"])
+            except (ConnectionNotFound, TelegramServerError) as e:
+                last_exc = e
+                LOGGER(__name__).warning(
+                    f"[join_call] attempt {attempt}/3 – TelegramServerError/ConnectionNotFound "
+                    f"for chat {chat_id}: {e}"
+                )
+                if attempt < 3:
+                    await asyncio.sleep(attempt * 2)   # 2s, 4s backoff
+                    # rebuild stream for next attempt
+                    stream = self._build_stream(link, video=bool(video))
+            except Exception as e:
+                last_exc = e
+                LOGGER(__name__).warning(
+                    f"[join_call] attempt {attempt}/3 – unexpected error "
+                    f"for chat {chat_id}: {type(e).__name__}: {e}"
+                )
+                if attempt < 3:
+                    await asyncio.sleep(attempt * 2)
+                    stream = self._build_stream(link, video=bool(video))
+
+        if last_exc is not None:
+            if isinstance(last_exc, (ConnectionNotFound, TelegramServerError)):
+                raise AssistantErr(_["call_10"])
+            raise AssistantErr(_["call_12"])
         await add_active_chat(chat_id)
         await music_on(chat_id)
         if video:
