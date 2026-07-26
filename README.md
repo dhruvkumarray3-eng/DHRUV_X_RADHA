@@ -4,12 +4,31 @@
 
 # 🎵 NOBITA X PRIME MUSIC BOT
 
-**A powerful, feature-rich Telegram Music Bot — stream YouTube music directly in your group & channel voice chats.**
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=22&pause=1000&color=FF6B6B&center=true&vCenter=true&width=600&lines=🎵+Nobita+X+Prime+Music+Bot;🚀+Stream+YouTube+in+Voice+Chats;🤖+Groq+AI+ChatBot+Powered;🎶+Auto-Play+%7C+Skip+%7C+Back+%7C+Pause;24%2F7+Music+%7C+Always+On" alt="Typing SVG" />
+</p>
 
-[![Telegram](https://img.shields.io/badge/Support-Telegram-blue?logo=telegram)](https://t.me/II_NOBITA_X_PRIME_II)
-[![Python](https://img.shields.io/badge/Python-3.12+-blue?logo=python)](https://python.org)
-[![License](https://img.shields.io/badge/License-Educational-orange)](#license)
-[![Uptime](https://img.shields.io/badge/Uptime-24%2F7-green)](#uptime-monitoring)
+<p align="center">
+  <a href="https://t.me/II_NOBITA_X_PRIME_II">
+    <img src="https://img.shields.io/badge/Channel-Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white&labelColor=0A0A0A" alt="Telegram Channel"/>
+  </a>
+  <a href="https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA">
+    <img src="https://img.shields.io/github/stars/dhruvkumarray3-eng/DHRUV_X_RADHA?style=for-the-badge&logo=github&color=FFD700&labelColor=0A0A0A" alt="Stars"/>
+  </a>
+  <a href="https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA/fork">
+    <img src="https://img.shields.io/github/forks/dhruvkumarray3-eng/DHRUV_X_RADHA?style=for-the-badge&logo=git&color=FF6B6B&labelColor=0A0A0A" alt="Forks"/>
+  </a>
+  <img src="https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white&labelColor=0A0A0A" alt="Python"/>
+  <img src="https://img.shields.io/badge/License-Educational-orange?style=for-the-badge&labelColor=0A0A0A" alt="License"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/▶%20Play-Music-00C851?style=flat-square&labelColor=1a1a1a" />
+  <img src="https://img.shields.io/badge/⏸%20Pause-Resume-2196F3?style=flat-square&labelColor=1a1a1a" />
+  <img src="https://img.shields.io/badge/⏭%20Skip-Next-9C27B0?style=flat-square&labelColor=1a1a1a" />
+  <img src="https://img.shields.io/badge/⏮%20Back-Previous-FF5722?style=flat-square&labelColor=1a1a1a" />
+  <img src="https://img.shields.io/badge/🤖%20AI-ChatBot-FF6B6B?style=flat-square&labelColor=1a1a1a" />
+</p>
 
 </div>
 
@@ -17,217 +36,71 @@
 
 ## ✨ Features
 
-| Category | Features |
+<table>
+<tr>
+<td>
+
+| 🎵 Music Controls | Description |
 |---|---|
-| 🎵 Music | Play, Pause, Resume, Skip, Stop, Seek, Loop, Shuffle |
-| 📻 Autoplay | YouTube Radio — auto-queues related songs when queue ends |
-| 📢 Channel Play | Link a channel to your group for VC streaming |
-| 🛡️ Moderation | Ban, Mute, Kick, Warn, Promote, Demote, Purge |
-| 📌 Tags | TagAll, HiTag, GmTag, LifeTag, Mention |
-| 👋 Welcome | Custom welcome messages & nightmode auto-lock |
-| 💑 Fun | Couple of the Day, Truth & Dare, Group Games |
-| 📋 Utility | Notes, Filters, AFK, User Info, Crypto & UPI tools |
-| 🔊 VC Logger | Log VC join/leave events to a dedicated chat |
-| 🌐 Multilingual | 180+ country language support, auto-detected per group |
-| 🤖 ChatBot | Groq AI chatbot — human-like replies in any language |
-| 📡 Traffic Control | Owner-only remote flood guard & rate limiter |
-| 💓 Uptime | Built-in `/ping` endpoint for 24/7 uptime monitoring |
+| ▶️ Play | YouTube, Spotify, Apple Music, SoundCloud |
+| ⏸ Pause / ▶ Resume | Inline buttons on every Now Playing card |
+| ⏭ Skip / Next | Skip current — queue advances automatically |
+| ⏮ Back / Previous | Return to the song that was just playing |
+| 🔁 Autoplay | Auto-queues related songs when queue ends |
+| 🔄 Loop | Loop current track N times |
+| ⚡ Seek | Jump to any timestamp |
+
+</td>
+<td>
+
+| 🛡️ Admin Tools | Description |
+|---|---|
+| 📊 Moderation | Ban, Mute, Kick, Warn, Promote |
+| 📌 TagAll | Mention all members |
+| 👋 Welcome | Custom welcome messages |
+| 🌙 Nightmode | Auto-lock at night |
+| 💑 Fun | Couple of the Day, Games |
+| 📋 Notes & Filters | Group note system |
+| 🔊 VC Logger | Log VC events |
+
+</td>
+</tr>
+</table>
+
+| 🤖 ChatBot (Groq AI) | Features |
+|---|---|
+| Auto-reply | Turns on per-group with `/chatbot on` (admin only) |
+| User Profiles | Admins save user info: `/addprofile @user info` — bot remembers them |
+| Smart Lookup | Ask about a saved user by @mention, ID, or name — bot replies with saved info |
+| Keyword Mode | Teach custom replies: `/teach keyword \| response` |
+| Language | Detects and replies in any language |
 
 ---
 
-## 🚀 Deployment
+## 🎮 Now Playing Buttons
 
-### Prerequisites
+Every music card shows these inline buttons:
 
-| Requirement | Where to get |
-|---|---|
-| `API_ID` | [my.telegram.org](https://my.telegram.org) |
-| `API_HASH` | [my.telegram.org](https://my.telegram.org) |
-| `BOT_TOKEN` | [@BotFather](https://t.me/BotFather) |
-| `MONGO_DB_URI` | [MongoDB Atlas](https://cloud.mongodb.com) |
-| `STRING_SESSION` | [@StringFetchBot](https://t.me/StringFetchBot) or `/genstring` |
-| `LOGGER_ID` | Your Telegram group/channel ID |
-| `OWNER_ID` | Your Telegram user ID |
+```
+[ ⏮ Back ]  [ ⏸ Pause ]  [ ▶ Resume ]  [ ⏭ Skip ]
+[    ⏹ Stop    ] [  ❤️‍🔥 Autoplay  ]
+[ 🎵 Audio ] [ 🎬 Video ]
+[ ✨ Update ] [ 🌹 Support ]
+```
 
-### Deploy on Replit *(Recommended)*
+> Works in both **regular play** and **autoplay** mode.
+> **Back** button plays the previously played song from history.
+> **Skip** in autoplay mode queues the next related YouTube song automatically.
+
+---
+
+## 🚀 Deployment — Deploy on Replit
+
+[![Run on Replit](https://img.shields.io/badge/Run%20on-Replit-667881?style=for-the-badge&logo=replit&logoColor=white)](https://replit.com)
 
 1. Import this repo into Replit.
-2. Go to **Tools → Secrets** and add:
-
-```
-API_ID           = your telegram api id
-API_HASH         = your telegram api hash
-BOT_TOKEN        = your bot token
-MONGO_DB_URI     = your mongodb atlas uri
-STRING_SESSION   = your pyrogram string session
-LOGGER_ID        = your logger group/channel id
-OWNER_ID         = your telegram user id
-```
-
-3. **Optional but recommended:**
-
-```
-GIT_TOKEN        = github personal access token (for /update autopush)
-GROQ_API_KEY     = groq api key (for AI chatbot)
-```
-
-4. Click **Run** — the bot starts automatically.
-
-### Deploy on VPS / Railway
-
-```bash
-git clone https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA
-cd DHRUV_X_RADHA
-pip3 install -r requirements.txt
-cp .env.example .env   # fill in your values
-python3 -m SHUKLAMUSIC
-```
-
----
-
-## 💓 Uptime Monitoring
-
-The bot runs a built-in HTTP server on port **8080**.
-
-Use the following URL in [UptimeRobot](https://uptimerobot.com), [BetterStack](https://betterstack.com), or any uptime monitor:
-
-```
-https://99ba27f5-641a-47cd-b312-5110070e0be0-00-369v6s0lclrz8.sisko.replit.dev/ping
-```
-
-Set the monitor to ping every **5 minutes**. This keeps the bot alive 24/7 on Replit's free tier.
-
----
-
-## 🌐 Language System (180+ Countries)
-
-Every group can set its own language:
-
-```
-/lang              → show all 17 supported languages
-/lang hindi        → search by language name
-/lang india        → search by country name
-/lang russia       → set Russian (Русский)
-/lang arabic       → set Arabic
-```
-
-**Supported languages:** English, Hindi, Arabic, Russian, French, Spanish, Turkish, Indonesian, Bengali, Punjabi, Telugu, Tamil, Marathi, Gujarati, Malayalam, Kannada, Urdu — with 180+ country→language mappings.
-
-When a language is set, **all bot messages** (including "Powered by" and start messages) are shown in that language.
-
----
-
-## 🤖 AI ChatBot
-
-Powered by **Groq LLaMA 3.3 70B** — responds like a real human friend.
-
-```
-/chatbot on        → enable in your group
-/chatbot off       → disable
-/chatbot status    → check current status
-/teach hi | Hello! → teach a keyword reply
-/unlearn hi        → forget a keyword
-/learned           → list all keywords
-/chatbothelp       → full help
-```
-
-**Owner-only — User Profiles (AI memory for specific users):**
-
-```
-/addprofile @username This is my best friend Rahul, he loves cricket
-/delprofile @username
-/profiles
-```
-
-When a user with a saved profile chats with the bot, the AI automatically uses that context for personalised replies.
-
----
-
-## 📡 Traffic Control *(Owner Only)*
-
-Protect your groups from Telegram flood limits:
-
-```
-/traffic                      → stats for current chat
-/traffic global               → stats for all chats
-/traffic <chat_id>            → stats for specific chat
-/floodctrl on                 → enable flood guard (this chat)
-/floodctrl on <chat_id>       → enable remotely
-/floodctrl off <chat_id>      → disable remotely
-/setflood 20 60               → max 20 msg per 60 seconds
-/setfloodaction warn|slow     → action when limit hit
-```
-
----
-
-## 🔄 Auto-Update via GitHub
-
-If `GIT_TOKEN` is set, use `/update` to:
-1. Pull latest code from `UPSTREAM_REPO`
-2. Push changes to your GitHub fork
-3. Restart the bot automatically
-
-Environment variables for update:
-
-```
-UPSTREAM_REPO    = https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA
-UPSTREAM_BRANCH  = main
-GIT_TOKEN        = your github personal access token
-```
-
----
-
-## 🎵 Music Features
-
-### Autoplay (YouTube Radio)
-
-```
-/autoplay    → toggle on/off
-```
-
-When ON, the bot auto-fetches related songs from YouTube Radio when the queue ends — streams indefinitely.
-
-### Channel Play Setup
-
-1. Add the bot to your **channel** as admin
-2. Add the bot to your **group** as admin
-3. In the group, use `/channelplay` to link the channel
-4. Play music — streams to the **channel's voice chat**
-
-### Commands
-
-| Command | Description |
-|---|---|
-| `/play <song>` | Play audio in voice chat |
-| `/vplay <song>` | Play video in voice chat |
-| `/pause` | Pause stream |
-| `/resume` | Resume stream |
-| `/skip` | Skip to next track |
-| `/stop` / `/end` | Stop and clear queue |
-| `/queue` | View current queue |
-| `/loop enable/disable` | Loop current track |
-| `/shuffle` | Shuffle queue |
-| `/seek <seconds>` | Seek forward |
-| `/seekback <seconds>` | Seek backward |
-| `/song <name>` | Download MP3/MP4 |
-
----
-
-## 🛡️ Owner Commands
-
-| Command | Description |
-|---|---|
-| `/addsudo @user` | Add sudo user |
-| `/delsudo @user` | Remove sudo user |
-| `/sudolist` | View sudo list (owner only) |
-| `/broadcast <msg>` | Broadcast to all chats |
-| `/gban @user` | Global ban |
-| `/ungban @user` | Remove global ban |
-| `/maintenance enable/disable` | Toggle maintenance mode |
-| `/logs` | Get bot logs |
-| `/traffic` | Traffic control panel |
-| `/addprofile @user <info>` | Add AI user profile |
-| `/update` | Pull latest code & restart |
+2. Go to **Tools → Secrets** and add the required variables (see below).
+3. Hit **Run** — the workflow starts automatically.
 
 ---
 
@@ -235,31 +108,63 @@ When ON, the bot auto-fetches related songs from YouTube Radio when the queue en
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `API_ID` | ✅ | — | Telegram API ID |
+| `API_ID` | ✅ | — | Telegram API ID from [my.telegram.org](https://my.telegram.org) |
 | `API_HASH` | ✅ | — | Telegram API Hash |
-| `BOT_TOKEN` | ✅ | — | Bot Token |
-| `MONGO_DB_URI` | ✅ | — | MongoDB connection string |
+| `BOT_TOKEN` | ✅ | — | Bot token from [@BotFather](https://t.me/BotFather) |
+| `MONGO_DB_URI` | ✅ | — | MongoDB Atlas connection string |
 | `STRING_SESSION` | ✅ | — | Pyrogram userbot session |
 | `LOGGER_ID` | ✅ | — | Log group/channel ID |
-| `OWNER_ID` | ✅ | `6670240589` | Bot owner's Telegram ID |
-| `GIT_TOKEN` | ⚙️ | — | GitHub token for auto-push |
+| `OWNER_ID` | ✅ | `6670240589` | Your Telegram user ID |
+| `GIT_TOKEN` | ⚙️ | — | GitHub token for `/update` auto-push |
 | `GROQ_API_KEY` | ⚙️ | — | Groq API key for AI chatbot |
+| `UPSTREAM_REPO` | ⚙️ | This repo | GitHub repo URL for updates |
+| `UPSTREAM_BRANCH` | ⚙️ | `main` | Branch to pull updates from |
 | `DURATION_LIMIT` | ⚙️ | `17000` | Max song duration (minutes) |
 | `SUPPORT_CHANNEL` | ⚙️ | Nobita channel | Support channel URL |
 | `SUPPORT_CHAT` | ⚙️ | Nobita group | Support group URL |
 
 ---
 
+## 💡 ChatBot Usage
+
+```
+/chatbot on          — Enable AI chatbot in this group (admin)
+/chatbot off         — Disable chatbot
+/chatbot status      — Check current status
+/addprofile @user info about them    — Save user profile for AI memory
+/delprofile @user    — Remove saved profile
+/profiles            — List all saved profiles
+/teach keyword | reply               — Teach keyword response
+/unlearn keyword     — Forget a keyword
+/learned             — List all learned keywords
+/chatbothelp         — Show full help
+```
+
+---
+
 ## 📚 Tech Stack
 
-- **Python 3.12**
-- **Pyrogram** — Telegram MTProto client
-- **py-tgcalls / ntgcalls** — Voice chat streaming engine
-- **yt-dlp** — YouTube audio/video downloader
-- **Motor / MongoDB** — Async database
-- **APScheduler** — Nightmode & scheduled tasks
-- **Groq LLaMA 3.3 70B** — AI chatbot engine
-- **aiohttp** — Built-in keep-alive web server
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Pyrogram-MTProto-00AFF0?style=flat-square&logo=telegram" />
+  <img src="https://img.shields.io/badge/PyTgCalls-VoiceChat-9C27B0?style=flat-square" />
+  <img src="https://img.shields.io/badge/yt--dlp-Downloader-FF0000?style=flat-square&logo=youtube&logoColor=white" />
+  <img src="https://img.shields.io/badge/MongoDB-Motor-47A248?style=flat-square&logo=mongodb&logoColor=white" />
+  <img src="https://img.shields.io/badge/Groq-LLaMA_3.3_70B-F55036?style=flat-square" />
+  <img src="https://img.shields.io/badge/aiohttp-KeepAlive-009688?style=flat-square" />
+</p>
+
+---
+
+## 🔗 Uptime Monitoring
+
+The bot runs a built-in keep-alive web server. You can use this `/ping` endpoint with any uptime monitor (UptimeRobot, BetterUptime, etc.):
+
+```
+https://<your-replit-domain>/ping
+```
+
+Returns `{"status": "ok", "bot": "NOBITA X PRIME"}` when the bot is alive.
 
 ---
 
@@ -276,6 +181,8 @@ Commercial use or removal of credits is **strictly prohibited**.
 
 **Made with ❤️ — Powered by NOBITA X PRIME**
 
-[![Channel](https://img.shields.io/badge/Updates-Channel-blue?logo=telegram)](https://t.me/II_NOBITA_X_PRIME_II)
+[![Channel](https://img.shields.io/badge/Updates-@II__NOBITA__X__PRIME__II-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/II_NOBITA_X_PRIME_II)
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=100&section=footer&animation=twinkling" width="100%"/>
 
 </div>

@@ -42,6 +42,7 @@ from SHUKLAMUSIC.utils.decorators.language import languageCB
 from SHUKLAMUSIC.utils.formatters import seconds_to_min
 from SHUKLAMUSIC.utils.inline import close_markup, stream_markup, stream_markup_timer
 from SHUKLAMUSIC.utils.stream.autoclear import auto_clean
+from SHUKLAMUSIC.utils.stream.history import push_history, pop_history
 from SHUKLAMUSIC.utils.thumbnails import get_thumb
 from config import (
     BANNED_USERS,
@@ -210,6 +211,126 @@ async def del_back_playlist(client, CallbackQuery, _):
                 )
             ]]),
         )
+    elif command == "Back":
+        prev = pop_history(chat_id)
+        if not prev:
+            return await CallbackQuery.answer(
+                "❌ ᴋᴏɪ ᴩᴜʀᴀɴᴀ ɢᴀɴᴀ ɴᴀʜɪ ʜᴀɪ! ᴩʜᴇʟᴇ ᴋᴜᴄʜ ɢᴀɴᴇ ᴩʟᴀʏ ᴋᴀʀᴏ.",
+                show_alert=True
+            )
+        await CallbackQuery.answer()
+        queued = prev["file"]
+        title = (prev["title"]).title()
+        user = prev["by"]
+        duration = prev["dur"]
+        streamtype = prev["streamtype"]
+        videoid = prev["vidid"]
+        status = True if str(streamtype) == "video" else None
+        # Prepend previous song to queue so it plays now
+        current_queue = db.get(chat_id) or []
+        db[chat_id] = [prev] + current_queue
+        db[chat_id][0]["played"] = 0
+        txt = f"➻ ᴩɪᴄʜʟᴀ ɢᴀɴᴀ 🎵\n│ \n└ʙʏ : {mention} 🥀"
+        if "live_" in queued:
+            n, link = await YouTube.video(videoid, True)
+            if n == 0:
+                return await CallbackQuery.message.reply_text(
+                    text=_["admin_7"].format(title), reply_markup=close_markup(_))
+            try:
+                image = await YouTube.thumbnail(videoid, True)
+            except Exception:
+                image = None
+            try:
+                await SHUKLA.skip_stream(chat_id, link, video=status, image=image)
+            except Exception:
+                return await CallbackQuery.message.reply_text(_["call_6"])
+            button = stream_markup(_, chat_id)
+            img = await get_thumb(videoid)
+            run = await CallbackQuery.message.reply_photo(
+                photo=img,
+                caption=_["stream_1"].format(
+                    f"https://t.me/{app.username}?start=info_{videoid}",
+                    title[:23], duration, user),
+                reply_markup=InlineKeyboardMarkup(button))
+            db[chat_id][0]["mystic"] = run
+            db[chat_id][0]["markup"] = "tg"
+        elif "vid_" in queued:
+            mystic = await CallbackQuery.message.reply_text(_["call_7"], disable_web_page_preview=True)
+            try:
+                file_path, direct = await YouTube.download(videoid, mystic, videoid=True, video=status)
+            except Exception:
+                return await mystic.edit_text(_["call_6"])
+            try:
+                image = await YouTube.thumbnail(videoid, True)
+            except Exception:
+                image = None
+            try:
+                await SHUKLA.skip_stream(chat_id, file_path, video=status, image=image)
+            except Exception:
+                return await mystic.edit_text(_["call_6"])
+            button = stream_markup(_, chat_id)
+            img = await get_thumb(videoid)
+            run = await CallbackQuery.message.reply_photo(
+                photo=img,
+                caption=_["stream_1"].format(
+                    f"https://t.me/{app.username}?start=info_{videoid}",
+                    title[:23], duration, user),
+                reply_markup=InlineKeyboardMarkup(button))
+            db[chat_id][0]["mystic"] = run
+            db[chat_id][0]["markup"] = "stream"
+            await mystic.delete()
+        elif "index_" in queued:
+            try:
+                await SHUKLA.skip_stream(chat_id, videoid, video=status)
+            except Exception:
+                return await CallbackQuery.message.reply_text(_["call_6"])
+            button = stream_markup(_, chat_id)
+            run = await CallbackQuery.message.reply_photo(
+                photo=STREAM_IMG_URL,
+                caption=_["stream_2"].format(user),
+                reply_markup=InlineKeyboardMarkup(button))
+            db[chat_id][0]["mystic"] = run
+            db[chat_id][0]["markup"] = "tg"
+        else:
+            if videoid in ("telegram", "soundcloud"):
+                image = None
+            else:
+                try:
+                    image = await YouTube.thumbnail(videoid, True)
+                except Exception:
+                    image = None
+            try:
+                await SHUKLA.skip_stream(chat_id, queued, video=status, image=image)
+            except Exception:
+                return await CallbackQuery.message.reply_text(_["call_6"])
+            if videoid == "telegram":
+                img_url = TELEGRAM_AUDIO_URL if str(streamtype) == "audio" else TELEGRAM_VIDEO_URL
+                button = stream_markup(_, chat_id)
+                run = await CallbackQuery.message.reply_photo(
+                    photo=img_url,
+                    caption=_["stream_1"].format(config.SUPPORT_CHAT, title[:23], duration, user),
+                    reply_markup=InlineKeyboardMarkup(button))
+            elif videoid == "soundcloud":
+                button = stream_markup(_, chat_id)
+                run = await CallbackQuery.message.reply_photo(
+                    photo=SOUNCLOUD_IMG_URL,
+                    caption=_["stream_1"].format(config.SUPPORT_CHAT, title[:23], duration, user),
+                    reply_markup=InlineKeyboardMarkup(button))
+            else:
+                button = stream_markup(_, chat_id)
+                img = await get_thumb(videoid)
+                run = await CallbackQuery.message.reply_photo(
+                    photo=img,
+                    caption=_["stream_1"].format(
+                        f"https://t.me/{app.username}?start=info_{videoid}",
+                        title[:23], duration, user),
+                    reply_markup=InlineKeyboardMarkup(button))
+            db[chat_id][0]["mystic"] = run
+            db[chat_id][0]["markup"] = "stream"
+        try:
+            await CallbackQuery.edit_message_text(txt, reply_markup=close_markup(_))
+        except Exception:
+            pass
     elif command == "Pause":
         if not await is_music_playing(chat_id):
             return await CallbackQuery.answer(_["admin_1"], show_alert=True)
@@ -244,6 +365,7 @@ async def del_back_playlist(client, CallbackQuery, _):
             try:
                 popped = check.pop(0)
                 if popped:
+                    push_history(chat_id, popped)
                     await auto_clean(popped)
                 if not check:
                     await CallbackQuery.edit_message_text(

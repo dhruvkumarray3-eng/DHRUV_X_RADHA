@@ -24,6 +24,7 @@ from SHUKLAMUSIC.utils.exceptions import AssistantErr
 from SHUKLAMUSIC.utils.inline import aq_markup, close_markup, stream_markup
 from SHUKLAMUSIC.utils.pastebin import SHUKLABin
 from SHUKLAMUSIC.utils.stream.queue import put_queue, put_queue_index
+from SHUKLAMUSIC.utils.stream.history import push_history
 from SHUKLAMUSIC.utils.thumbnails import get_thumb
 
 
@@ -213,6 +214,7 @@ async def stream(
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "stream"
+            push_history(chat_id, dict(db[chat_id][0]))
     elif streamtype == "soundcloud":
         file_path = result["filepath"]
         title = result["title"]

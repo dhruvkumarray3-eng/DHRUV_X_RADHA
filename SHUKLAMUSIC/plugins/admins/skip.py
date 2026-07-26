@@ -22,6 +22,7 @@ from SHUKLAMUSIC.utils.database import get_loop
 from SHUKLAMUSIC.utils.decorators import AdminRightsCheck
 from SHUKLAMUSIC.utils.inline import close_markup, stream_markup
 from SHUKLAMUSIC.utils.stream.autoclear import auto_clean
+from SHUKLAMUSIC.utils.stream.history import push_history
 from SHUKLAMUSIC.utils.thumbnails import get_thumb
 from config import BANNED_USERS
 
@@ -79,6 +80,7 @@ async def skip(cli, message: Message, _, chat_id):
         try:
             popped = check.pop(0)
             if popped:
+                push_history(chat_id, popped)
                 await auto_clean(popped)
             if not check:
                 await message.reply_text(

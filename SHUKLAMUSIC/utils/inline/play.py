@@ -81,12 +81,16 @@ def stream_markup_timer(_, chat_id, played, dur, videoid=None, autoplay=False):
                 icon_custom_emoji_id=5204046146955153467
             )
         ],
+        # Row: Back(green) | Pause(blue) | Resume(green) | Skip(blue)
         [
-            InlineKeyboardButton(text="", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068, style=ButtonStyle.SUCCESS),
+            InlineKeyboardButton(text="⏮ ʙᴀᴄᴋ", callback_data=f"ADMIN Back|{chat_id}", style=ButtonStyle.SUCCESS),
             InlineKeyboardButton(text="", callback_data=f"ADMIN Pause|{chat_id}", icon_custom_emoji_id=5409042015415448331, style=ButtonStyle.PRIMARY),
-            InlineKeyboardButton(text="", callback_data=f"ADMIN Stop|{chat_id}", icon_custom_emoji_id=5408832111773757273, style=ButtonStyle.DANGER),
+            InlineKeyboardButton(text="", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068, style=ButtonStyle.SUCCESS),
+            InlineKeyboardButton(text="⏭ sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}", style=ButtonStyle.PRIMARY),
         ],
+        # Row: Stop(red) | Autoplay(blue)
         [
+            InlineKeyboardButton(text="", callback_data=f"ADMIN Stop|{chat_id}", icon_custom_emoji_id=5408832111773757273, style=ButtonStyle.DANGER),
             InlineKeyboardButton(
                 text="❤️‍🔥 ᴀᴜᴛᴏᴘʟᴀʏ",
                 callback_data=f"ADMIN Autoplay|{chat_id}",
@@ -153,12 +157,16 @@ def stream_markup(_, chat_id, videoid=None, autoplay=False):
     autoplay=False → regular play; shows audio + video split row.
     """
     buttons = [
+        # Row: Back(green) | Pause(blue) | Resume(green) | Skip(blue)
         [
-            InlineKeyboardButton(text="", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068, style=ButtonStyle.SUCCESS),
+            InlineKeyboardButton(text="⏮ ʙᴀᴄᴋ", callback_data=f"ADMIN Back|{chat_id}", style=ButtonStyle.SUCCESS),
             InlineKeyboardButton(text="", callback_data=f"ADMIN Pause|{chat_id}", icon_custom_emoji_id=5409042015415448331, style=ButtonStyle.PRIMARY),
-            InlineKeyboardButton(text="", callback_data=f"ADMIN Stop|{chat_id}", icon_custom_emoji_id=5408832111773757273, style=ButtonStyle.DANGER),
+            InlineKeyboardButton(text="", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068, style=ButtonStyle.SUCCESS),
+            InlineKeyboardButton(text="⏭ sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}", style=ButtonStyle.PRIMARY),
         ],
+        # Row: Stop(red) | Autoplay(blue)
         [
+            InlineKeyboardButton(text="", callback_data=f"ADMIN Stop|{chat_id}", icon_custom_emoji_id=5408832111773757273, style=ButtonStyle.DANGER),
             InlineKeyboardButton(
                 text="❤️‍🔥 ᴀᴜᴛᴏᴘʟᴀʏ",
                 callback_data=f"ADMIN Autoplay|{chat_id}",
