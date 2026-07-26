@@ -34,12 +34,65 @@ from pyrogram.enums import ButtonStyle as _BS
 
 _LANG_STYLES = [_BS.PRIMARY, _BS.SUCCESS, _BS.DANGER]
 
+# Country / region / keyword → language code mapping
+_COUNTRY_MAP = {
+    # Arabic
+    "iraq": "ar", "iraqi": "ar", "عراق": "ar",
+    "saudi": "ar", "arabia": "ar", "arab": "ar",
+    "egypt": "ar", "egyptian": "ar",
+    "syria": "ar", "syrian": "ar",
+    "jordan": "ar", "kuwait": "ar", "uae": "ar",
+    "qatar": "ar", "bahrain": "ar", "oman": "ar",
+    "lebanon": "ar", "libya": "ar", "morocco": "ar",
+    "arabic": "ar", "عربي": "ar",
+    # Hindi
+    "india": "hi", "indian": "hi", "bharat": "hi",
+    "hindi": "hi", "हिंदी": "hi",
+    # Urdu
+    "pakistan": "ur", "pakistani": "ur", "urdu": "ur", "اردو": "ur",
+    # Punjabi
+    "punjab": "pa", "punjabi": "pa", "ਪੰਜਾਬੀ": "pa",
+    # Bengali
+    "bangladesh": "bn", "bengal": "bn", "bengali": "bn", "bangla": "bn",
+    # Telugu
+    "telugu": "te", "andhra": "te", "telangana": "te",
+    # Tamil
+    "tamil": "ta", "tamilnadu": "ta", "srilanka": "ta",
+    # Marathi
+    "marathi": "mr", "maharashtra": "mr",
+    # Gujarati
+    "gujarati": "gu", "gujarat": "gu",
+    # Malayalam
+    "malayalam": "ml", "kerala": "ml",
+    # Kannada
+    "kannada": "kn", "karnataka": "kn",
+    # Spanish
+    "spain": "es", "spanish": "es", "mexico": "es", "colombia": "es",
+    "argentina": "es", "español": "es",
+    # Russian
+    "russia": "ru", "russian": "ru", "русский": "ru",
+    # Turkish
+    "turkey": "tr", "turkish": "tr", "türkiye": "tr",
+    # Indonesian
+    "indonesia": "id", "indonesian": "id",
+    # French
+    "france": "fr", "french": "fr", "français": "fr",
+    # English
+    "english": "en", "uk": "en", "usa": "en", "america": "en",
+}
+
+
 def lanuages_keyboard(_, filter_query: str = ""):
     """Build language keyboard, optionally filtered by search query."""
     query = filter_query.strip().lower()
+
+    # Country name → resolve to language code
+    resolved_code = _COUNTRY_MAP.get(query)
+
     lang_list = [
         k for k in languages_present.keys()
         if not query
+        or (resolved_code and k == resolved_code)
         or query in k.lower()
         or query in languages_present[k].lower()
     ]

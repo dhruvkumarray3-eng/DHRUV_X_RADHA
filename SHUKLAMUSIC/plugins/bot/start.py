@@ -168,7 +168,7 @@ async def start_pm(client, message: Message, _):
     try:
         # Step 1 — Send premium emojis splash
         emoji_splash = await message.reply_text(
-            '<emoji id=5857427272448876539>🤩</emoji>  <emoji id=5854711294044677474>🤩</emoji>'
+            '🤩  🤩'
         )
         await asyncio.sleep(0.5)
         await emoji_splash.delete()

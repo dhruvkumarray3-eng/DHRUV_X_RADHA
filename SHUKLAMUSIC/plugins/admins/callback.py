@@ -177,26 +177,26 @@ async def del_back_playlist(client, CallbackQuery, _):
             await set_autoplay_owner(chat_id, CallbackQuery.from_user.id)
             text = (
                 "<blockquote>"
-                "<emoji id=5409025823388741707>🎵</emoji> <b>ᴀᴜᴛᴏᴘʟᴀʏ ᴇɴᴀʙʟᴇᴅ</b> ✨\n"
+                "🎵 <b>ᴀᴜᴛᴏᴘʟᴀʏ ᴇɴᴀʙʟᴇᴅ</b> ✨\n"
                 "│\n"
-                "├ <emoji id=5406690851533370477>✅</emoji> <b>sᴛᴀᴛᴜs :</b> <code>ᴏɴ</code>\n"
-                f"└ <emoji id=5408846628763217930>👤</emoji> <b>ʙʏ :</b> {mention}"
+                "├ ✅ <b>sᴛᴀᴛᴜs :</b> <code>ᴏɴ</code>\n"
+                f"└ 👤 <b>ʙʏ :</b> {mention}"
                 "</blockquote>\n\n"
                 "<blockquote expandable>"
-                "<emoji id=5409032416163540795>🔗</emoji> ɪ ᴡɪʟʟ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ǫᴜᴇᴜᴇ ʀᴇʟᴀᴛᴇᴅ sᴏɴɢs\n"
+                "🔗 ɪ ᴡɪʟʟ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ǫᴜᴇᴜᴇ ʀᴇʟᴀᴛᴇᴅ sᴏɴɢs\n"
                 "ᴡʜᴇɴ ᴛʜᴇ ᴘʟᴀʏʟɪsᴛ ʀᴜɴs ᴏᴜᴛ — sɪᴛ ʙᴀᴄᴋ ᴀɴᴅ ᴇɴᴊᴏʏ 🎶"
                 "</blockquote>"
             )
         else:
             text = (
                 "<blockquote>"
-                "<emoji id=5409025823388741707>🎵</emoji> <b>ᴀᴜᴛᴏᴘʟᴀʏ ᴅɪsᴀʙʟᴇᴅ</b> 🚫\n"
+                "🎵 <b>ᴀᴜᴛᴏᴘʟᴀʏ ᴅɪsᴀʙʟᴇᴅ</b> 🚫\n"
                 "│\n"
-                "├ <emoji id=5409280837071941659>✖️</emoji> <b>sᴛᴀᴛᴜs :</b> <code>ᴏꜰꜰ</code>\n"
-                f"└ <emoji id=5408846628763217930>👤</emoji> <b>ʙʏ :</b> {mention}"
+                "├ ✖️ <b>sᴛᴀᴛᴜs :</b> <code>ᴏꜰꜰ</code>\n"
+                f"└ 👤 <b>ʙʏ :</b> {mention}"
                 "</blockquote>\n\n"
                 "<blockquote expandable>"
-                "<emoji id=5408943604829794451>⚠️</emoji> ᴀᴜᴛᴏᴘʟᴀʏ ɪs ɴᴏᴡ ᴏꜰꜰ.\n"
+                "⚠️ ᴀᴜᴛᴏᴘʟᴀʏ ɪs ɴᴏᴡ ᴏꜰꜰ.\n"
                 "ᴍᴜsɪᴄ ᴡɪʟʟ sᴛᴏᴘ ᴡʜᴇɴ ᴛʜᴇ ǫᴜᴇᴜᴇ ɪs ᴇᴍᴘᴛʏ."
                 "</blockquote>"
             )
