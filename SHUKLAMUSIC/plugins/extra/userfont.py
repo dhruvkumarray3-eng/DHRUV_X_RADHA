@@ -17,55 +17,57 @@ from config import BANNED_USERS
 user_font_prefs = mongodb.user_font_prefs
 
 # ── Color cycle: green → red → blue ──────────────────────────────────────────
-_G = ButtonStyle.SUCCESS   # 🟢 green
-_R = ButtonStyle.DANGER    # 🔴 red
-_B = ButtonStyle.PRIMARY   # 🔵 blue
+_G = ButtonStyle.SUCCESS   # 🟢
+_R = ButtonStyle.DANGER    # 🔴
+_B = ButtonStyle.PRIMARY   # 🔵
 _CYCLE = [_G, _R, _B]
 
-# ── All 39 fonts (key, display_label, preview_of_word_NOBITA) ─────────────────
+# ── All 41 fonts (key, display_label) ─────────────────────────────────────────
 FONT_OPTIONS = [
-    ("typewriter",  "𝚃𝚢𝚙𝚎𝚠𝚛𝚒𝚝𝚎𝚛"),
-    ("outline",     "𝕆𝕦𝕥𝕝𝕚𝕟𝕖"),
-    ("serief",      "𝐒𝐞𝐫𝐢𝐟 𝐁𝐨𝐥𝐝"),
-    ("bold_cool",   "𝑩𝒐𝒍𝒅 𝑰𝒕𝒂𝒍𝒊𝒄"),
-    ("cool",        "𝑆𝑒𝑟𝑖𝑓 𝐼𝑡𝑎𝑙𝑖𝑐"),
-    ("smallcap",    "Sᴍᴀʟʟ Cᴀᴘs"),
-    ("script",      "𝓈𝒸𝓇𝒾𝓅𝓉"),
-    ("bold_script", "𝓼𝓬𝓻𝓲𝓹𝓽 𝓑𝓸𝓵𝓭"),
-    ("tiny",        "ᵗⁱⁿʸ"),
-    ("comic",       "ᑕOᗰIᑕ"),
-    ("san",         "𝗦𝗮𝗻𝘀 𝗕𝗼𝗹𝗱"),
-    ("slant_san",   "𝙎𝙡𝙖𝙣𝙩 𝙎𝙖𝙣𝙨"),
-    ("slant",       "𝘚𝘭𝘢𝘯𝘵"),
-    ("sim",         "𝖲𝗂𝗆𝗉𝗅𝖾"),
-    ("circles",     "Ⓒ︎Ⓘ︎Ⓡ︎Ⓒ︎Ⓛ︎Ⓔ︎Ⓢ"),
-    ("dark_circle", "🅒︎🅘︎🅡︎🅒︎🅛︎🅔︎🅢︎"),
-    ("gothic",      "𝔊𝔬𝔱𝔥𝔦𝔠"),
-    ("bold_gothic", "𝕲𝖔𝖙𝖍𝖎𝖈 𝕭𝖔𝖑𝖉"),
-    ("cloud",       "C͜͡l͜͡o͜͡u͜͡d͜͡s"),
-    ("happy",       "H̆̈ă̈p̆̈p̆̈y̆̈"),
-    ("sad",         "S̑̈ȃ̈d̑̈"),
-    ("special",     "🇸🇵🇪🇨🇮🇦🇱"),
-    ("square",      "🅂🅀🅄🄰🅁🄴"),
-    ("dark_square", "🆂︎🆀︎🆄︎🅰︎🆁︎🅴︎"),
-    ("andalucia",   "ꪖꪀᦔꪖꪶꪊᥴ𝓲ꪖ"),
-    ("manga",       "爪卂几ᘜ卂"),
-    ("stinky",      "S̾t̾i̾n̾k̾y̾"),
-    ("bubbles",     "B̥ͦu̥ͦb̥ͦb̥ͦl̥ͦe̥ͦs"),
-    ("underline",   "U͟n͟d͟e͟r͟l͟i͟n͟e͟"),
-    ("ladybug",     "꒒ꍏꀷꌩꌃꀎꁅ"),
-    ("rays",        "R҉a҉y҉s҉"),
-    ("birds",       "B҈i҈r҈d҈s҈"),
-    ("slash",       "S̸l̸a̸s̸h̸"),
-    ("stop",        "s⃠t⃠o⃠p⃠"),
-    ("skyline",     "S̺͆k̺͆y̺͆l̺͆i̺͆n̺͆e̺͆"),
-    ("arrows",      "A͎r͎r͎o͎w͎s͎"),
-    ("rvnes",       "ዪሀክቿነ"),
-    ("strike",      "S̶t̶r̶i̶k̶e̶"),
-    ("frozen",      "F༙r༙o༙z༙e༙n༙"),
+    ("typewriter",   "𝚃𝚢𝚙𝚎𝚠𝚛𝚒𝚝𝚎𝚛"),
+    ("outline",      "𝕆𝕦𝕥𝕝𝕚𝕟𝕖"),
+    ("serief",       "𝐒𝐞𝐫𝐢𝐟 𝐁𝐨𝐥𝐝"),
+    ("bold_cool",    "𝑩𝒐𝒍𝒅 𝑰𝒕𝒂𝒍𝒊𝒄"),
+    ("cool",         "𝑆𝑒𝑟𝑖𝑓 𝐼𝑡𝑎𝑙𝑖𝑐"),
+    ("smallcap",     "Sᴍᴀʟʟ Cᴀᴘs"),
+    ("script",       "𝓈𝒸𝓇𝒾𝓅𝓉"),
+    ("bold_script",  "𝓼𝓬𝓻𝓲𝓹𝓽 𝓑𝓸𝓵𝓭"),
+    ("tiny",         "ᵗⁱⁿʸ"),
+    ("comic",        "ᑕOᗰIᑕ"),
+    ("san",          "𝗦𝗮𝗻𝘀 𝗕𝗼𝗹𝗱"),
+    ("slant_san",    "𝙎𝙡𝙖𝙣𝙩 𝙎𝙖𝙣𝙨"),
+    ("slant",        "𝘚𝘭𝘢𝘯𝘵"),
+    ("sim",          "𝖲𝗂𝗆𝗉𝗅𝖾"),
+    ("circles",      "Ⓒ︎Ⓘ︎Ⓡ︎Ⓒ︎Ⓛ︎Ⓔ︎Ⓢ"),
+    ("dark_circle",  "🅒︎🅘︎🅡︎🅒︎🅛︎🅔︎🅢︎"),
+    ("gothic",       "𝔊𝔬𝔱𝔥𝔦𝔠"),
+    ("bold_gothic",  "𝕲𝖔𝖙𝖍𝖎𝖈 𝕭𝖔𝖑𝖉"),
+    ("cloud",        "C͜͡l͜͡o͜͡u͜͡d͜͡s"),
+    ("happy",        "H̆̈ă̈p̆̈p̆̈y̆̈"),
+    ("sad",          "S̑̈ȃ̈d̑̈"),
+    ("special",      "🇸🇵🇪🇨🇮🇦🇱"),
+    ("square",       "🅂🅀🅄🄰🅁🄴"),
+    ("dark_square",  "🆂︎🆀︎🆄︎🅰︎🆁︎🅴︎"),
+    ("andalucia",    "ꪖꪀᦔꪖꪶꪊᥴ𝓲ꪖ"),
+    ("manga",        "爪卂几ᘜ卂"),
+    ("stinky",       "S̾t̾i̾n̾k̾y̾"),
+    ("bubbles",      "B̥ͦu̥ͦb̥ͦb̥ͦl̥ͦe̥ͦs"),
+    ("underline",    "U͟n͟d͟e͟r͟l͟i͟n͟e͟"),
+    ("ladybug",      "꒒ꍏꀷꌩꌃꀎꁅ"),
+    ("rays",         "R҉a҉y҉s҉"),
+    ("birds",        "B҈i҈r҈d҈s҈"),
+    ("slash",        "S̸l̸a̸s̸h̸"),
+    ("stop",         "s⃠t⃠o⃠p⃠"),
+    ("skyline",      "S̺͆k̺͆y̺͆l̺͆i̺͆n̺͆e̺͆"),
+    ("arrows",       "A͎r͎r͎o͎w͎s͎"),
+    ("rvnes",        "ዪሀክቿነ"),
+    ("strike",       "S̶t̶r̶i̶k̶e̶"),
+    ("frozen",       "F༙r༙o༙z༙e༙n༙"),
+    ("fullwidth",    "Ｆｕｌｌｗｉｄｔｈ"),
+    ("inverted",     "ᴉnʌǝɹʇǝp"),
 ]
 
-# Preview strings (how "NOBITA X PRIME" looks in each font)
+# Preview strings — "NOBITA X PRIME" in each font style
 FONT_PREVIEW = {
     "typewriter":  "𝙽𝙾𝙱𝙸𝚃𝙰 𝚇 𝙿𝚁𝙸𝙼𝙴",
     "outline":     "𝕹𝕺𝕭𝕴𝕿𝕬 𝖃 𝕻𝕽𝕴𝕸𝕰",
@@ -87,14 +89,14 @@ FONT_PREVIEW = {
     "bold_gothic": "𝕹𝖔𝖇𝖎𝖙𝖆 𝖃 𝕻𝖗𝖎𝖒𝖊",
     "cloud":       "N͜͡O͜͡B͜͡I͜͡T͜͡A͜͡ X͜͡ P͜͡R͜͡I͜͡M͜͡E͜͡",
     "happy":       "N̆̈Ŏ̈B̆̈Ĭ̈T̆̈Ă̈ X̆̈ P̆̈R̆̈Ĭ̈M̆̈Ĕ̈",
-    "sad":         "N̑̈Ȏ̈B̑̈Ȋ̈T̑̈Ȃ̈ X̑̈ P̑̈Ȓ̈Ȋ̈M̑̈Ȇ̈",
+    "sad":         "N̑̈Ȏ̈B̑̈Ȋ̈T̑̈Ȃ̈ X̑̈ P̑̈Ȓ̈Ȋ̈M̑̈Ȇ̈",
     "special":     "🇳 🇴 🇧 🇮 🇹 🇦 🇽 🇵 🇷 🇮 🇲 🇪",
     "square":      "🄽🄾🄱🄸🅃🄰 🅇 🄿🅁🄸🄼🄴",
     "dark_square": "🅽🅾🅱🅸🆃🅰 🆇 🅿🆁🅸🅼🅴",
     "andalucia":   "ꪀꪮ᥇ꪱ𝓽ꪖ ꪲ ρꪱ꥓ꫀ",
     "manga":       "ᑎ口乃ノ丅卂 乂 卩尺ノ爪乇",
     "stinky":      "N̾o̾b̾i̾t̾a̾ X̾ P̾r̾i̾m̾e̾",
-    "bubbles":     "N̥ͦo̥ͦb̥ͦi̥ͦt̥ͦḁͦ X̥ͦ P̥ͦr̥ͦi̥ͦm̥ͦe̥ͦ",
+    "bubbles":     "N̥ͦo̥ͦb̥ͦi̥ͦt̥ͦḁͦ X̥ͦ P̥ͦr̥ͦi̥ͦm̥ͦe̥ͦ",
     "underline":   "N͟o͟b͟i͟t͟a͟ X͟ P͟r͟i͟m͟e͟",
     "ladybug":     "꒒ꍏꀷꀎꌃꀎꁅ ꊰ ꉣꋪꀤꂵꏂ",
     "rays":        "N҉o҉b҉i҉t҉a҉ X҉ P҉r҉i҉m҉e҉",
@@ -106,11 +108,37 @@ FONT_PREVIEW = {
     "rvnes":       "ክሀᵽᎥ𝓽ᵽ ᤱ ᵽ𝓻Ꭵꎭꏹ",
     "strike":      "N̶o̶b̶i̶t̶a̶ X̶ P̶r̶i̶m̶e̶",
     "frozen":      "N༙o༙b༙i༙t༙a༙ X༙ P༙r༙i༙m༙e༙",
+    "fullwidth":   "Ｎｏｂｉｔａ Ｘ Ｐｒｉｍｅ",
+    "inverted":    "Nobita X Prime",   # applied at runtime via invert map
+}
+
+# ── Custom font transformers for non-library fonts ───────────────────────────
+_FULLWIDTH = {chr(c): chr(c + 0xFF01 - 0x21) for c in range(0x21, 0x7F)}
+_FULLWIDTH[" "] = "\u3000"
+
+_INVERT_MAP = {
+    'a':'ɐ','b':'q','c':'ɔ','d':'p','e':'ǝ','f':'ɟ','g':'ƃ','h':'ɥ','i':'ᴉ','j':'ɾ',
+    'k':'ʞ','l':'l','m':'ɯ','n':'u','o':'o','p':'d','q':'b','r':'ɹ','s':'s','t':'ʇ',
+    'u':'n','v':'ʌ','w':'ʍ','x':'x','y':'ʎ','z':'z',
+    'A':'∀','B':'ᗺ','C':'Ɔ','D':'ᗡ','E':'Ǝ','F':'ᖵ','G':'פ','H':'H','I':'I','J':'ſ',
+    'K':'ʞ','L':'˥','M':'W','N':'N','O':'O','P':'Ԁ','Q':'Q','R':'ᴚ','S':'S','T':'┴',
+    'U':'∩','V':'Λ','W':'M','X':'X','Y':'⅄','Z':'Z',
+    '0':'0','1':'Ɩ','2':'ᄅ','3':'Ɛ','4':'ㄣ','5':'ϛ','6':'9','7':'ㄥ','8':'8','9':'6',
+    '!':'¡','?':'¿','.':'˙',',':'\'','\'':',',
 }
 
 
+def apply_custom_font(text: str, font_key: str) -> str:
+    """Apply fullwidth or inverted transform to a string."""
+    if font_key == "fullwidth":
+        return "".join(_FULLWIDTH.get(c, c) for c in text)
+    if font_key == "inverted":
+        return "".join(_INVERT_MAP.get(c, c) for c in reversed(text))
+    return text
+
+
 def _font_menu_keyboard(page: int = 1):
-    """Build paginated font selection keyboard (13 fonts per page, 3 cols)."""
+    """Build paginated font selection keyboard (12 fonts per page, 3 cols)."""
     PER_PAGE = 12
     start = (page - 1) * PER_PAGE
     chunk = FONT_OPTIONS[start: start + PER_PAGE]
@@ -142,7 +170,6 @@ def _font_menu_keyboard(page: int = 1):
     if nav:
         rows.append(nav)
 
-    # Bottom row
     rows.append([
         InlineKeyboardButton("❌ ɴᴏ ꜰᴏɴᴛ (ᴅᴇꜰᴀᴜʟᴛ)", callback_data="set_user_font:none", style=_R),
     ])
@@ -152,12 +179,16 @@ def _font_menu_keyboard(page: int = 1):
     return InlineKeyboardMarkup(rows)
 
 
-def _font_menu_text(current_font: str | None, page: int = 1) -> str:
+def _font_menu_text(current_font, page: int = 1) -> str:
     preview = FONT_PREVIEW.get(current_font, "ɴᴏʙɪᴛᴀ x ᴘʀɪᴍᴇ")
+    if current_font == "fullwidth":
+        preview = apply_custom_font("Nobita X Prime", "fullwidth")
+    elif current_font == "inverted":
+        preview = apply_custom_font("Nobita X Prime", "inverted")
     current_label = next((lbl for k, lbl in FONT_OPTIONS if k == current_font), "Default")
     total = len(FONT_OPTIONS)
     return (
-        f"🔤 <b>Cʜᴏᴏsᴇ Yᴏᴜʀ Fᴏɴᴛ Sᴛʏʟᴇ</b>  <i>({total}+ fonts)</i>\n\n"
+        f"🔤 <b>Cʜᴏᴏsᴇ Yᴏᴜʀ Fᴏɴᴛ Sᴛʏʟᴇ</b>  <i>({total} fonts)</i>\n\n"
         f"📌 <b>Current:</b> {current_label}\n"
         f"👁 <b>Preview:</b> {preview}\n\n"
         "Pick a font — bot AI replies will use that style for you:\n"
@@ -246,6 +277,10 @@ async def set_user_font_cb(_, cq: CallbackQuery):
             upsert=True,
         )
         preview = FONT_PREVIEW.get(font_key, font_key)
+        if font_key == "fullwidth":
+            preview = apply_custom_font("Nobita X Prime", "fullwidth")
+        elif font_key == "inverted":
+            preview = apply_custom_font("Nobita X Prime", "inverted")
         await cq.answer(f"✅ Font set!\n{preview}", show_alert=True)
         current = font_key
 
@@ -259,7 +294,7 @@ async def set_user_font_cb(_, cq: CallbackQuery):
 
 
 __help__ = """
- ❍ /setmyfont *:* ᴄʜᴏᴏsᴇ ꜰʀᴏᴍ 39+ ꜰᴏɴᴛ sᴛʏʟᴇs ꜰᴏʀ ᴛʜᴇ ʙᴏᴛ's ᴀɪ ʀᴇᴘʟɪᴇs ᴛᴏ ʏᴏᴜ.
+ ❍ /setmyfont *:* ᴄʜᴏᴏsᴇ ꜰʀᴏᴍ 41 ꜰᴏɴᴛ sᴛʏʟᴇs ꜰᴏʀ ᴛʜᴇ ʙᴏᴛ's ᴀɪ ʀᴇᴘʟɪᴇs ᴛᴏ ʏᴏᴜ.
  """
 
 __mod_name__ = "Fᴏɴᴛ Pʀᴇꜰ"

@@ -272,11 +272,20 @@ async def chatbot_auto_reply(client, message: Message):
                         from SHUKLAMUSIC.utils.Shukla_font import Fonts as _Fonts
                         _fdoc = await _mdb.user_font_prefs.find_one({"user_id": message.from_user.id})
                         if _fdoc and _fdoc.get("font"):
-                            _ffunc = getattr(_Fonts, _fdoc["font"], None)
-                            if _ffunc:
-                                _ascii_ratio = sum(1 for c in ai_reply if ord(c) < 256) / max(len(ai_reply), 1)
-                                if _ascii_ratio > 0.65:
-                                    ai_reply = _ffunc(ai_reply)
+                            _fkey = _fdoc["font"]
+                            _ascii_ratio = sum(1 for c in ai_reply if ord(c) < 256) / max(len(ai_reply), 1)
+                            if _ascii_ratio > 0.65:
+                                # Custom fonts handled here (not in Shukla_font)
+                                if _fkey == "fullwidth":
+                                    from SHUKLAMUSIC.plugins.extra.userfont import apply_custom_font
+                                    ai_reply = apply_custom_font(ai_reply, "fullwidth")
+                                elif _fkey == "inverted":
+                                    from SHUKLAMUSIC.plugins.extra.userfont import apply_custom_font
+                                    ai_reply = apply_custom_font(ai_reply, "inverted")
+                                else:
+                                    _ffunc = getattr(_Fonts, _fkey, None)
+                                    if _ffunc:
+                                        ai_reply = _ffunc(ai_reply)
                     except Exception:
                         pass
                 # Use MARKDOWN so ```code``` blocks render correctly

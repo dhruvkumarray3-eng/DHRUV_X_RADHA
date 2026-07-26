@@ -547,17 +547,20 @@ async def welcome(client, message: Message):
                                     [
                                         InlineKeyboardButton(
                                             "🔗 ᴄᴏɴɴᴇᴄᴛ ᴄʜᴀɴɴᴇʟ",
-                                             url=connect_url,
+                                            url=connect_url,
+                                            style=ButtonStyle.SUCCESS,
                                         ),
                                     ],
                                     [
                                         InlineKeyboardButton(
                                             "📖 ʜᴏᴡ ᴛᴏ sᴇᴛᴜᴘ",
                                             url=f"https://t.me/{app.username}?start=help",
+                                            style=ButtonStyle.PRIMARY,
                                         ),
                                         InlineKeyboardButton(
                                             "💬 sᴜᴘᴘᴏʀᴛ",
                                             url=config.SUPPORT_CHAT,
+                                            style=ButtonStyle.DANGER,
                                         ),
                                     ],
                                 ]),
@@ -632,16 +635,19 @@ async def welcome(client, message: Message):
                                     InlineKeyboardButton(
                                         "🎵 /ᴘʟᴀʏ sᴏɴɢ",
                                         url=f"https://t.me/{app.username}?start=help",
+                                        style=ButtonStyle.SUCCESS,
                                     ),
                                     InlineKeyboardButton(
                                         "📖 ᴄᴏᴍᴍᴀɴᴅs",
                                         url=f"https://t.me/{app.username}?start=help",
+                                        style=ButtonStyle.PRIMARY,
                                     ),
                                 ],
                                 [
                                     InlineKeyboardButton(
                                         "💬 sᴜᴘᴘᴏʀᴛ",
                                         url=config.SUPPORT_CHAT,
+                                        style=ButtonStyle.DANGER,
                                     ),
                                 ],
                             ]),
