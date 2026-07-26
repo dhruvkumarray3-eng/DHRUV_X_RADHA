@@ -44,9 +44,9 @@ BAR_X, BAR_Y = 388, META_Y + 45
 BAR_RED_LEN = 280
 BAR_TOTAL_LEN = 480
 
-ICONS_W, ICONS_H = 415, 45
-ICONS_X = PANEL_X + (PANEL_W - ICONS_W) // 2
-ICONS_Y = BAR_Y + 48
+ICONS_W, ICONS_H = 522, 114
+ICONS_X = PANEL_X + (PANEL_W - ICONS_W) // 2  # auto-centers based on ICONS_W
+ICONS_Y = BAR_Y + 42
 
 MAX_TITLE_WIDTH = 580
 
@@ -177,9 +177,8 @@ async def get_thumb(videoid: str) -> str:
     icons_path = "SHUKLAMUSIC/assets/assets/play_icons.png"
     if os.path.isfile(icons_path):
         ic = Image.open(icons_path).resize((ICONS_W, ICONS_H)).convert("RGBA")
-        r, g, b, a = ic.split()
-        black_ic = Image.merge("RGBA", (r.point(lambda *_: 0), g.point(lambda *_: 0), b.point(lambda *_: 0), a))
-        bg.paste(black_ic, (ICONS_X, ICONS_Y), black_ic)
+        # Preserve original colors (red/green/blue button backgrounds)
+        bg.paste(ic, (ICONS_X, ICONS_Y), ic)
 
     # Cleanup and save
     try:
