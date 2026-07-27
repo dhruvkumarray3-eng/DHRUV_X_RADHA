@@ -11,8 +11,10 @@
 #
 # ❤️ Made with dedication and love by ItzShukla
 # -----------------------------------------------
+from SHUKLAMUSIC import app
 from SHUKLAMUSIC.misc import SUDOERS
 from SHUKLAMUSIC.utils.database import get_lang, is_maintenance
+from config import SUPPORT_CHAT
 from strings import get_string
 
 
