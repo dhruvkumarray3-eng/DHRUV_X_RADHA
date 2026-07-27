@@ -1,45 +1,41 @@
-# NOBITA X PRIME — Telegram Music Bot
+# NOBITA X PRIME Music Bot
 
-A Telegram music/voice-chat bot with AI chatbot, MongoDB persistence, and a built-in keep-alive web server.
+A Telegram music bot that streams YouTube/Spotify/SoundCloud audio into Telegram voice chats. Includes an AI chatbot powered by Groq (LLaMA 3.3 70B).
 
 ## Stack
-- **Python 3.12** + Pyrogram (MTProto bot client)
-- **PyTgCalls / ntgcalls** — voice chat streaming
-- **yt-dlp** — YouTube/Spotify/SoundCloud audio download
-- **Motor / MongoDB** — async database
-- **Groq LLaMA 3.3 70B** — AI chatbot
-- **aiohttp** — keep-alive web server (port 8080 → external port 80)
+- **Python 3.12** — runtime
+- **Pyrogram** — Telegram MTProto client (bot + userbot assistant)
+- **PyTgCalls / NTgCalls** — voice chat streaming
+- **yt-dlp** — YouTube audio/video downloading
+- **MongoDB (Motor)** — async database
+- **Groq** — AI chatbot
+- **aiohttp** — built-in keep-alive web server on port 8080
 
 ## How to run
 ```
 python3 -m SHUKLAMUSIC
 ```
-The workflow **Start application** handles this automatically.
+Workflow: **Start application** (already configured)
 
-## Required secrets (set in Replit Secrets)
-| Key | Purpose |
-|---|---|
-| `API_ID` | Telegram API ID |
-| `API_HASH` | Telegram API Hash |
+## Required secrets (Replit Secrets)
+| Key | Description |
+|-----|-------------|
+| `API_ID` | Telegram API ID from my.telegram.org |
+| `API_HASH` | Telegram API Hash from my.telegram.org |
 | `BOT_TOKEN` | Bot token from @BotFather |
 | `MONGO_DB_URI` | MongoDB connection string |
-| `LOGGER_ID` | Telegram chat ID for bot logs |
-| `OWNER_ID` | Telegram user ID of bot owner |
-| `STRING_SESSION` | Pyrogram session for assistant/userbot |
-| `GROQ_API_KEY` | Groq AI chatbot (optional) |
-| `GIT_TOKEN` | GitHub token for push support (optional) |
+| `STRING_SESSION` | Pyrogram session string for the assistant userbot |
+| `OWNER_ID` | Your Telegram user ID |
+| `LOGGER_ID` | Log group/channel ID (negative number) |
+| `GROQ_API_KEY` | Groq API key for AI chatbot |
+| `GIT_TOKEN` | GitHub token for auto-updates |
 
-## Keep-alive endpoint
-The bot runs an HTTP server at port 8080. Hit `/ping` to keep it alive:
+## Keep-alive
+The bot runs a lightweight HTTP server on port 8080. Ping `/ping` to keep it alive:
 ```
-GET https://<your-replit-domain>/ping
-→ {"status": "ok", "bot": "NOBITA X PRIME"}
+https://<your-replit-domain>/ping
 ```
-
-## Entry point
-`SHUKLAMUSIC/__main__.py` — starts keep-alive server, loads all plugin modules, starts bot + userbot + PyTgCalls.
-
-## Config
-`config.py` at project root — reads all secrets from environment variables via `python-dotenv`.
+Returns `{"status": "ok", "bot": "NOBITA X PRIME"}`.
 
 ## User preferences
+- Keep the project's existing structure and stack — do not restructure or migrate it.
