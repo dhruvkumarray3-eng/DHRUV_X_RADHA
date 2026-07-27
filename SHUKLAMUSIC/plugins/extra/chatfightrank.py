@@ -32,9 +32,9 @@ PERIOD_LABELS = {
     "month": "🗓  THIS MONTH",
 }
 BTN_LABELS = {
-    "today": "🔵 Today",
-    "week":  "🟣 Week",
-    "month": "🟠 Monthly",
+    "today": "🟢 Today",
+    "week":  "🔵 Week",
+    "month": "🔴 Monthly",
 }
 
 BAR_PALETTE = [
@@ -287,8 +287,21 @@ async def show_rank(client: Client, message: Message):
 
 @app.on_callback_query(filters.regex(r"^cfr_(today|week|month)_(-?\d+)$"))
 async def cfr_callback(client: Client, callback: CallbackQuery):
-    _, period, cid_str = callback.data.split("_", 2)
+    parts = callback.data.split("_", 2)
+    period = parts[1]
+    cid_str = parts[2]
     chat_id = int(cid_str)
+
+    # Detect already-active period to avoid redundant regeneration (prevents glitch)
+    current_markup = callback.message.reply_markup
+    active_label = BTN_LABELS.get(period, "")
+    expected_active = f"✅ {active_label}"
+    if current_markup:
+        for row in current_markup.inline_keyboard:
+            for btn in row:
+                if btn.text == expected_active:
+                    await callback.answer(f"Already showing {PERIOD_LABELS.get(period, period)}")
+                    return
 
     await callback.answer(f"Loading {PERIOD_LABELS.get(period, period)} …")
 
@@ -312,11 +325,13 @@ async def cfr_callback(client: Client, callback: CallbackQuery):
             reply_markup=_keyboard(chat_id, period),
         )
     except Exception:
-        await callback.message.reply_photo(
-            photo=buf,
-            caption=caption,
-            reply_markup=_keyboard(chat_id, period),
-        )
+        try:
+            await callback.message.edit_caption(
+                caption=caption,
+                reply_markup=_keyboard(chat_id, period),
+            )
+        except Exception:
+            pass
 
 
 __help__ = """

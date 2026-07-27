@@ -409,26 +409,33 @@ async def play_commnd(
             return await play_logs(message, streamtype=f"Playlist : {plist_type}")
         else:
             if slider:
-                buttons = slider_markup(
-                    _,
-                    track_id,
-                    message.from_user.id,
-                    query,
-                    0,
-                    "c" if channel else "g",
-                    "f" if fplay else "d",
-                )
+                # Fast play: auto-stream the top search result directly without
+                # requiring the user to tap a selection button.
+                if details["duration_min"]:
+                    duration_sec = time_to_seconds(details["duration_min"])
+                    if duration_sec > config.DURATION_LIMIT:
+                        return await mystic.edit_text(
+                            _["play_6"].format(config.DURATION_LIMIT_MIN, app.mention)
+                        )
+                try:
+                    await stream(
+                        _,
+                        mystic,
+                        user_id,
+                        details,
+                        chat_id,
+                        user_name,
+                        message.chat.id,
+                        video=video,
+                        streamtype=streamtype,
+                        forceplay=fplay,
+                    )
+                except Exception as e:
+                    ex_type = type(e).__name__
+                    err = e if ex_type == "AssistantErr" else _["general_2"].format(ex_type)
+                    return await mystic.edit_text(err)
                 await mystic.delete()
-                await message.reply_photo(
-                    photo=details["thumb"],
-                    has_spoiler=True,
-                    caption=_["play_10"].format(
-                        details["title"].title(),
-                        details["duration_min"],
-                    ),
-                    reply_markup=InlineKeyboardMarkup(buttons),
-                )
-                return await play_logs(message, streamtype=f"Searched on Youtube")
+                return await play_logs(message, streamtype="Searched on Youtube")
             else:
                 buttons = track_markup(
                     _,

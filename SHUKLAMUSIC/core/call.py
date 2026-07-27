@@ -379,12 +379,15 @@ class Call(PyTgCalls):
                             from SHUKLAMUSIC.utils.stream.queue import put_queue
                             # Inherit video/audio mode from the song that just ended
                             autoplay_video = popped.get("streamtype", "audio") == "video"
-                            # Record both the outgoing and incoming song in history
-                            await add_autoplay_history(chat_id, last_vidid)
-                            await add_autoplay_history(chat_id, new_vidid)
+                            # Download BEFORE clearing queue to avoid losing state on failure
                             file_path, direct = await YouTube.download(
                                 new_vidid, None, videoid=True, video=autoplay_video
                             )
+                            if not file_path:
+                                raise ValueError("Autoplay download returned None")
+                            # Record history only after successful download
+                            await add_autoplay_history(chat_id, last_vidid)
+                            await add_autoplay_history(chat_id, new_vidid)
                             db[chat_id] = []
                             ap_stream = self._build_stream(file_path, video=autoplay_video)
                             await self._play_on_assistant(client, chat_id, ap_stream)
@@ -414,11 +417,14 @@ class Call(PyTgCalls):
                                 ),
                                 reply_markup=InlineKeyboardMarkup(ap_button),
                             )
-                            db[chat_id][0]["mystic"] = run
-                            db[chat_id][0]["markup"] = "stream"
+                            # Guard against race: put_queue must have populated db
+                            if db.get(chat_id) and len(db[chat_id]) > 0:
+                                db[chat_id][0]["mystic"] = run
+                                db[chat_id][0]["markup"] = "stream"
                             return
-                    except Exception:
-                        pass   # autoplay failed → fall through and leave normally
+                    except Exception as _ap_err:
+                        LOGGER(__name__).warning(f"[autoplay] failed for chat {chat_id}: {_ap_err}")
+                        # autoplay failed → fall through and leave normally
                 await _clear_(chat_id)
                 return await client.leave_call(chat_id, close=False)
         except Exception:
