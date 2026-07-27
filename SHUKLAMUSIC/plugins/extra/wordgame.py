@@ -103,7 +103,7 @@ async def cmd_word_score(client: Client, message: Message):
 
 
 # ── Message listener — validate submitted words ───────────────────────────────
-@app.on_message(filters.group & filters.text & ~filters.command([""]), group=11)
+@app.on_message(filters.group & filters.text & ~filters.regex(r"^/"), group=11)
 async def _check_word(client: Client, message: Message):
     if not message.from_user:
         return

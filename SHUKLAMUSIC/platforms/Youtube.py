@@ -456,21 +456,48 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
-        results = VideosSearch(link, limit=1)
-        for result in (await results.next())["result"]:
-            title = result["title"]
-            duration_min = result["duration"]
-            vidid = result["id"]
-            yturl = result["link"]
-            thumbnail = result["thumbnails"][0]["url"].split("?")[0]
-        track_details = {
-            "title": title,
-            "link": yturl,
-            "vidid": vidid,
-            "duration_min": duration_min,
-            "thumb": thumbnail,
-        }
-        return track_details, vidid
+
+        # ── 1. Try youtube-search-python ──────────────────────────────────────
+        try:
+            results = VideosSearch(link, limit=1)
+            result_list = (await results.next()).get("result") or []
+            if result_list:
+                r = result_list[0]
+                track_details = {
+                    "title": r["title"],
+                    "link": r["link"],
+                    "vidid": r["id"],
+                    "duration_min": r["duration"],
+                    "thumb": r["thumbnails"][0]["url"].split("?")[0],
+                }
+                return track_details, r["id"]
+        except Exception:
+            pass
+
+        # ── 2. Fallback: yt-dlp ytsearch ─────────────────────────────────────
+        def _ytdlp_search():
+            opts = {"quiet": True, "no_warnings": True, "skip_download": True, "noplaylist": True}
+            with yt_dlp.YoutubeDL(opts) as ydl:
+                info = ydl.extract_info(f"ytsearch1:{link}", download=False)
+                if info and info.get("entries"):
+                    entry = info["entries"][0]
+                    dur = int(entry.get("duration") or 0)
+                    m, s = divmod(dur, 60)
+                    return {
+                        "title": entry.get("title", "Unknown"),
+                        "link": f"https://www.youtube.com/watch?v={entry['id']}",
+                        "vidid": entry["id"],
+                        "duration_min": f"{m}:{s:02d}",
+                        "thumb": f"https://i.ytimg.com/vi/{entry['id']}/hqdefault.jpg",
+                    }, entry["id"]
+            return None, None
+
+        loop = asyncio.get_event_loop()
+        track_details, vidid = await loop.run_in_executor(None, _ytdlp_search)
+        if track_details:
+            return track_details, vidid
+
+        raise ValueError(f"No search results found for: {link}")
 
     async def formats(self, link: str, videoid: Union[bool, str] = None):
         if videoid:
@@ -519,13 +546,37 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
-        a = VideosSearch(link, limit=10)
-        result = (await a.next()).get("result")
-        title = result[query_type]["title"]
-        duration_min = result[query_type]["duration"]
-        vidid = result[query_type]["id"]
-        thumbnail = result[query_type]["thumbnails"][0]["url"].split("?")[0]
-        return title, duration_min, thumbnail, vidid
+
+        # ── 1. Try youtube-search-python ──────────────────────────────────────
+        try:
+            a = VideosSearch(link, limit=10)
+            result = (await a.next()).get("result") or []
+            if result and query_type < len(result):
+                r = result[query_type]
+                return r["title"], r["duration"], r["thumbnails"][0]["url"].split("?")[0], r["id"]
+        except Exception:
+            pass
+
+        # ── 2. Fallback: yt-dlp ytsearch10 ───────────────────────────────────
+        def _ytdlp_slider():
+            opts = {"quiet": True, "no_warnings": True, "skip_download": True, "noplaylist": True}
+            with yt_dlp.YoutubeDL(opts) as ydl:
+                info = ydl.extract_info(f"ytsearch10:{link}", download=False)
+                if info and info.get("entries"):
+                    idx = min(query_type, len(info["entries"]) - 1)
+                    entry = info["entries"][idx]
+                    dur = int(entry.get("duration") or 0)
+                    m, s = divmod(dur, 60)
+                    return (
+                        entry.get("title", "Unknown"),
+                        f"{m}:{s:02d}",
+                        f"https://i.ytimg.com/vi/{entry['id']}/hqdefault.jpg",
+                        entry["id"],
+                    )
+            return None, None, None, None
+
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, _ytdlp_slider)
 
     async def download(
         self,

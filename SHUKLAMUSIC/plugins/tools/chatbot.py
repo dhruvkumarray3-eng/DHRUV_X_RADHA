@@ -420,6 +420,69 @@ async def addprofile_private_cmd(client, message: Message):
     )
 
 
+# ── /setmyprofile — any user sets their OWN profile ──────────────────────────
+@app.on_message(filters.command("setmyprofile") & ~BANNED_USERS)
+async def setmyprofile_cmd(client, message: Message):
+    """
+    /setmyprofile <info about yourself>
+    Any user can save their own profile. AI will remember and use this info.
+    """
+    args = message.text.split(None, 1)
+    if len(args) < 2 or not args[1].strip():
+        return await message.reply_text(
+            f"{_ERR} Usage: <code>/setmyprofile apne baare mein kuch batao</code>\n\n"
+            "Example:\n"
+            "<code>/setmyprofile Mera naam Rahul hai, main Delhi mein rehta hoon, mujhe cricket aur coding pasand hai</code>"
+        )
+    if not message.from_user:
+        return
+    info = args[1].strip()
+    u    = message.from_user
+    name = f"{u.first_name or ''} {u.last_name or ''}".strip() or str(u.id)
+    uname = (u.username or "").lower() or None
+
+    doc = {"user_id": u.id, "name": name, "info": info}
+    if uname:
+        doc["username"] = uname
+
+    await user_profiles.update_one({"user_id": u.id}, {"$set": doc}, upsert=True)
+    await message.reply_text(
+        f"{_ON} <b>Profile save ho gaya, {name}!</b> 🎉\n\n"
+        f"📝 <b>Tumhari info:</b> {info}\n\n"
+        f"✨ Ab jab bhi tum kuch puchoge, bot tumhare baare mein jaanta hua jawab dega!"
+    )
+
+
+@app.on_message(filters.command("mymemory") & ~BANNED_USERS)
+async def mymemory_cmd(client, message: Message):
+    """Show user their saved profile."""
+    if not message.from_user:
+        return
+    doc = await user_profiles.find_one({"user_id": message.from_user.id})
+    if not doc:
+        return await message.reply_text(
+            f"📭 Tumhara koi profile save nahi hai.\n"
+            f"Use <code>/setmyprofile apne baare mein batao</code> to set one!"
+        )
+    await message.reply_text(
+        f"{_BOOK} <b>Tumhara Saved Profile:</b>\n\n"
+        f"👤 <b>Name:</b> {doc.get('name', 'Unknown')}\n"
+        f"📝 <b>Info:</b> {doc.get('info', 'N/A')}"
+    )
+
+
+@app.on_message(filters.command("deletemymemory") & ~BANNED_USERS)
+async def deletemymemory_cmd(client, message: Message):
+    """User deletes their own saved profile."""
+    if not message.from_user:
+        return
+    res = await user_profiles.delete_one({"user_id": message.from_user.id})
+    if res.deleted_count:
+        await message.reply_text(f"{_ON} Tumhara profile delete ho gaya! Bot ab tumhe nahi pehchanega 😢")
+    else:
+        await message.reply_text(f"📭 Koi profile nahi tha delete karne ke liye.")
+
+
 @app.on_message(filters.command("delprofile") & ~BANNED_USERS)
 async def delprofile_cmd(client, message: Message):
     # Allow in group (admin) or private (owner/sudo)
