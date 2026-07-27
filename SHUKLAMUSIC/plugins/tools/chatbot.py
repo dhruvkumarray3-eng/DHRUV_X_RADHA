@@ -471,7 +471,7 @@ async def mymemory_cmd(client, message: Message):
     )
 
 
-@app.on_message(filters.command("deletemymemory") & ~BANNED_USERS)
+@app.on_message(filters.command(["deletemymemory", "deletemyprofile", "delmyprofile"]) & ~BANNED_USERS)
 async def deletemymemory_cmd(client, message: Message):
     """User deletes their own saved profile."""
     if not message.from_user:
