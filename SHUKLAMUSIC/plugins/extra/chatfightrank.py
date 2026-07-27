@@ -10,6 +10,7 @@ import aiohttp
 from PIL import Image, ImageDraw, ImageFont
 
 from pyrogram import Client, filters
+from pyrogram.enums import ButtonStyle
 from pyrogram.types import (
     Message, InlineKeyboardMarkup, InlineKeyboardButton,
     CallbackQuery, InputMediaPhoto,
@@ -237,11 +238,21 @@ async def _make_card(chat_title: str, period: str, top: list) -> io.BytesIO:
 
 # ── Keyboard ──────────────────────────────────────────────────────────────────
 
+_BTN_STYLES = {
+    "today": ButtonStyle.SUCCESS,   # green
+    "week":  ButtonStyle.PRIMARY,   # blue
+    "month": ButtonStyle.DANGER,    # red
+}
+
 def _keyboard(chat_id: int, active: str) -> InlineKeyboardMarkup:
     def btn(p: str):
         label = BTN_LABELS[p]
         text  = f"✅ {label}" if p == active else label
-        return InlineKeyboardButton(text, callback_data=f"cfr_{p}_{chat_id}")
+        return InlineKeyboardButton(
+            text,
+            callback_data=f"cfr_{p}_{chat_id}",
+            style=_BTN_STYLES[p],
+        )
     return InlineKeyboardMarkup([[btn("today"), btn("week"), btn("month")]])
 
 
