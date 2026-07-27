@@ -33,9 +33,9 @@ PERIOD_LABELS = {
     "month": "🗓  THIS MONTH",
 }
 BTN_LABELS = {
-    "today": "🟢 Today",
-    "week":  "🔵 Week",
-    "month": "🔴 Monthly",
+    "today": "Today",
+    "week":  "Week",
+    "month": "Monthly",
 }
 
 BAR_PALETTE = [
@@ -224,11 +224,13 @@ async def _make_card(chat_title: str, period: str, top: list) -> io.BytesIO:
             ctw = draw.textlength(count_txt, font=f_count)
             draw.text((W - 44 - ctw, ry + 13), count_txt, font=f_count, fill=bc)
 
-    # ── 7. Footer ──────────────────────────────────────────────────────────
+    # ── 7. Footer — chat name + total msgs ────────────────────────────────
+    total_msgs = sum(c for _, _, c in top) if top else 0
+    chat_short = (chat_title[:30] + "…") if len(chat_title) > 30 else chat_title
+    footer_txt = f"📍 {chat_short}  •  {total_msgs:,} msgs"
     draw.rectangle([(0, H - 4), (W, H)], fill=(180, 80, 255))
-    footer_txt = "🎵  t.me/II_NOBITA_X_PRIME_II"
     fw = draw.textlength(footer_txt, font=f_footer)
-    draw.text(((W - fw) / 2, H - 22), footer_txt, font=f_footer, fill=(150, 120, 200))
+    draw.text(((W - fw) / 2, H - 22), footer_txt, font=f_footer, fill=(200, 180, 255))
 
     buf = io.BytesIO()
     canvas.convert("RGB").save(buf, format="JPEG", quality=92)
@@ -267,6 +269,26 @@ async def _track_msg(client: Client, message: Message):
     await increment_msg(message.chat.id, u.id, name)
 
 
+_MEDALS = ["🥇", "🥈", "🥉"]
+
+
+def _build_caption(chat_title: str, period: str, top: list) -> str:
+    """Build caption with chat name, period label, and name + msg-count list."""
+    period_label = PERIOD_LABELS.get(period, "TODAY").strip()
+    lines = [
+        f"🏆 <b>Chat Fight Rank — {period_label}</b>",
+        f"📍 <b>{chat_title}</b>",
+        "",
+    ]
+    if not top:
+        lines.append("😶 Koi messages nahi aaye abhi! Start chatting.")
+    else:
+        for i, (uid, name, count) in enumerate(top):
+            medal = _MEDALS[i] if i < len(_MEDALS) else f"{i + 1}."
+            lines.append(f"{medal} <b>{name}</b> — {count:,} msgs")
+    return "\n".join(lines)
+
+
 # ── /cfr command ──────────────────────────────────────────────────────────────
 
 @app.on_message(
@@ -279,11 +301,8 @@ async def show_rank(client: Client, message: Message):
     chat_title = message.chat.title or "This Group"
 
     try:
-        buf = await _make_card(chat_title, period, top)
-        caption = (
-            f"🏆 <b>Chat Fight Rank — Today</b>\n"
-            f"📍 <b>{chat_title}</b>"
-        )
+        buf     = await _make_card(chat_title, period, top)
+        caption = _build_caption(chat_title, period, top)
         await wait.delete()
         await message.reply_photo(
             photo=buf,
@@ -298,15 +317,13 @@ async def show_rank(client: Client, message: Message):
 
 @app.on_callback_query(filters.regex(r"^cfr_(today|week|month)_(-?\d+)$"))
 async def cfr_callback(client: Client, callback: CallbackQuery):
-    parts = callback.data.split("_", 2)
-    period = parts[1]
-    cid_str = parts[2]
-    chat_id = int(cid_str)
+    parts   = callback.data.split("_", 2)
+    period  = parts[1]
+    chat_id = int(parts[2])
 
-    # Detect already-active period to avoid redundant regeneration (prevents glitch)
+    # Detect already-active period — skip regeneration (prevents glitch)
     current_markup = callback.message.reply_markup
-    active_label = BTN_LABELS.get(period, "")
-    expected_active = f"✅ {active_label}"
+    expected_active = f"✅ {BTN_LABELS.get(period, '')}"
     if current_markup:
         for row in current_markup.inline_keyboard:
             for btn in row:
@@ -322,13 +339,9 @@ async def cfr_callback(client: Client, callback: CallbackQuery):
     except Exception:
         chat_title = "This Group"
 
-    top = await get_top(chat_id, period=period)
-    buf = await _make_card(chat_title, period, top)
-
-    caption = (
-        f"🏆 <b>Chat Fight Rank — {PERIOD_LABELS.get(period, period)}</b>\n"
-        f"📍 <b>{chat_title}</b>"
-    )
+    top     = await get_top(chat_id, period=period)
+    buf     = await _make_card(chat_title, period, top)
+    caption = _build_caption(chat_title, period, top)
 
     try:
         await callback.message.edit_media(
@@ -354,9 +367,9 @@ __help__ = """
 /topchatters — Same
 
 Buttons pe tap karo:
-🔵 <b>Today</b> — Aaj ke top chatters
-🟣 <b>Week</b> — Is hafte ke top chatters
-🟠 <b>Monthly</b> — Is mahine ke top chatters
+<b>Today</b> — Aaj ke top chatters
+<b>Week</b> — Is hafte ke top chatters
+<b>Monthly</b> — Is mahine ke top chatters
 
 Har message count hota hai. Roz midnight reset.
 """
