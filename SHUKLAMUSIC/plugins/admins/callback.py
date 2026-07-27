@@ -59,6 +59,13 @@ from strings import get_string
 checker = {}
 upvoters = {}
 
+# ── Button spam / double-fire guard ──────────────────────────────────────────
+# Keyed by (user_id, command, chat_id) → timestamp of last accepted action.
+# Any repeat within 3 s is silently dropped.
+import time as _time
+_cb_last: dict = {}
+_CB_COOLDOWN = 3.0   # seconds
+
 
 
 @app.on_callback_query(filters.regex("unban_assistant"))
@@ -88,6 +95,18 @@ async def del_back_playlist(client, CallbackQuery, _):
         await CallbackQuery.answer()
         return await CallbackQuery.message.reply_text(_["general_5"])
     mention = CallbackQuery.from_user.mention
+
+    # ── Spam / double-fire guard ─────────────────────────────────────────────
+    # Action buttons (not UpVote / GetTimer) get a per-user 3-second cooldown.
+    if command not in ("UpVote", "GetTimer"):
+        _key = (CallbackQuery.from_user.id, command, chat_id)
+        _now = _time.monotonic()
+        if _now - _cb_last.get(_key, 0.0) < _CB_COOLDOWN:
+            return await CallbackQuery.answer(
+                "⏳ ᴛʜᴏᴅᴀ ʀᴜᴋᴏ, ᴩʜɪʀ ᴋᴏsʜɪsʜ ᴋᴀʀᴏ!", show_alert=False
+            )
+        _cb_last[_key] = _now
+    # ─────────────────────────────────────────────────────────────────────────
     if command == "UpVote":
         if chat_id not in votemode:
             votemode[chat_id] = {}
