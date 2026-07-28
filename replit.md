@@ -1,41 +1,56 @@
-# NOBITA X PRIME Music Bot
+# NOBITA X PRIME MUSIC BOT
 
-A Telegram music bot that streams YouTube/Spotify/SoundCloud audio into Telegram voice chats. Includes an AI chatbot powered by Groq (LLaMA 3.3 70B).
+A Telegram music bot that streams YouTube, Spotify, SoundCloud, and Apple Music into Telegram voice chats. Includes a Groq-powered AI chatbot, MongoDB persistence, and a keep-alive web server.
 
 ## Stack
-- **Python 3.12** — runtime
+
+- **Python 3.12** — main runtime
 - **Pyrogram** — Telegram MTProto client (bot + userbot assistant)
-- **PyTgCalls / NTgCalls** — voice chat streaming
-- **yt-dlp** — YouTube audio/video downloading
-- **MongoDB (Motor)** — async database
-- **Groq** — AI chatbot
-- **aiohttp** — built-in keep-alive web server on port 8080
+- **PyTgCalls / ntgcalls** — voice chat streaming
+- **yt-dlp** — YouTube/audio downloading
+- **Motor (MongoDB)** — async database via MongoDB Atlas
+- **Groq (LLaMA 3.3 70B)** — AI chatbot
+- **aiohttp** — keep-alive web server on port 8080
 
 ## How to run
+
 ```
 python3 -m SHUKLAMUSIC
 ```
-Workflow: **Start application** (already configured)
+
+The workflow **Start application** handles this automatically.
 
 ## Required secrets (Replit Secrets)
+
 | Key | Description |
 |-----|-------------|
-| `API_ID` | Telegram API ID from my.telegram.org |
-| `API_HASH` | Telegram API Hash from my.telegram.org |
+| `API_HASH` | Telegram API hash from my.telegram.org |
 | `BOT_TOKEN` | Bot token from @BotFather |
-| `MONGO_DB_URI` | MongoDB connection string |
-| `STRING_SESSION` | Pyrogram session string for the assistant userbot |
-| `OWNER_ID` | Your Telegram user ID |
-| `LOGGER_ID` | Log group/channel ID (negative number) |
+| `MONGO_DB_URI` | MongoDB Atlas connection string |
+| `STRING_SESSION` | Pyrogram session string for the userbot assistant |
 | `GROQ_API_KEY` | Groq API key for AI chatbot |
-| `GIT_TOKEN` | GitHub token for auto-updates |
+| `GIT_TOKEN` | GitHub token for auto-update feature |
 
-## Keep-alive
-The bot runs a lightweight HTTP server on port 8080. Ping `/ping` to keep it alive:
+## Environment variables (already set)
+
+| Key | Value |
+|-----|-------|
+| `API_ID` | 38987335 |
+| `OWNER_ID` | 8245258112 |
+| `LOGGER_ID` | -1004458016685 |
+| `LOG_GROUP_ID` | -1004458016685 |
+| `UPSTREAM_REPO` | https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA |
+| `UPSTREAM_BRANCH` | main |
+
+## Keep-alive endpoint
+
+The bot exposes a `/ping` endpoint on port 8080:
 ```
-https://<your-replit-domain>/ping
+GET https://<your-replit-domain>/ping
+→ {"status": "ok", "bot": "NOBITA X PRIME"}
 ```
-Returns `{"status": "ok", "bot": "NOBITA X PRIME"}`.
+Use this with UptimeRobot or BetterUptime to keep the bot alive 24/7.
 
 ## User preferences
-- Keep the project's existing structure and stack — do not restructure or migrate it.
+
+- Keep the project's existing structure and stack.
