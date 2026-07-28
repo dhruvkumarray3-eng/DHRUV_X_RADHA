@@ -40,7 +40,7 @@ from SHUKLAMUSIC.utils.database import (
 )
 from SHUKLAMUSIC.utils.exceptions import AssistantErr
 from SHUKLAMUSIC.utils.formatters import check_duration, seconds_to_min, speed_converter
-from SHUKLAMUSIC.utils.inline.play import stream_markup
+from SHUKLAMUSIC.utils.inline.play import stream_markup, stream_markup_timer
 from SHUKLAMUSIC.utils.stream.autoclear import auto_clean
 from SHUKLAMUSIC.utils.thumbnails import get_thumb as gen_thumb
 from strings import get_string
@@ -403,7 +403,7 @@ class Call(PyTgCalls):
                                 "video" if autoplay_video else "audio",
                             )
                             img = await gen_thumb(new_vidid)
-                            ap_button = stream_markup(_ap, chat_id, new_vidid, autoplay=True)
+                            ap_button = stream_markup_timer(_ap, chat_id, "0:00", details["duration_min"], videoid=new_vidid, autoplay=True)
                             ap_title = details["title"].title()
                             run = await app.send_photo(
                                 original_chat_id,

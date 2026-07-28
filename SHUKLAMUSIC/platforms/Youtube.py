@@ -155,7 +155,7 @@ async def download_song(link: str) -> str:
                     async with session.get(
                         f"{API_URL}/download",
                         params={"url": video_id, "type": "audio", "api_key": API_KEY},
-                        timeout=aiohttp.ClientTimeout(total=300),
+                        timeout=aiohttp.ClientTimeout(total=25),
                     ) as resp:
                         if resp.status != 200:
                             break
@@ -241,7 +241,7 @@ async def download_video(link: str) -> str:
             async with session.get(
                 f"{API_URL}/download",
                 params={"url": video_id, "type": "video", "api_key": API_KEY},
-                timeout=aiohttp.ClientTimeout(total=300),
+                timeout=aiohttp.ClientTimeout(total=20),
             ) as resp:
                 if resp.status == 200:
                     tmp_dl = file_path + ".dl"
@@ -270,7 +270,7 @@ async def download_video(link: str) -> str:
                 stdout=asyncio.subprocess.DEVNULL,
                 stderr=asyncio.subprocess.DEVNULL,
             )
-            await asyncio.wait_for(proc.wait(), timeout=600)
+            await asyncio.wait_for(proc.wait(), timeout=120)
             import glob as _glob
             for candidate in [tmp_ytdl, tmp_ytdl + ".mp4"] + _glob.glob(tmp_ytdl + "*"):
                 if os.path.exists(candidate) and os.path.getsize(candidate) > 10_000:
