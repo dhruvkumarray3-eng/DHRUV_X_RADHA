@@ -44,6 +44,8 @@ async def init():
         and not config.STRING3
         and not config.STRING4
         and not config.STRING5
+        and not config.STRING6
+        and not config.STRING7
     ):
         LOGGER(__name__).error("String Session Not Filled, Please Fill A Pyrogram Session")
         exit()
@@ -74,6 +76,12 @@ async def init():
         pass
     await SHUKLA.decorators()
     await initialize_vc_logger()
+    # Restore any dynamic sessions added via /addsession
+    try:
+        from SHUKLAMUSIC.plugins.sudo.addsession import restore_dynamic_sessions
+        await restore_dynamic_sessions()
+    except Exception:
+        pass
     await start_keepalive()
     LOGGER("SHUKLAMUSIC").info("Bot fully started!")
     await idle()

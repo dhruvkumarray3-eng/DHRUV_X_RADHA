@@ -55,6 +55,20 @@ class Userbot(Client):
             session_string=str(config.STRING5),
             no_updates=True,
         )
+        self.six = Client(
+            name="SHUKLAAss6",
+            api_id=config.API_ID,
+            api_hash=config.API_HASH,
+            session_string=str(config.STRING6),
+            no_updates=True,
+        )
+        self.seven = Client(
+            name="SHUKLAAss7",
+            api_id=config.API_ID,
+            api_hash=config.API_HASH,
+            session_string=str(config.STRING7),
+            no_updates=True,
+        )
 
     async def start(self):
         LOGGER(__name__).info(f"Starting Assistants...")
@@ -163,6 +177,46 @@ class Userbot(Client):
             assistantids.append(self.five.id)
             LOGGER(__name__).info(f"Assistant Five Started as {self.five.name}")
 
+        if config.STRING6:
+            await self.six.start()
+            try:
+                await self.six.join_chat("ITSZSHUKLA")
+            except:
+                pass
+            assistants.append(6)
+            try:
+                await self.six.send_message(config.LOGGER_ID, "Assistant Started")
+            except:
+                LOGGER(__name__).error(
+                    "Assistant Account 6 has failed to access the log Group."
+                )
+                exit()
+            self.six.id = self.six.me.id
+            self.six.name = self.six.me.mention
+            self.six.username = self.six.me.username
+            assistantids.append(self.six.id)
+            LOGGER(__name__).info(f"Assistant Six Started as {self.six.name}")
+
+        if config.STRING7:
+            await self.seven.start()
+            try:
+                await self.seven.join_chat("ITSZSHUKLA")
+            except:
+                pass
+            assistants.append(7)
+            try:
+                await self.seven.send_message(config.LOGGER_ID, "Assistant Started")
+            except:
+                LOGGER(__name__).error(
+                    "Assistant Account 7 has failed to access the log Group."
+                )
+                exit()
+            self.seven.id = self.seven.me.id
+            self.seven.name = self.seven.me.mention
+            self.seven.username = self.seven.me.username
+            assistantids.append(self.seven.id)
+            LOGGER(__name__).info(f"Assistant Seven Started as {self.seven.name}")
+
     async def stop(self):
         LOGGER(__name__).info(f"Stopping Assistants...")
         try:
@@ -176,5 +230,9 @@ class Userbot(Client):
                 await self.four.stop()
             if config.STRING5:
                 await self.five.stop()
+            if config.STRING6:
+                await self.six.stop()
+            if config.STRING7:
+                await self.seven.stop()
         except:
             pass
