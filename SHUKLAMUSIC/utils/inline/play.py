@@ -43,10 +43,17 @@ def track_markup(_, videoid, user_id, channel, fplay):
 
 
 def stream_markup_timer(_, chat_id, played, dur, videoid=None, autoplay=False):
-    played_sec = time_to_seconds(played)
-    duration_sec = time_to_seconds(dur)
-    percentage = (played_sec / duration_sec) * 100
-    
+    try:
+        played_sec = time_to_seconds(played)
+        duration_sec = time_to_seconds(dur)
+        percentage = (played_sec / duration_sec * 100) if duration_sec > 0 else 0
+    except (ValueError, ZeroDivisionError, TypeError):
+        percentage = 0
+
+    # Sanitise display strings so the button never shows "-" or raw error text
+    display_played = played if (played and played not in ("-", "")) else "0:00"
+    display_dur = dur if (dur and dur not in ("-", "")) else "Live"
+
     umm = math.floor(percentage)
     if 0 <= umm < 8:
         bar = "𝚴❤️‍🔥···········"
@@ -75,7 +82,7 @@ def stream_markup_timer(_, chat_id, played, dur, videoid=None, autoplay=False):
     buttons = [
         [
             InlineKeyboardButton(
-                text=f"{played} {bar} {dur}",
+                text=f"{display_played} {bar} {display_dur}",
                 callback_data="GetTimer",
                 style=ButtonStyle.PRIMARY,
                 icon_custom_emoji_id=5204046146955153467
