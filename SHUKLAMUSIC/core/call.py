@@ -43,6 +43,7 @@ from SHUKLAMUSIC.utils.formatters import check_duration, seconds_to_min, speed_c
 from SHUKLAMUSIC.utils.inline.play import stream_markup, stream_markup_timer
 from SHUKLAMUSIC.utils.stream.autoclear import auto_clean
 from SHUKLAMUSIC.utils.thumbnails import get_thumb as gen_thumb
+from SHUKLAMUSIC.utils.stream.history import push_history
 from strings import get_string
 
 autoend = {}
@@ -421,6 +422,11 @@ class Call(PyTgCalls):
                             if db.get(chat_id) and len(db[chat_id]) > 0:
                                 db[chat_id][0]["mystic"] = run
                                 db[chat_id][0]["markup"] = "stream"
+                                # Push to history so ⏮ Back works after autoplay
+                                try:
+                                    push_history(chat_id, dict(db[chat_id][0]))
+                                except Exception:
+                                    pass
                             return
                     except Exception as _ap_err:
                         LOGGER(__name__).warning(f"[autoplay] failed for chat {chat_id}: {_ap_err}")

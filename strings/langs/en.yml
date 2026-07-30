@@ -207,13 +207,13 @@ ping_2 : "<Blockquote>❤️‍🩹 {1}\n\n❤️‍🔥 ᴘɪɴɢ..ᴩᴏɴɢ :
 queue_1 : "<pre» ғᴇᴛᴄʜɪɴɢ ǫᴜᴇᴜᴇ...\n\nᴘʟᴇᴀsᴇ ᴡᴀɪᴛ...</pre>"
 queue_2 : "⚠️ ǫᴜᴇᴜᴇ ᴇᴍᴘᴛʏ."
 queue_3 : "<u>» ᴄʟɪᴄᴋ ʜᴇʀᴇ ᴛᴏ ᴄʜᴇᴄᴋ ᴛʜᴇ ʟɪsᴛ ᴏғ ᴛʜᴇ ǫᴜᴇᴜᴇᴅ ᴛʀᴀᴄᴋs :</u> <a href={0}>ʜᴇʀᴇ</a>"
-queue_4: "<blockquote>🎵 <b>Aᴅᴅᴇᴅ Tᴏ Qᴜᴇᴜᴇ Aᴛ #{0}</b></blockquote>\n<blockquote expandable>📝 <b>ᴛɪᴛʟᴇ :</b> {1}\n🕐 <b>ᴅᴜʀᴀᴛɪᴏɴ :</b> {2} ᴍɪɴᴜᴛᴇs\n👤 <b>ʀᴇǫᴜᴇsᴛᴇᴅ :</b> {3}</blockquote>\n<blockquote>© ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href=https://t.me/II_NOBITA_X_PRIME_II>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a></blockquote>"
+queue_4: "<blockquote>🎵 <b>Aᴅᴅᴇᴅ Tᴏ Qᴜᴇᴜᴇ Aᴛ #{0}</b></blockquote>\n<blockquote expandable>📝 <b>ᴛɪᴛʟᴇ :</b> {1}\n🕐 <b>ᴅᴜʀᴀᴛɪᴏɴ :</b> {2}\n👤 <b>ʀᴇǫᴜᴇsᴛᴇᴅ :</b> {3}</blockquote>\n<blockquote>© ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href=https://t.me/II_NOBITA_X_PRIME_II>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a></blockquote>"
 queue_5 : "ᴛʜᴇʀᴇ's ᴏɴʟʏ ᴏɴᴇ ǫᴜᴇᴜᴇᴅ ᴛʀᴀᴄᴋ ɪɴ ᴘʟᴀʏʟɪsᴛ.\n\nᴀᴅᴅ ᴍᴏʀᴇ ᴛʀᴀᴄᴋs ᴛᴏ ᴄʜᴇᴄᴋ ʟɪsᴛ."
 queue_6 : "<b>🕚 ᴅᴜʀᴀᴛɪᴏɴ :</b> ᴜɴᴋɴᴏᴡɴ ᴅᴜʀᴀᴛɪᴏɴ sᴛʀᴇᴀᴍ\n\nᴄʟɪᴄᴋ ᴏɴ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴛᴏ ɢᴇᴛ ᴡʜᴏʟᴇ ǫᴜᴇᴜᴇᴅ ʟɪsᴛ."
 queue_7 : "\nᴄʟɪᴄᴋ ᴏɴ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴛᴏ ɢᴇᴛ ᴡʜᴏʟᴇ ǫᴜᴇᴜᴇᴅ ʟɪsᴛ."
 queue_8 : "<b>{0} ᴘʟᴀʏᴇʀ</b>\n\n🎄 <b>sᴛʀᴇᴀᴍɪɴɢ :</b> {1}\n\n🔗 <b>sᴛʀᴇᴀᴍ ᴛʏᴘᴇ :</b> {2}\n <b>ʀᴇǫᴜᴇsᴛᴇᴅ ʙʏ :</b> {3}\n{4}"
 
-stream_1 : "<blockquote>⬇️ <a href={0}>ᴛᴀᴘ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ᴛʜɪs sᴏɴɢ ❤️‍🔥</a></blockquote>\n<blockquote expandable>🎵 <b><u>ɴᴏᴡ sᴛʀᴇᴀᴍɪɴɢ</u></b>\n\n📝 <b>ᴛɪᴛʟᴇ :</b> <a href={0}>{1}</a>\n🕐 <b>ᴅᴜʀᴀᴛɪᴏɴ :</b> {2} ᴍɪɴᴜᴛᴇs\n👤 <b>ʀᴇǫᴜᴇsᴛᴇᴅ :</b> {3}</blockquote>\n<blockquote>© ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href=https://t.me/II_NOBITA_X_PRIME_II>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a></blockquote>"
+stream_1 : "<blockquote>⬇️ <a href={0}>ᴛᴀᴘ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ᴛʜɪs sᴏɴɢ ❤️‍🔥</a></blockquote>\n<blockquote expandable>🎵 <b><u>ɴᴏᴡ sᴛʀᴇᴀᴍɪɴɢ</u></b>\n\n📝 <b>ᴛɪᴛʟᴇ :</b> <a href={0}>{1}</a>\n🕐 <b>ᴅᴜʀᴀᴛɪᴏɴ :</b> {2}\n👤 <b>ʀᴇǫᴜᴇsᴛᴇᴅ :</b> {3}</blockquote>\n<blockquote>© ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href=https://t.me/II_NOBITA_X_PRIME_II>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a></blockquote>"
 stream_2 : "<blockquote>⬇️ <a href={0}>ᴛᴀᴘ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ᴛʜɪs sᴏɴɢ ❤️‍🔥</a></blockquote>\n<blockquote expandable>🎞 <b>Sᴛʀᴇᴀᴍɪɴɢ Sᴛᴀʀᴛᴇᴅ</b>\n🔗 <b>Sᴛʀᴇᴀᴍ ᴛʏᴘᴇ :</b> ʟɪᴠᴇ sᴛʀᴇᴀᴍ [ᴜʀʟ]\n👤 <b>Rᴇǫᴜᴇsᴛᴇᴅ ʙʏ :</b> {0}</blockquote>\n<blockquote>© ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href=https://t.me/II_NOBITA_X_PRIME_II>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a></blockquote>"
 
 CLOSE_BUTTON  : "❤️‍🩹 ᴄʟᴏsᴇ ❤️‍🩹"
