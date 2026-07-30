@@ -11,27 +11,49 @@
 #
 # ❤️ Made with dedication and love by ItzShukla
 # -----------------------------------------------
+import os
 from os import path
 import yt_dlp
 from yt_dlp.utils import DownloadError
 
-ytdl = yt_dlp.YoutubeDL(
-    {
+# Cookies: prefer root-level cookies.txt, fall back to assets/cookies.txt
+_ROOT_COOKIES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "cookies.txt")
+_ASSET_COOKIES = os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets", "cookies.txt")
+
+
+def _cookies_file():
+    for p in (_ROOT_COOKIES, _ASSET_COOKIES):
+        if os.path.exists(p) and os.path.getsize(p) > 50:
+            return p
+    return None
+
+
+def _base_opts():
+    opts = {
         "outtmpl": "downloads/%(id)s.%(ext)s",
         "format": "bestaudio/best",
         "format_sort": ["abr", "asr"],
         "geo_bypass": True,
         "nocheckcertificate": True,
+        "extractor_args": {
+            "youtube": {
+                "player_client": ["android", "ios"],
+                "skip": ["webpage", "configs"],
+            }
+        },
     }
- )
+    cookies = _cookies_file()
+    if cookies:
+        opts["cookiefile"] = cookies
+    return opts
 
-def download(url: str, my_hook) -> str:       
+
+ytdl = yt_dlp.YoutubeDL(_base_opts())
+
+
+def download(url: str, my_hook) -> str:
     ydl_optssx = {
-        'format': 'bestaudio/best',
-        'format_sort': ["abr", "asr"],
-        "outtmpl": "downloads/%(id)s.%(ext)s",
-        "geo_bypass": True,
-        "nocheckcertificate": True,
+        **_base_opts(),
         'quiet': True,
         'no_warnings': True,
     }

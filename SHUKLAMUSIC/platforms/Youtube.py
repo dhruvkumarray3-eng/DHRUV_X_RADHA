@@ -13,7 +13,37 @@ from typing import Union
 import yt_dlp
 
 _LOGGER = logging.getLogger(__name__)
-_COOKIES_FILE = os.path.join(os.path.dirname(__file__), "..", "assets", "cookies.txt")
+# Cookies: prefer root-level cookies.txt, fall back to assets/cookies.txt
+_ROOT_COOKIES = os.path.join(os.path.dirname(__file__), "..", "..", "cookies.txt")
+_ASSET_COOKIES = os.path.join(os.path.dirname(__file__), "..", "assets", "cookies.txt")
+
+
+def _cookies_file():
+    for p in (_ROOT_COOKIES, _ASSET_COOKIES):
+        if os.path.exists(p) and os.path.getsize(p) > 50:
+            return p
+    return None
+
+
+def _base_ydl_opts(**extra):
+    """Return a yt-dlp options dict with anti-bot extractor args and cookies."""
+    opts = {
+        "quiet": True,
+        "no_warnings": True,
+        "nocheckcertificate": True,
+        "geo_bypass": True,
+        "extractor_args": {
+            "youtube": {
+                "player_client": ["android", "ios"],
+                "skip": ["webpage", "configs"],
+            }
+        },
+    }
+    cookies = _cookies_file()
+    if cookies:
+        opts["cookiefile"] = cookies
+    opts.update(extra)
+    return opts
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Message
 from py_yt import VideosSearch, Playlist
@@ -185,13 +215,21 @@ async def download_song(link: str) -> str:
             yt_url = f"https://www.youtube.com/watch?v={video_id}" if "youtube" not in link else link
             tmp_ytdl = mp3_path + ".ytdl"
             try:
-                proc = await asyncio.create_subprocess_exec(
+                _ytdlp_args = [
                     "yt-dlp",
                     "-x", "--audio-format", "mp3",
                     "--audio-quality", "0",
                     "--no-playlist",
-                    "-o", tmp_ytdl,
-                    yt_url,
+                    "--extractor-args", "youtube:player_client=android,ios;skip=webpage,configs",
+                    "--no-check-certificate",
+                    "--geo-bypass",
+                ]
+                _cookies = _cookies_file()
+                if _cookies:
+                    _ytdlp_args += ["--cookies", _cookies]
+                _ytdlp_args += ["-o", tmp_ytdl, yt_url]
+                proc = await asyncio.create_subprocess_exec(
+                    *_ytdlp_args,
                     stdout=asyncio.subprocess.DEVNULL,
                     stderr=asyncio.subprocess.DEVNULL,
                 )
@@ -264,13 +302,21 @@ async def download_video(link: str) -> str:
     if not downloaded:
         tmp_ytdl = file_path + ".ytdl"
         try:
-            proc = await asyncio.create_subprocess_exec(
+            _ytdlp_args = [
                 "yt-dlp",
                 "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
                 "--merge-output-format", "mp4",
                 "--no-playlist",
-                "-o", tmp_ytdl,
-                yt_url,
+                "--extractor-args", "youtube:player_client=android,ios;skip=webpage,configs",
+                "--no-check-certificate",
+                "--geo-bypass",
+            ]
+            _cookies = _cookies_file()
+            if _cookies:
+                _ytdlp_args += ["--cookies", _cookies]
+            _ytdlp_args += ["-o", tmp_ytdl, yt_url]
+            proc = await asyncio.create_subprocess_exec(
+                *_ytdlp_args,
                 stdout=asyncio.subprocess.DEVNULL,
                 stderr=asyncio.subprocess.DEVNULL,
             )
@@ -412,28 +458,10 @@ class YouTubeAPI:
         _played = played_ids or set()
 
         def _fetch():
-            ydl_opts = {
-                "quiet": True,
-                "no_warnings": True,
-                "extract_flat": True,
-                "playlist_items": "2-50",   # large pool to prevent repeats
-                "extractor_args": {
-                    "youtube": {
-                        "player_client": ["android_embedded", "web_creator"],
-                        "player_skip": ["webpage"],
-                    }
-                },
-                "http_headers": {
-                    "User-Agent": (
-                        "Mozilla/5.0 (Linux; Android 11; Pixel 5) "
-                        "AppleWebKit/537.36 (KHTML, like Gecko) "
-                        "Chrome/90.0.4430.91 Mobile Safari/537.36"
-                    ),
-                },
-            }
-            # Use cookies if available (needed for YouTube Radio/Mix access)
-            if os.path.exists(_COOKIES_FILE) and os.path.getsize(_COOKIES_FILE) > 50:
-                ydl_opts["cookiefile"] = _COOKIES_FILE
+            ydl_opts = _base_ydl_opts(
+                extract_flat=True,
+                playlist_items="2-50",   # large pool to prevent repeats
+            )
 
             url = f"https://www.youtube.com/watch?v={vidid}&list=RD{vidid}"
             try:
@@ -497,7 +525,7 @@ class YouTubeAPI:
 
         # ── 2. Fallback: yt-dlp ytsearch ─────────────────────────────────────
         def _ytdlp_search():
-            opts = {"quiet": True, "no_warnings": True, "skip_download": True, "noplaylist": True}
+            opts = _base_ydl_opts(skip_download=True, noplaylist=True)
             with yt_dlp.YoutubeDL(opts) as ydl:
                 info = ydl.extract_info(f"ytsearch1:{link}", download=False)
                 if info and info.get("entries"):
@@ -525,22 +553,7 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
-        ytdl_opts = {
-            "quiet": True,
-            "extractor_args": {
-                "youtube": {
-                    "player_client": ["android_embedded", "web_creator"],
-                    "player_skip": ["webpage"],
-                }
-            },
-            "http_headers": {
-                "User-Agent": (
-                    "Mozilla/5.0 (Linux; Android 11; Pixel 5) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/90.0.4430.91 Mobile Safari/537.36"
-                ),
-            },
-        }
+        ytdl_opts = _base_ydl_opts()
         ydl = yt_dlp.YoutubeDL(ytdl_opts)
         with ydl:
             formats_available = []
@@ -580,7 +593,7 @@ class YouTubeAPI:
 
         # ── 2. Fallback: yt-dlp ytsearch10 ───────────────────────────────────
         def _ytdlp_slider():
-            opts = {"quiet": True, "no_warnings": True, "skip_download": True, "noplaylist": True}
+            opts = _base_ydl_opts(skip_download=True, noplaylist=True)
             with yt_dlp.YoutubeDL(opts) as ydl:
                 info = ydl.extract_info(f"ytsearch10:{link}", download=False)
                 if info and info.get("entries"):
