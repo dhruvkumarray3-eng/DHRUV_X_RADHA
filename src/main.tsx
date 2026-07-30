@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useVideoPlayer } from "@/lib/video/hooks";
 import { createRoot } from "react-dom/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { BrainCircuit, ChevronLeft, ChevronRight, CircleStop, Flame, Heart, Mic2, Pause, Play, Repeat2, SkipBack, SkipForward, Sparkles, Users, Volume2, Zap } from "lucide-react";
@@ -26,12 +27,10 @@ function Wordmark({ small=false }: {small?:boolean}) {
   return <div className={small ? "wordmark small" : "wordmark"}><span>NOBITA X</span><b>PRIME</b><i>❤️‍🔥</i></div>;
 }
 
+const SCENE_DURATIONS = { s0:7200, s1:7200, s2:7200, s3:7200, s4:7200, s5:7200, s6:7200 };
+
 function App() {
-  const [scene, setScene] = useState(0);
-  useEffect(() => {
-    const id = window.setInterval(() => setScene(s => (s + 1) % scenes.length), 7200);
-    return () => window.clearInterval(id);
-  }, []);
+  const { currentScene: scene } = useVideoPlayer({ durations: SCENE_DURATIONS });
   const current = scenes[scene];
   return <main className="video">
     <div className="noise" />
