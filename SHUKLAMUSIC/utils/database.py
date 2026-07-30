@@ -34,6 +34,7 @@ skipdb = mongodb.skipmode
 sudoersdb = mongodb.sudoers
 usersdb = mongodb.tgusersdb
 cardsdb = mongodb.cards
+autoplaydb = mongodb.autoplay  # persistent autoplay state per chat
 
 # Shifting to memory [mongo sucks often]
 active = []
@@ -242,11 +243,21 @@ async def set_loop(chat_id: int, mode: int):
 
 
 async def get_autoplay(chat_id: int) -> bool:
-    return bool(autoplay.get(chat_id, False))
+    cached = autoplay.get(chat_id)
+    if cached is not None:
+        return bool(cached)
+    # Load from MongoDB on first access
+    doc = await autoplaydb.find_one({"chat_id": chat_id})
+    state = bool(doc.get("autoplay", False)) if doc else False
+    autoplay[chat_id] = state
+    return state
 
 
 async def set_autoplay(chat_id: int, mode: bool):
     autoplay[chat_id] = mode
+    await autoplaydb.update_one(
+        {"chat_id": chat_id}, {"$set": {"autoplay": mode}}, upsert=True
+    )
     if not mode:
         autoplay_owner.pop(chat_id, None)
         autoplay_history.pop(chat_id, None)   # clear history when autoplay is turned off

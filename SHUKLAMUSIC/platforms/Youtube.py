@@ -6,10 +6,14 @@
 # ---------------------------------------------------------------
 
 import asyncio
+import logging
 import os
 import re
 from typing import Union
 import yt_dlp
+
+_LOGGER = logging.getLogger(__name__)
+_COOKIES_FILE = os.path.join(os.path.dirname(__file__), "..", "assets", "cookies.txt")
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Message
 from py_yt import VideosSearch, Playlist
@@ -413,7 +417,24 @@ class YouTubeAPI:
                 "no_warnings": True,
                 "extract_flat": True,
                 "playlist_items": "2-50",   # large pool to prevent repeats
+                "extractor_args": {
+                    "youtube": {
+                        "player_client": ["android_embedded", "web_creator"],
+                        "player_skip": ["webpage"],
+                    }
+                },
+                "http_headers": {
+                    "User-Agent": (
+                        "Mozilla/5.0 (Linux; Android 11; Pixel 5) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/90.0.4430.91 Mobile Safari/537.36"
+                    ),
+                },
             }
+            # Use cookies if available (needed for YouTube Radio/Mix access)
+            if os.path.exists(_COOKIES_FILE) and os.path.getsize(_COOKIES_FILE) > 50:
+                ydl_opts["cookiefile"] = _COOKIES_FILE
+
             url = f"https://www.youtube.com/watch?v={vidid}&list=RD{vidid}"
             try:
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -444,8 +465,8 @@ class YouTubeAPI:
                             "link": f"https://www.youtube.com/watch?v={eid}",
                             "thumb": f"https://i.ytimg.com/vi/{eid}/hqdefault.jpg",
                         }, eid
-            except Exception:
-                pass
+            except Exception as e:
+                _LOGGER.warning(f"[related_track] Radio Mix fetch failed for {vidid}: {e}")
             return None, None
 
         loop = asyncio.get_event_loop()
