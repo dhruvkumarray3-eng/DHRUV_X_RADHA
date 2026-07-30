@@ -11,8 +11,88 @@ import os
 import re
 from typing import Union
 import yt_dlp
+import aiohttp as _aiohttp_module
 
 _LOGGER = logging.getLogger(__name__)
+
+# ── YouTube Data API v3 helpers ───────────────────────────────────────────────
+try:
+    from config import YOUTUBE_API_KEY as _YT_API_KEY
+except Exception:
+    _YT_API_KEY = ""
+
+_YT_API_BASE = "https://www.googleapis.com/youtube/v3"
+
+
+def _iso_to_min(iso: str) -> str:
+    """Convert ISO 8601 duration (PT3M45S) → 'MM:SS' string."""
+    h = int((re.search(r'(\d+)H', iso) or type('', (), {'group': lambda s, n: 0})()).group(1) or 0)
+    m = int((re.search(r'(\d+)M', iso) or type('', (), {'group': lambda s, n: 0})()).group(1) or 0)
+    s = int((re.search(r'(\d+)S', iso) or type('', (), {'group': lambda s, n: 0})()).group(1) or 0)
+    total = h * 3600 + m * 60 + s
+    mm, ss = divmod(total, 60)
+    return f"{mm}:{ss:02d}"
+
+
+async def _yt_api_search(query: str, max_results: int = 10) -> list:
+    """Search via YouTube Data API v3. Returns list of track dicts."""
+    if not _YT_API_KEY:
+        return []
+    try:
+        async with _aiohttp_module.ClientSession() as session:
+            async with session.get(
+                f"{_YT_API_BASE}/search",
+                params={
+                    "part": "snippet",
+                    "q": query,
+                    "type": "video",
+                    "maxResults": max_results,
+                    "key": _YT_API_KEY,
+                },
+                timeout=_aiohttp_module.ClientTimeout(total=10),
+            ) as resp:
+                if resp.status != 200:
+                    return []
+                data = await resp.json()
+            items = data.get("items") or []
+            if not items:
+                return []
+            # Fetch durations in one batch call
+            ids = ",".join(it["id"]["videoId"] for it in items)
+            async with session.get(
+                f"{_YT_API_BASE}/videos",
+                params={"part": "contentDetails", "id": ids, "key": _YT_API_KEY},
+                timeout=_aiohttp_module.ClientTimeout(total=10),
+            ) as resp2:
+                dur_map = {}
+                if resp2.status == 200:
+                    vdata = await resp2.json()
+                    dur_map = {
+                        v["id"]: _iso_to_min(v["contentDetails"]["duration"])
+                        for v in (vdata.get("items") or [])
+                    }
+            results = []
+            for it in items:
+                vid = it["id"]["videoId"]
+                sn = it["snippet"]
+                thumb = (
+                    sn.get("thumbnails", {}).get("high", {}).get("url")
+                    or sn.get("thumbnails", {}).get("default", {}).get("url")
+                    or f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg"
+                )
+                results.append({
+                    "title": sn["title"],
+                    "link": f"https://www.youtube.com/watch?v={vid}",
+                    "vidid": vid,
+                    "duration_min": dur_map.get(vid, "0:00"),
+                    "thumb": thumb,
+                })
+            return results
+    except Exception as exc:
+        _LOGGER.warning(f"[YT API search] failed for '{query}': {exc}")
+        return []
+
+
 # Cookies: prefer root-level cookies.txt, fall back to assets/cookies.txt
 _ROOT_COOKIES = os.path.join(os.path.dirname(__file__), "..", "..", "cookies.txt")
 _ASSET_COOKIES = os.path.join(os.path.dirname(__file__), "..", "assets", "cookies.txt")
@@ -392,6 +472,14 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
+        # ── 1. YouTube Data API v3 ─────────────────────────────────────────────
+        api_results = await _yt_api_search(link, max_results=1)
+        if api_results:
+            r = api_results[0]
+            duration_min = r["duration_min"]
+            duration_sec = int(time_to_seconds(duration_min)) if duration_min else 0
+            return r["title"], duration_min, duration_sec, r["thumb"], r["vidid"]
+        # ── 2. Fallback: youtube-search-python ────────────────────────────────
         results = VideosSearch(link, limit=1)
         for result in (await results.next())["result"]:
             title = result["title"]
@@ -406,6 +494,9 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
+        api_results = await _yt_api_search(link, max_results=1)
+        if api_results:
+            return api_results[0]["title"]
         results = VideosSearch(link, limit=1)
         for result in (await results.next())["result"]:
             return result["title"]
@@ -415,6 +506,9 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
+        api_results = await _yt_api_search(link, max_results=1)
+        if api_results:
+            return api_results[0]["duration_min"]
         results = VideosSearch(link, limit=1)
         for result in (await results.next())["result"]:
             return result["duration"]
@@ -424,6 +518,9 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
+        api_results = await _yt_api_search(link, max_results=1)
+        if api_results:
+            return api_results[0]["thumb"]
         results = VideosSearch(link, limit=1)
         for result in (await results.next())["result"]:
             return result["thumbnails"][0]["url"].split("?")[0]
@@ -517,7 +614,13 @@ class YouTubeAPI:
         if "&" in link:
             link = link.split("&")[0]
 
-        # ── 1. Try youtube-search-python ──────────────────────────────────────
+        # ── 1. YouTube Data API v3 (fastest, most reliable) ───────────────────
+        api_results = await _yt_api_search(link, max_results=1)
+        if api_results:
+            r = api_results[0]
+            return r, r["vidid"]
+
+        # ── 2. Fallback: youtube-search-python ────────────────────────────────
         try:
             results = VideosSearch(link, limit=1)
             result_list = (await results.next()).get("result") or []
@@ -534,7 +637,7 @@ class YouTubeAPI:
         except Exception:
             pass
 
-        # ── 2. Fallback: yt-dlp ytsearch ─────────────────────────────────────
+        # ── 3. Last resort: yt-dlp ytsearch ──────────────────────────────────
         def _ytdlp_search():
             opts = _base_ydl_opts(skip_download=True, noplaylist=True)
             with yt_dlp.YoutubeDL(opts) as ydl:
@@ -592,7 +695,13 @@ class YouTubeAPI:
         if "&" in link:
             link = link.split("&")[0]
 
-        # ── 1. Try youtube-search-python ──────────────────────────────────────
+        # ── 1. YouTube Data API v3 ────────────────────────────────────────────
+        api_results = await _yt_api_search(link, max_results=10)
+        if api_results and query_type < len(api_results):
+            r = api_results[query_type]
+            return r["title"], r["duration_min"], r["thumb"], r["vidid"]
+
+        # ── 2. Fallback: youtube-search-python ────────────────────────────────
         try:
             a = VideosSearch(link, limit=10)
             result = (await a.next()).get("result") or []
@@ -602,7 +711,7 @@ class YouTubeAPI:
         except Exception:
             pass
 
-        # ── 2. Fallback: yt-dlp ytsearch10 ───────────────────────────────────
+        # ── 3. Last resort: yt-dlp ytsearch10 ────────────────────────────────
         def _ytdlp_slider():
             opts = _base_ydl_opts(skip_download=True, noplaylist=True)
             with yt_dlp.YoutubeDL(opts) as ydl:
