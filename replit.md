@@ -1,45 +1,40 @@
-# NOBITA X PRIME Music Bot (SHUKLAMUSIC)
+# NOBITA X PRIME MUSIC BOT (SHUKLAMUSIC)
 
-A Telegram voice-chat music bot built with Pyrogram, PyTgCalls, yt-dlp, MongoDB, and Groq AI.
+A Telegram music bot that streams audio/video in voice chats, with an AI chatbot powered by Groq.
+
+## Stack
+- **Python 3.12** — Pyrogram (MTProto), PyTgCalls (voice), Motor/MongoDB, yt-dlp, Groq LLaMA
+- **MongoDB** — persistent storage (playlists, sudoers, settings, etc.)
+- **Keep-alive server** — aiohttp on port 8080, `/ping` returns `{"status":"ok","bot":"NOBITA X PRIME"}`
 
 ## How to run
-
 ```
 python3 -m SHUKLAMUSIC
 ```
-
-The "Start application" workflow runs this automatically.
+Workflow: **Start application** (configured as console output)
 
 ## Required secrets (set in Replit Secrets)
-
-| Secret | Description |
-|---|---|
-| `API_ID` | Telegram API ID from https://my.telegram.org |
-| `API_HASH` | Telegram API Hash from https://my.telegram.org |
+| Key | Description |
+|-----|-------------|
+| `API_ID` | Telegram API ID (my.telegram.org) |
+| `API_HASH` | Telegram API Hash |
 | `BOT_TOKEN` | Bot token from @BotFather |
-| `MONGO_DB_URI` | MongoDB Atlas connection string |
-| `LOGGER_ID` | Telegram group/channel ID for bot logs (negative number) |
-| `OWNER_ID` | Owner's Telegram user ID |
-| `STRING_SESSION` | Pyrogram session string for the userbot (joins voice chats) |
+| `MONGO_DB_URI` | MongoDB connection string |
+| `STRING_SESSION` | Pyrogram userbot session string (for voice calls) |
+| `OWNER_ID` | Your Telegram user ID |
 
 ## Optional secrets
+| Key | Description |
+|-----|-------------|
+| `GROQ_API_KEY` | Groq API key for AI chatbot (LLaMA 3.3 70B) |
+| `GIT_TOKEN` | GitHub token for git-based update commands |
+| `STRING_SESSION2`–`STRING_SESSION7` | Additional assistant accounts |
+| `HEROKU_API_KEY` / `HEROKU_APP_NAME` | Only needed if deploying to Heroku |
+| `LOGGER_ID` / `LOG_GROUP_ID` | Telegram group ID for logging |
 
-| Secret | Description |
-|---|---|
-| `GROQ_API_KEY` | Groq API key for the AI chatbot feature (LLaMA 3.3 70B) |
-| `GIT_TOKEN` | GitHub token for auto-update (`/update` command) |
-| `STRING_SESSION2`–`STRING_SESSION7` | Additional userbot session strings |
-
-## Keep-alive endpoint
-
-The bot runs a lightweight HTTP server on port 8080. Use `/ping` with an uptime monitor (e.g. UptimeRobot) to keep the bot alive:
-
-```
-https://<your-replit-domain>/ping
-```
-
-Returns `{"status": "ok", "bot": "NOBITA X PRIME"}`.
+## Non-secret env vars (set in .replit userenv)
+- `UPSTREAM_REPO` — GitHub repo for `/update` command
+- `UPSTREAM_BRANCH` — branch to pull from (default: `main`)
 
 ## User preferences
-
-<!-- Add user preferences here -->
+- Keep existing project structure; do not restructure or migrate.
