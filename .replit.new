@@ -44,7 +44,6 @@ args = "npm run dev"
 
 [deployment]
 deploymentTarget = "static"
-run = ["python3", "-m", "SHUKLAMUSIC"]
 build = ["npm", "run", "build"]
 publicDir = "dist"
 
@@ -59,9 +58,9 @@ LOG_GROUP_ID = "-1004458016685"
 OWNER_ID = "8245258112"
 
 [[ports]]
-localPort = 5173
-externalPort = 5173
+localPort = 5000
+externalPort = 80
 
 [[ports]]
 localPort = 8080
-externalPort = 80
+externalPort = 3000
