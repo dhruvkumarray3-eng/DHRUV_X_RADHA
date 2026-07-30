@@ -181,7 +181,7 @@ async def download_song(link: str) -> str:
         return wav_path
 
     # ── 2. Download MP3 from ShrutiAPI if not cached ──
-    if not (os.path.exists(mp3_path) and os.path.getsize(mp3_path) > 0):
+    if not (os.path.exists(mp3_path) and os.path.getsize(mp3_path) > 100_000):
         downloaded = False
         for attempt in range(2):          # 1 retry on failure
             try:
@@ -193,14 +193,22 @@ async def download_song(link: str) -> str:
                     ) as resp:
                         if resp.status != 200:
                             break
+                        # Reject non-audio responses (e.g. rate-limit JSON)
+                        content_type = resp.content_type or ""
+                        if not content_type.startswith("audio/"):
+                            break
                         tmp_dl = mp3_path + ".dl"
                         with open(tmp_dl, "wb") as f:
                             async for chunk in resp.content.iter_chunked(131072):
                                 f.write(chunk)
-                        if os.path.exists(tmp_dl) and os.path.getsize(tmp_dl) > 0:
+                        # Require at least 50 KB — real MP3 is always larger
+                        if os.path.exists(tmp_dl) and os.path.getsize(tmp_dl) > 50_000:
                             os.replace(tmp_dl, mp3_path)
                             downloaded = True
                             break
+                        # Too small → not real audio; clean up and fall through
+                        if os.path.exists(tmp_dl):
+                            os.remove(tmp_dl)
             except Exception:
                 if os.path.exists(mp3_path + ".dl"):
                     try:
@@ -211,7 +219,7 @@ async def download_song(link: str) -> str:
                     await asyncio.sleep(2)   # brief pause before retry
 
         # ── 2b. Fallback to yt-dlp if ShrutiAPI failed ──
-        if not downloaded or not (os.path.exists(mp3_path) and os.path.getsize(mp3_path) > 0):
+        if not downloaded or not (os.path.exists(mp3_path) and os.path.getsize(mp3_path) > 50_000):
             yt_url = f"https://www.youtube.com/watch?v={video_id}" if "youtube" not in link else link
             tmp_ytdl = mp3_path + ".ytdl"
             try:
@@ -286,15 +294,18 @@ async def download_video(link: str) -> str:
                 timeout=aiohttp.ClientTimeout(total=20),
             ) as resp:
                 if resp.status == 200:
-                    tmp_dl = file_path + ".dl"
-                    with open(tmp_dl, "wb") as f:
-                        async for chunk in resp.content.iter_chunked(131072):
-                            f.write(chunk)
-                    if os.path.exists(tmp_dl) and os.path.getsize(tmp_dl) > 10_000:
-                        os.replace(tmp_dl, file_path)
-                        downloaded = True
-                    elif os.path.exists(tmp_dl):
-                        os.remove(tmp_dl)
+                    # Reject non-video responses (e.g. rate-limit JSON)
+                    content_type = resp.content_type or ""
+                    if content_type.startswith("video/"):
+                        tmp_dl = file_path + ".dl"
+                        with open(tmp_dl, "wb") as f:
+                            async for chunk in resp.content.iter_chunked(131072):
+                                f.write(chunk)
+                        if os.path.exists(tmp_dl) and os.path.getsize(tmp_dl) > 100_000:
+                            os.replace(tmp_dl, file_path)
+                            downloaded = True
+                        elif os.path.exists(tmp_dl):
+                            os.remove(tmp_dl)
     except Exception:
         pass
 
