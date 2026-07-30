@@ -43,39 +43,41 @@ def track_markup(_, videoid, user_id, channel, fplay):
 
 
 def stream_markup_timer(_, chat_id, played, dur, videoid=None, autoplay=False):
+    played_sec = 0
     try:
         played_sec = time_to_seconds(played)
         duration_sec = time_to_seconds(dur)
-        percentage = (played_sec / duration_sec * 100) if duration_sec > 0 else 0
+        _ = (played_sec / duration_sec * 100) if duration_sec > 0 else 0  # kept for future use
     except (ValueError, ZeroDivisionError, TypeError):
-        percentage = 0
+        pass
 
     # Sanitise display strings so the button never shows "-" or raw error text
     display_played = played if (played and played not in ("-", "")) else "0:00"
     display_dur = dur if (dur and dur not in ("-", "")) else "Live"
 
-    umm = math.floor(percentage)
-    if 0 <= umm < 8:
+    # Bar advances ONE letter per minute elapsed  → N·O·B·I·T·A·X·P·R·I·M·E❤️‍🔥
+    played_min = int(played_sec) // 60
+    if played_min == 0:
         bar = "𝚴❤️‍🔥···········"
-    elif 8 <= umm < 17:
+    elif played_min == 1:
         bar = "𝚴𝐎❤️‍🔥··········"
-    elif 17 <= umm < 25:
+    elif played_min == 2:
         bar = "𝚴𝐎𝐁❤️‍🔥·········"
-    elif 25 <= umm < 33:
+    elif played_min == 3:
         bar = "𝚴𝐎𝐁𝚰❤️‍🔥········"
-    elif 33 <= umm < 42:
+    elif played_min == 4:
         bar = "𝚴𝐎𝐁𝚰𝐓❤️‍🔥·······"
-    elif 42 <= umm < 50:
+    elif played_min == 5:
         bar = "𝚴𝐎𝐁𝚰𝐓𝚲❤️‍🔥······"
-    elif 50 <= umm < 58:
+    elif played_min == 6:
         bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗❤️‍🔥·····"
-    elif 58 <= umm < 67:
+    elif played_min == 7:
         bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸❤️‍🔥····"
-    elif 67 <= umm < 75:
+    elif played_min == 8:
         bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑❤️‍🔥···"
-    elif 75 <= umm < 83:
+    elif played_min == 9:
         bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑𝐈❤️‍🔥··"
-    elif 83 <= umm < 92:
+    elif played_min == 10:
         bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑𝐈𝐌❤️‍🔥·"
     else:
         bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑𝐈𝐌𝐄❤️‍🔥"
