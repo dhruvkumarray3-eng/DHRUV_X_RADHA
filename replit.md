@@ -1,40 +1,46 @@
-# NOBITA X PRIME MUSIC BOT (SHUKLAMUSIC)
+# NOBITA X PRIME Music Bot
 
-A Telegram music bot that streams audio/video in voice chats, with an AI chatbot powered by Groq.
+A Telegram music bot that streams YouTube audio in group voice chats, with Groq AI chatbot, Spotify/SoundCloud support, and an assistant userbot.
 
 ## Stack
-- **Python 3.12** — Pyrogram (MTProto), PyTgCalls (voice), Motor/MongoDB, yt-dlp, Groq LLaMA
-- **MongoDB** — persistent storage (playlists, sudoers, settings, etc.)
-- **Keep-alive server** — aiohttp on port 8080, `/ping` returns `{"status":"ok","bot":"NOBITA X PRIME"}`
+
+- **Python 3.12** — Pyrogram (MTProto), PyTgCalls (voice chat), yt-dlp (download), Motor/MongoDB (database)
+- **AI** — Groq LLaMA 3.3 70B for chatbot replies
+- **Audio pipeline** — ShrutiAPI (primary) → yt-dlp fallback → ffmpeg WAV conversion → pytgcalls stream
 
 ## How to run
+
 ```
 python3 -m SHUKLAMUSIC
 ```
-Workflow: **Start application** (configured as console output)
 
-## Required secrets (set in Replit Secrets)
+The workflow "Start application" is already configured and will start it automatically.
+
+## Required secrets (set as Replit Secrets)
+
 | Key | Description |
-|-----|-------------|
-| `API_ID` | Telegram API ID (my.telegram.org) |
-| `API_HASH` | Telegram API Hash |
+|---|---|
+| `API_HASH` | Telegram API hash from my.telegram.org |
 | `BOT_TOKEN` | Bot token from @BotFather |
-| `MONGO_DB_URI` | MongoDB connection string |
-| `STRING_SESSION` | Pyrogram userbot session string (for voice calls) |
-| `OWNER_ID` | Your Telegram user ID |
+| `MONGO_DB_URI` | MongoDB Atlas connection string |
+| `GROQ_API_KEY` | Groq API key (AI chatbot) |
+| `GIT_TOKEN` | GitHub token (auto-update) |
+| `STRING_SESSION` | Pyrogram string session (assistant userbot) |
 
-## Optional secrets
+## Required env vars (set via Replit env vars)
+
 | Key | Description |
-|-----|-------------|
-| `GROQ_API_KEY` | Groq API key for AI chatbot (LLaMA 3.3 70B) |
-| `GIT_TOKEN` | GitHub token for git-based update commands |
-| `STRING_SESSION2`–`STRING_SESSION7` | Additional assistant accounts |
-| `HEROKU_API_KEY` / `HEROKU_APP_NAME` | Only needed if deploying to Heroku |
-| `LOGGER_ID` / `LOG_GROUP_ID` | Telegram group ID for logging |
+|---|---|
+| `API_ID` | Telegram API ID from my.telegram.org |
+| `OWNER_ID` | Your Telegram user ID |
+| `LOGGER_ID` | Telegram group ID for bot logs |
 
-## Non-secret env vars (set in .replit userenv)
-- `UPSTREAM_REPO` — GitHub repo for `/update` command
-- `UPSTREAM_BRANCH` — branch to pull from (default: `main`)
+## yt-dlp anti-bot configuration
+
+All yt-dlp calls use `player_client: [android, ios]` with `skip: [webpage, configs]` to bypass YouTube bot-detection. Cookies are loaded automatically if `cookies.txt` exists in the project root or `SHUKLAMUSIC/assets/cookies.txt`.
 
 ## User preferences
-- Keep existing project structure; do not restructure or migrate.
+
+- Keep yt-dlp at `>=2026.06.09` in requirements.txt
+- Always use `android`/`ios` player clients for yt-dlp, never `android_embedded`/`web_creator`
+- Cookie file: check root `cookies.txt` first, then `SHUKLAMUSIC/assets/cookies.txt`
