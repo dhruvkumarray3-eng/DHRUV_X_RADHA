@@ -34,6 +34,9 @@ ASSUSERNAME = getenv("ASSUSERNAME", "")
 # AI Chatbot
 GROQ_API_KEY = getenv("GROQ_API_KEY", None)
 
+# Google / YouTube Data API key (used for /tg and /spg search commands)
+YOUTUBE_API_KEY = getenv("YOUTUBE_API_KEY", "")
+
 
 # MongoDB
 MONGO_DB_URI = getenv("MONGO_DB_URI", None)

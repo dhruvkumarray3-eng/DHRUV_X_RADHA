@@ -18,6 +18,7 @@ import aiohttp
 import re
 import os
 from SHUKLAMUSIC import app
+from config import YOUTUBE_API_KEY
 
 
 @app.on_message(filters.command("tg"))
@@ -26,7 +27,7 @@ async def search_command(_, message):
     async with aiohttp.ClientSession() as session:
         start = 1
         async with session.get(
-            f"https://content-customsearch.googleapis.com/customsearch/v1?cx=ec8db9e1f9e41e65e&q={message.text.split()[1]}&key=AIzaSyAa8yy0GdcGPHdtD083HiGGx_S0vMPScDM&start={start}",
+            f"https://content-customsearch.googleapis.com/customsearch/v1?cx=ec8db9e1f9e41e65e&q={message.text.split()[1]}&key={YOUTUBE_API_KEY}&start={start}",
             headers={"x-referer": "https://explorer.apis.google.com"},
         ) as r:
             response = await r.json()
@@ -61,7 +62,7 @@ async def prev_callback(_, callback_query):
     start = int(callback_query.data.split()[1])
     async with aiohttp.ClientSession() as session:
         async with session.get(
-            f"https://content-customsearch.googleapis.com/customsearch/v1?cx=ec8db9e1f9e41e65e&q={(callback_query.data.split()[2]).encode('utf-8')}&key=AIzaSyAa8yy0GdcGPHdtD083HiGGx_S0vMPScDM&start={start}",
+            f"https://content-customsearch.googleapis.com/customsearch/v1?cx=ec8db9e1f9e41e65e&q={(callback_query.data.split()[2]).encode('utf-8')}&key={YOUTUBE_API_KEY}&start={start}",
             headers={"x-referer": "https://explorer.apis.google.com"},
         ) as r:
             response = await r.json()
@@ -96,7 +97,7 @@ async def next_callback(_, callback_query):
     start = int(callback_query.data.split()[1])
     async with aiohttp.ClientSession() as session:
         async with session.get(
-            f"https://content-customsearch.googleapis.com/customsearch/v1?cx=ec8db9e1f9e41e65e&q={(callback_query.data.split()[2]).encode('utf-8')}&key=AIzaSyAa8yy0GdcGPHdtD083HiGGx_S0vMPScDM&start={start}",
+            f"https://content-customsearch.googleapis.com/customsearch/v1?cx=ec8db9e1f9e41e65e&q={(callback_query.data.split()[2]).encode('utf-8')}&key={YOUTUBE_API_KEY}&start={start}",
             headers={"x-referer": "https://explorer.apis.google.com"},
         ) as r:
             response = await r.json()

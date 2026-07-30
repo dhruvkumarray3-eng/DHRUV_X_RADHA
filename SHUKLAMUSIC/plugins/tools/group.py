@@ -18,6 +18,7 @@ from pyrogram import Client, filters
 from pyrogram.enums import ButtonStyle
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from SHUKLAMUSIC import app
+from config import YOUTUBE_API_KEY
 from config import OWNER_ID
 
 _G = ButtonStyle.SUCCESS
@@ -159,7 +160,7 @@ async def search(_, message: Message):
         url = (
             f"https://content-customsearch.googleapis.com/customsearch/v1"
             f"?cx=ec8db9e1f9e41e65e&q={query}"
-            f"&key=AIzaSyAa8yy0GdcGPHdtD083HiGGx_S0vMPScDM&start={start}"
+            f"&key={YOUTUBE_API_KEY}&start={start}"
         )
         async with session.get(url, headers={"x-referer": "https://explorer.apis.google.com"}) as r:
             response = await r.json()
