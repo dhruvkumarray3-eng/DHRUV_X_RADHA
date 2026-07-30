@@ -40,7 +40,15 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
+<<<<<<< Updated upstream
 args = "npm run dev"
+=======
+args = "cd video-project && npm run dev"
+waitForPort = 5173
+
+[workflows.workflow.metadata]
+outputType = "webview"
+>>>>>>> Stashed changes
 
 [deployment]
 deploymentTarget = "static"
