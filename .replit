@@ -1,4 +1,4 @@
-modules = ["python-3.12", "bash", "nix", "nodejs-24"]
+modules = ["python-3.12", "bash", "nix"]
 [agent]
 expertMode = true
 stack = "BEST_EFFORT_FALLBACK"
@@ -19,10 +19,6 @@ author = "agent"
 task = "workflow.run"
 args = "Start application"
 
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Video Preview"
-
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -34,27 +30,9 @@ args = "python3 -m SHUKLAMUSIC"
 [workflows.workflow.metadata]
 outputType = "console"
 
-[[workflows.workflow]]
-name = "Video Preview"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-<<<<<<< Updated upstream
-args = "npm run dev"
-=======
-args = "cd video-project && npm run dev"
-waitForPort = 5173
-
-[workflows.workflow.metadata]
-outputType = "webview"
->>>>>>> Stashed changes
-
 [deployment]
-deploymentTarget = "static"
+deploymentTarget = "vm"
 run = ["python3", "-m", "SHUKLAMUSIC"]
-build = ["npm", "run", "build"]
-publicDir = "dist"
 
 [userenv]
 
@@ -65,10 +43,6 @@ API_ID = "38987335"
 LOGGER_ID = "-1004458016685"
 LOG_GROUP_ID = "-1004458016685"
 OWNER_ID = "8245258112"
-
-[[ports]]
-localPort = 5173
-externalPort = 5173
 
 [[ports]]
 localPort = 8080
