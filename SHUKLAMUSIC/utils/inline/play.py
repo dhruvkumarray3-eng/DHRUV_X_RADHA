@@ -47,7 +47,7 @@ def stream_markup_timer(_, chat_id, played, dur, videoid=None, autoplay=False):
     try:
         played_sec = time_to_seconds(played)
         duration_sec = time_to_seconds(dur)
-        _ = (played_sec / duration_sec * 100) if duration_sec > 0 else 0  # kept for future use
+        _pct = (played_sec / duration_sec * 100) if duration_sec > 0 else 0  # kept for future use
     except (ValueError, ZeroDivisionError, TypeError):
         pass
 

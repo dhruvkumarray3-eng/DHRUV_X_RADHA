@@ -572,7 +572,10 @@ async def del_back_playlist(client, CallbackQuery, _):
 
 async def markup_timer():
     while not await asyncio.sleep(7):
-        active_chats = await get_active_chats()
+        try:
+            active_chats = await get_active_chats()
+        except Exception:
+            continue
         for chat_id in active_chats:
             try:
                 if not await is_music_playing(chat_id):
@@ -580,40 +583,40 @@ async def markup_timer():
                 playing = db.get(chat_id)
                 if not playing:
                     continue
-                duration_seconds = int(playing[0]["seconds"])
-                if duration_seconds == 0:
+                duration_seconds = int(playing[0].get("seconds", 0))
+                if duration_seconds <= 0:
                     continue
                 try:
                     mystic = playing[0]["mystic"]
-                except:
+                except (KeyError, IndexError):
                     continue
                 try:
                     check = checker[chat_id][mystic.id]
                     if check is False:
                         continue
-                except:
+                except Exception:
                     pass
                 try:
                     language = await get_lang(chat_id)
                     _ = get_string(language)
-                except:
+                except Exception:
                     _ = get_string("en")
                 try:
                     _is_autoplay = playing[0].get("by") == "❤️‍🔥 ᴀᴜᴛᴏᴘʟᴀʏ"
                     buttons = stream_markup_timer(
                         _,
                         chat_id,
-                        seconds_to_min(playing[0]["played"]),
-                        playing[0]["dur"],
+                        seconds_to_min(playing[0].get("played", 0)),
+                        playing[0].get("dur", "0:00"),
                         videoid=playing[0].get("vidid"),
                         autoplay=_is_autoplay,
                     )
                     await mystic.edit_reply_markup(
                         reply_markup=InlineKeyboardMarkup(buttons)
                     )
-                except:
+                except Exception:
                     continue
-            except:
+            except Exception:
                 continue
 
 
