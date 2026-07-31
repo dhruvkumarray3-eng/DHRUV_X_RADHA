@@ -336,39 +336,24 @@ async def start_pm(client, message: Message, _):
                 except Exception:
                     await message.reply_text(searched_text, reply_markup=key, disable_web_page_preview=True)
         elif name.startswith("dl_"):
-            # ── Download handler via ShrutiAPI (bypasses YouTube bot-check) ──
+            # ── Download handler — uses download_song/download_video (yt-dlp format-18 fallback) ──
             m = await message.reply_text("⏬ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ʏᴏᴜʀ sᴏɴɢ, ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ... ❤️‍🔥")
             try:
+                from SHUKLAMUSIC.platforms.Youtube import download_song, download_video
                 parts   = name[3:].rsplit("_", 1)
                 vidid   = parts[0]
                 dl_type = parts[1] if len(parts) == 2 else "a"
-                os.makedirs("downloads", exist_ok=True)
-                powered  = "✦ ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href='https://t.me/II_NOBITA_X_PRIME_II'>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a>"
-                api_url  = "https://api01.shrutibots.site"
-                api_key  = "ShrutiBots2knm7tCsnIVesZt50Lwb"
-                api_type = "video" if dl_type == "v" else "audio"
-                ext      = "mp4" if dl_type == "v" else "mp3"
-                out_file = f"downloads/{vidid}_dl_{dl_type}.{ext}"
-                tmp_file = out_file + ".tmp"
+                powered = "✦ ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href='https://t.me/II_NOBITA_X_PRIME_II'>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a>"
+                yt_url  = f"https://www.youtube.com/watch?v={vidid}"
 
-                # Download from ShrutiAPI
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(
-                        f"{api_url}/download",
-                        params={"url": vidid, "type": api_type, "api_key": api_key},
-                        timeout=aiohttp.ClientTimeout(total=300),
-                    ) as resp:
-                        if resp.status != 200:
-                            await m.edit_text("❌ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.")
-                            return
-                        with open(tmp_file, "wb") as f:
-                            async for chunk in resp.content.iter_chunked(131072):
-                                f.write(chunk)
+                if dl_type == "v":
+                    out_file = await download_video(yt_url)
+                else:
+                    out_file = await download_song(yt_url)
 
-                if not (os.path.exists(tmp_file) and os.path.getsize(tmp_file) > 0):
+                if not out_file or not os.path.exists(out_file) or os.path.getsize(out_file) == 0:
                     await m.edit_text("❌ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.")
                     return
-                os.replace(tmp_file, out_file)
 
                 await m.delete()
                 if dl_type == "v":
@@ -382,12 +367,8 @@ async def start_pm(client, message: Message, _):
                     await app.send_audio(
                         chat_id=message.chat.id,
                         audio=out_file,
-                        caption=f"🎵 <b>HD ᴀᴜᴅɪᴏ 320kbps — ɴᴏʙɪᴛᴀ 𝗫 ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ</b>\n\n{powered}",
+                        caption=f"🎵 <b>HD ᴀᴜᴅɪᴏ — ɴᴏʙɪᴛᴀ 𝗫 ᴘʀɪᴍᴇ ᴍᴜsɪᴄ ʙᴏᴛ</b>\n\n{powered}",
                     )
-                try:
-                    os.remove(out_file)
-                except Exception:
-                    pass
             except Exception:
                 try:
                     await m.edit_text("❌ ᴅᴏᴡɴʟᴏᴀᴅ ꜰᴀɪʟᴇᴅ. ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.")

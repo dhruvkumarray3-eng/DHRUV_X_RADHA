@@ -91,32 +91,33 @@ async def _shruti_download(vidid: str, out_file: str, tmp_file: str) -> bool:
 
 
 async def _ytdlp_download(vidid: str, out_file: str) -> bool:
-    """Fallback: download via yt-dlp. Returns True on success."""
-    import asyncio
+    """Fallback: download via yt-dlp using format 18 (no SABR/PO-token needed).
+    Returns True on success."""
+    import asyncio, glob as _glob
     url = f"https://www.youtube.com/watch?v={vidid}"
     tmp_out = out_file + ".ytdl"
     try:
         proc = await asyncio.create_subprocess_exec(
             "yt-dlp",
+            # Format 18 = 360p combined H.264+AAC, plain HTTPS, no bot-detection issues.
+            "-f", "18/bestaudio[ext=m4a]/bestaudio/best",
             "-x", "--audio-format", "mp3",
             "--audio-quality", "0",
             "--no-playlist",
+            "--extractor-args", "youtube:player_client=android,mweb",
+            "--no-check-certificate",
+            "--geo-bypass",
             "-o", tmp_out,
             url,
             stdout=asyncio.subprocess.DEVNULL,
-            stderr=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.PIPE,
         )
-        await asyncio.wait_for(proc.wait(), timeout=300)
-        # yt-dlp appends .mp3 automatically
-        final = tmp_out if os.path.exists(tmp_out) else tmp_out + ".mp3"
-        if not os.path.exists(final):
-            # Search with glob pattern
-            import glob
-            matches = glob.glob(tmp_out + "*")
-            final = matches[0] if matches else None
-        if final and os.path.exists(final) and os.path.getsize(final) > 10_000:
-            os.replace(final, out_file)
-            return True
+        _, stderr_data = await asyncio.wait_for(proc.communicate(), timeout=300)
+        # Find the output file (yt-dlp appends extension automatically)
+        for candidate in [tmp_out, tmp_out + ".mp3"] + _glob.glob(tmp_out + "*"):
+            if os.path.exists(candidate) and os.path.getsize(candidate) > 10_000:
+                os.replace(candidate, out_file)
+                return True
     except Exception:
         pass
     # cleanup any partial files
