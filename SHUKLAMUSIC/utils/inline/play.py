@@ -44,10 +44,11 @@ def track_markup(_, videoid, user_id, channel, fplay):
 
 def stream_markup_timer(_, chat_id, played, dur, videoid=None, autoplay=False):
     played_sec = 0
+    duration_sec = 0
     try:
         played_sec = time_to_seconds(played)
         duration_sec = time_to_seconds(dur)
-        _pct = (played_sec / duration_sec * 100) if duration_sec > 0 else 0  # kept for future use
+        _pct = (played_sec / duration_sec * 100) if duration_sec > 0 else 0
     except (ValueError, ZeroDivisionError, TypeError):
         pass
 
@@ -55,32 +56,29 @@ def stream_markup_timer(_, chat_id, played, dur, videoid=None, autoplay=False):
     display_played = played if (played and played not in ("-", "")) else "0:00"
     display_dur = dur if (dur and dur not in ("-", "")) else "Live"
 
-    # Bar advances ONE letter per minute elapsed  → N·O·B·I·T·A·X·P·R·I·M·E❤️‍🔥
-    played_min = int(played_sec) // 60
-    if played_min == 0:
-        bar = "𝚴❤️‍🔥···········"
-    elif played_min == 1:
-        bar = "𝚴𝐎❤️‍🔥··········"
-    elif played_min == 2:
-        bar = "𝚴𝐎𝐁❤️‍🔥·········"
-    elif played_min == 3:
-        bar = "𝚴𝐎𝐁𝚰❤️‍🔥········"
-    elif played_min == 4:
-        bar = "𝚴𝐎𝐁𝚰𝐓❤️‍🔥·······"
-    elif played_min == 5:
-        bar = "𝚴𝐎𝐁𝚰𝐓𝚲❤️‍🔥······"
-    elif played_min == 6:
-        bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗❤️‍🔥·····"
-    elif played_min == 7:
-        bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸❤️‍🔥····"
-    elif played_min == 8:
-        bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑❤️‍🔥···"
-    elif played_min == 9:
-        bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑𝐈❤️‍🔥··"
-    elif played_min == 10:
-        bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑𝐈𝐌❤️‍🔥·"
+    # Bar fills proportionally: 12 steps across the full song duration so it
+    # reaches NOBITAXPRIME❤️‍🔥 exactly at the end — works for any song length.
+    # step 0 = just started, step 11 = song ≥ 11/12 done (bar fully filled).
+    if duration_sec > 0:
+        step = min(11, int(played_sec / duration_sec * 12))
     else:
-        bar = "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑𝐈𝐌𝐄❤️‍🔥"
+        step = 0
+
+    _BARS = [
+        "𝚴❤️‍🔥···········",
+        "𝚴𝐎❤️‍🔥··········",
+        "𝚴𝐎𝐁❤️‍🔥·········",
+        "𝚴𝐎𝐁𝚰❤️‍🔥········",
+        "𝚴𝐎𝐁𝚰𝐓❤️‍🔥·······",
+        "𝚴𝐎𝐁𝚰𝐓𝚲❤️‍🔥······",
+        "𝚴𝐎𝐁𝚰𝐓𝚲𝐗❤️‍🔥·····",
+        "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸❤️‍🔥····",
+        "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑❤️‍🔥···",
+        "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑𝐈❤️‍🔥··",
+        "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑𝐈𝐌❤️‍🔥·",
+        "𝚴𝐎𝐁𝚰𝐓𝚲𝐗𝚸𝐑𝐈𝐌𝐄❤️‍🔥",
+    ]
+    bar = _BARS[step]
     buttons = [
         [
             InlineKeyboardButton(

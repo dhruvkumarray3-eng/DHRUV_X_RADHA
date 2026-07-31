@@ -312,9 +312,9 @@ async def download_song(link: str) -> str:
             try:
                 _ytdlp_args = [
                     "yt-dlp",
-                    # Format 18 = 360p combined H.264+AAC — no SABR/PO-token needed.
-                    # Falls back to bestaudio if format 18 is absent.
-                    "-f", "18/bestaudio[ext=m4a]/bestaudio/best",
+                    # Prefer highest-quality audio; format 18 is only 360p/AAC
+                    # so we skip it here to get true HD audio for streaming.
+                    "-f", "bestaudio[ext=m4a]/bestaudio[ext=webm]/bestaudio/best",
                     "-x", "--audio-format", "mp3",
                     "--audio-quality", "0",
                     "--no-playlist",
@@ -410,7 +410,8 @@ async def download_video(link: str) -> str:
         try:
             _ytdlp_args = [
                 "yt-dlp",
-                "-f", "18/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+                # Prefer 1080p H.264 + best audio; fall back to best available.
+                "-f", "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
                 "--merge-output-format", "mp4",
                 "--no-playlist",
                 "--extractor-args", "youtube:player_client=android,mweb",
