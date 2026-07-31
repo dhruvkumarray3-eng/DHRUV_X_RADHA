@@ -31,14 +31,17 @@ def _cookies_file():
 def _base_opts():
     opts = {
         "outtmpl": "downloads/%(id)s.%(ext)s",
-        "format": "bestaudio/best",
+        # format 18 = combined 360p H.264+AAC, no SABR/PO-token needed.
+        # Falls back to bestaudio if format 18 is not available.
+        "format": "18/bestaudio[ext=m4a]/bestaudio/best",
         "format_sort": ["abr", "asr"],
         "geo_bypass": True,
         "nocheckcertificate": True,
         "extractor_args": {
             "youtube": {
-                "player_client": ["android", "ios"],
-                "skip": ["webpage", "configs"],
+                # android provides format 18; mweb provides its config download.
+                # Do NOT skip configs — mweb needs its config to expose format 18.
+                "player_client": ["android", "mweb"],
             }
         },
     }

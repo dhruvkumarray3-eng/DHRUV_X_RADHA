@@ -106,16 +106,23 @@ def _cookies_file():
 
 
 def _base_ydl_opts(**extra):
-    """Return a yt-dlp options dict with anti-bot extractor args and cookies."""
+    """Return a yt-dlp options dict with anti-bot extractor args and cookies.
+
+    Uses format 18 (360p combined H.264+AAC) as the first choice because it
+    is served over plain HTTPS and does not require SABR tokens or PO tokens.
+    Falls back to bestaudio for videos that don't carry format 18.
+    The `android` client exposes format 18; `mweb` provides its config download
+    so DO NOT add skip=configs here.
+    """
     opts = {
         "quiet": True,
         "no_warnings": True,
         "nocheckcertificate": True,
         "geo_bypass": True,
+        "format": "18/bestaudio[ext=m4a]/bestaudio/best",
         "extractor_args": {
             "youtube": {
-                "player_client": ["android", "ios"],
-                "skip": ["webpage", "configs"],
+                "player_client": ["android", "mweb"],
             }
         },
     }
@@ -305,10 +312,13 @@ async def download_song(link: str) -> str:
             try:
                 _ytdlp_args = [
                     "yt-dlp",
+                    # Format 18 = 360p combined H.264+AAC — no SABR/PO-token needed.
+                    # Falls back to bestaudio if format 18 is absent.
+                    "-f", "18/bestaudio[ext=m4a]/bestaudio/best",
                     "-x", "--audio-format", "mp3",
                     "--audio-quality", "0",
                     "--no-playlist",
-                    "--extractor-args", "youtube:player_client=android,ios;skip=webpage,configs",
+                    "--extractor-args", "youtube:player_client=android,mweb",
                     "--no-check-certificate",
                     "--geo-bypass",
                 ]
@@ -319,9 +329,14 @@ async def download_song(link: str) -> str:
                 proc = await asyncio.create_subprocess_exec(
                     *_ytdlp_args,
                     stdout=asyncio.subprocess.DEVNULL,
-                    stderr=asyncio.subprocess.DEVNULL,
+                    stderr=asyncio.subprocess.PIPE,
                 )
-                await asyncio.wait_for(proc.wait(), timeout=300)
+                _, stderr_data = await asyncio.wait_for(proc.communicate(), timeout=300)
+                if proc.returncode != 0 and stderr_data:
+                    _LOGGER.warning(
+                        f"[download_song] yt-dlp exited {proc.returncode} for {video_id}: "
+                        + stderr_data.decode(errors="replace")[-400:]
+                    )
                 # yt-dlp may append .mp3 extension
                 import glob as _glob
                 for candidate in [tmp_ytdl, tmp_ytdl + ".mp3"] + _glob.glob(tmp_ytdl + "*"):
@@ -329,8 +344,8 @@ async def download_song(link: str) -> str:
                         os.replace(candidate, mp3_path)
                         downloaded = True
                         break
-            except Exception:
-                pass
+            except Exception as _ytdl_exc:
+                _LOGGER.warning(f"[download_song] yt-dlp exception for {video_id}: {_ytdl_exc}")
             finally:
                 import glob as _glob
                 for f in _glob.glob(tmp_ytdl + "*"):
@@ -395,10 +410,10 @@ async def download_video(link: str) -> str:
         try:
             _ytdlp_args = [
                 "yt-dlp",
-                "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+                "-f", "18/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
                 "--merge-output-format", "mp4",
                 "--no-playlist",
-                "--extractor-args", "youtube:player_client=android,ios;skip=webpage,configs",
+                "--extractor-args", "youtube:player_client=android,mweb",
                 "--no-check-certificate",
                 "--geo-bypass",
             ]
@@ -409,17 +424,22 @@ async def download_video(link: str) -> str:
             proc = await asyncio.create_subprocess_exec(
                 *_ytdlp_args,
                 stdout=asyncio.subprocess.DEVNULL,
-                stderr=asyncio.subprocess.DEVNULL,
+                stderr=asyncio.subprocess.PIPE,
             )
-            await asyncio.wait_for(proc.wait(), timeout=120)
+            _, stderr_data = await asyncio.wait_for(proc.communicate(), timeout=120)
+            if proc.returncode != 0 and stderr_data:
+                _LOGGER.warning(
+                    f"[download_video] yt-dlp exited {proc.returncode} for {video_id}: "
+                    + stderr_data.decode(errors="replace")[-400:]
+                )
             import glob as _glob
             for candidate in [tmp_ytdl, tmp_ytdl + ".mp4"] + _glob.glob(tmp_ytdl + "*"):
                 if os.path.exists(candidate) and os.path.getsize(candidate) > 10_000:
                     os.replace(candidate, file_path)
                     downloaded = True
                     break
-        except Exception:
-            pass
+        except Exception as _ytdl_exc:
+            _LOGGER.warning(f"[download_video] yt-dlp exception for {video_id}: {_ytdl_exc}")
         finally:
             import glob as _glob
             for f in _glob.glob(tmp_ytdl + "*"):
