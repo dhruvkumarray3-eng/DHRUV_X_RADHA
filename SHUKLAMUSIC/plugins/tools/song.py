@@ -57,7 +57,10 @@ async def song_command_group(client, message: Message, lang):
 @capture_err
 @language
 async def song_command_private(client, message: Message, lang):
-    await message.delete()
+    try:
+        await message.delete()
+    except Exception:
+        pass
     mystic = await message.reply_text(lang["play_1"])
 
     url = await YouTube.url(message)

@@ -119,10 +119,16 @@ def _base_ydl_opts(**extra):
         "no_warnings": True,
         "nocheckcertificate": True,
         "geo_bypass": True,
+        # Format 18 = 360p combined H.264+AAC (no PO token needed from mweb/tv_embedded).
+        # bestaudio fallbacks used when format 18 is absent.
+        # Format 18 = 360p combined H.264+AAC (no PO token needed from tv_embedded).
+        # Falls back to bestaudio when format 18 is unavailable.
         "format": "18/bestaudio[ext=m4a]/bestaudio/best",
         "extractor_args": {
             "youtube": {
-                "player_client": ["android", "mweb"],
+                # tv_embedded does NOT require GVS PO tokens — safest client in 2026.
+                # mweb as secondary fallback; android as last resort for format 18.
+                "player_client": ["tv_embedded", "mweb", "android"],
             }
         },
     }
@@ -312,13 +318,12 @@ async def download_song(link: str) -> str:
             try:
                 _ytdlp_args = [
                     "yt-dlp",
-                    # Prefer highest-quality audio; format 18 is only 360p/AAC
-                    # so we skip it here to get true HD audio for streaming.
+                    # Best quality audio — mweb+tv_embedded work without PO tokens
                     "-f", "bestaudio[ext=m4a]/bestaudio[ext=webm]/bestaudio/best",
                     "-x", "--audio-format", "mp3",
                     "--audio-quality", "0",
                     "--no-playlist",
-                    "--extractor-args", "youtube:player_client=android,mweb",
+                    "--extractor-args", "youtube:player_client=tv_embedded,mweb,android",
                     "--no-check-certificate",
                     "--geo-bypass",
                 ]
@@ -410,13 +415,16 @@ async def download_video(link: str) -> str:
         try:
             _ytdlp_args = [
                 "yt-dlp",
-                # Prefer 1080p H.264 + best audio; fall back to best available.
-                "-f", "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+                # Prefer 1080p H.264/AVC + best audio — mweb+tv_embedded need no PO tokens.
+                # AVC (H.264) preferred over VP9/AV1 for maximum Telegram VC compatibility.
+                "-f", "bestvideo[height<=1080][ext=mp4][vcodec^=avc]+bestaudio[ext=m4a]/bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
                 "--merge-output-format", "mp4",
                 "--no-playlist",
-                "--extractor-args", "youtube:player_client=android,mweb",
+                "--extractor-args", "youtube:player_client=tv_embedded,mweb,android",
                 "--no-check-certificate",
                 "--geo-bypass",
+                # Force yuv420p — prevents blue/green color artifacts in VC streams
+                "--postprocessor-args", "ffmpeg:-pix_fmt yuv420p -vf scale=trunc(iw/2)*2:trunc(ih/2)*2",
             ]
             _cookies = _cookies_file()
             if _cookies:

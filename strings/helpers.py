@@ -2,12 +2,35 @@ HELP_1 = """<b><u>ᴀᴅᴍɪɴ ᴄᴏᴍᴍᴀɴᴅs :</u></b>
 
 ᴊᴜsᴛ ᴀᴅᴅ <b>ᴄ</b> ᴀᴛ ᴛʜᴇ ʙᴇɢɪɴɴɪɴɢ ᴏғ ᴄᴏᴍᴍᴀɴᴅs ᴛᴏ ᴜsᴇ ᴛʜᴇᴍ ғᴏʀ ᴄʜᴀɴɴᴇʟs.
 
-• /pause : ᴘᴀᴜsᴇs ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ ᴘʟᴀʏɪɴɢ sᴛʀᴇᴀᴍ.  
-• /resume : ʀᴇsᴜᴍᴇs ᴛʜᴇ ᴘᴀᴜsᴇᴅ sᴛʀᴇᴀᴍ.  
-• /skip : sᴋɪᴘs ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ ᴛʀᴀᴄᴋ ᴀɴᴅ sᴛᴀʀᴛs ᴛʜᴇ ɴᴇxᴛ ᴏɴᴇ.  
-• /end ᴏʀ /stop : ᴄʟᴇᴀʀs ᴛʜᴇ ǫᴜᴇᴜᴇ ᴀɴᴅ sᴛᴏᴘs ᴛʜᴇ sᴛʀᴇᴀᴍ.  
-• /player : ᴏᴘᴇɴs ᴀɴ ɪɴᴛᴇʀᴀᴄᴛɪᴠᴇ ᴘʟᴀʏᴇʀ ᴘᴀɴᴇʟ.  
-• /queue : sʜᴏᴡs ᴛʜᴇ ǫᴜᴇᴜᴇᴅ ᴛʀᴀᴄᴋs.
+• /pause — ᴘᴀᴜsᴇs ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ sᴛʀᴇᴀᴍ.
+  <i>eg:</i> <code>/pause</code>
+
+• /resume — ʀᴇsᴜᴍᴇs ᴛʜᴇ ᴘᴀᴜsᴇᴅ sᴛʀᴇᴀᴍ.
+  <i>eg:</i> <code>/resume</code>
+
+• /skip — sᴋɪᴘs ᴛᴏ ɴᴇxᴛ sᴏɴɢ.
+  <i>eg:</i> <code>/skip</code>
+
+• /end or /stop — sᴛᴏᴘs sᴛʀᴇᴀᴍ & ᴄʟᴇᴀʀs ǫᴜᴇᴜᴇ.
+  <i>eg:</i> <code>/stop</code>
+
+• /queue — sʜᴏᴡs ǫᴜᴇᴜᴇᴅ ᴛʀᴀᴄᴋs.
+  <i>eg:</i> <code>/queue</code>
+
+• /loop — ᴛᴏɢɢʟᴇs ʟᴏᴏᴘ ᴍᴏᴅᴇ.
+  <i>eg:</i> <code>/loop enable</code> | <code>/loop 3</code>
+
+• /seek — sᴇᴇᴋ ᴛᴏ ᴀ ᴛɪᴍᴇstᴀᴍᴘ.
+  <i>eg:</i> <code>/seek 60</code> (jump to 1 min)
+
+• /speed — ᴄʜᴀɴɢᴇ ᴘʟᴀʏʙᴀᴄᴋ sᴘᴇᴇᴅ.
+  <i>eg:</i> <code>/speed 1.5</code> | <code>/speed 0.75</code>
+
+• /shuffle — sʜᴜғғʟᴇs ᴛʜᴇ ǫᴜᴇᴜᴇ.
+  <i>eg:</i> <code>/shuffle</code>
+
+• /player — ᴏᴘᴇɴs ɪɴᴛᴇʀᴀᴄᴛɪᴠᴇ ᴘʟᴀʏᴇʀ ᴘᴀɴᴇʟ.
+  <i>eg:</i> <code>/player</code>
 """
 
 HELP_2 = """<b><u>ᴀᴜᴛʜ ᴜsᴇʀs :</u></b>
@@ -62,11 +85,17 @@ sᴛʀᴇᴀᴍ ᴀᴜᴅɪᴏ/ᴠɪᴅᴇᴏ ɪɴ ᴀ ᴄʜᴀɴɴᴇʟ.
 • /channelplay [ᴜsᴇʀɴᴀᴍᴇ/ɪᴅ] ᴏʀ [disable] : ʟɪɴᴋs ᴀ ᴄʜᴀɴɴᴇʟ ᴡɪᴛʜ ᴀ ɢʀᴏᴜᴩ.
 """
 
-HELP_7 = """<b><u>ɢʟᴏʙᴀʟ ʙᴀɴ :</u></b> [sᴜᴅᴏ ᴏɴʟʏ]
+HELP_7 = """<b><u>ɢʟᴏʙᴀʟ ʙᴀɴ :</u></b> [sᴜᴅᴏ / ᴏᴡɴᴇʀ ᴏɴʟʏ]
 
-• /gban [ᴜsᴇʀ/ʀᴇᴩʟʏ] : ɢʟᴏʙᴀʟʟʏ ʙᴀɴs ᴀ ᴜsᴇʀ.  
-• /ungban [ᴜsᴇʀ/ʀᴇᴩʟʏ] : ᴜɴʙᴀɴs ᴀ ɢʟᴏʙᴀʟʟʏ ʙᴀɴɴᴇᴅ ᴜsᴇʀ.  
-• /gbannedusers : sʜᴏᴡs ᴛʜᴇ ʟɪsᴛ ᴏғ ɢʟᴏʙᴀʟʟʏ ʙᴀɴɴᴇᴅ ᴜsᴇʀs.
+• /gban — ɢʟᴏʙᴀʟʟʏ ʙᴀɴ ᴀ ᴜsᴇʀ ᴀᴄʀᴏss ᴀʟʟ ɢʀᴏᴜᴘs
+  <i>eg:</i> <code>/gban @username spamming</code>
+  <i>eg:</i> Reply to msg → <code>/gban</code>
+
+• /ungban — ʀᴇᴍᴏᴠᴇ ɢʟᴏʙᴀʟ ʙᴀɴ
+  <i>eg:</i> <code>/ungban @username</code>
+
+• /gbannedusers — ʟɪsᴛ ᴀʟʟ ɢʙᴀɴɴᴇᴅ ᴜsᴇʀs
+  <i>eg:</i> <code>/gbannedusers</code>
 """
 
 HELP_8 = """<b><u>ʟᴏᴏᴘ sᴛʀᴇᴀᴍ :</u></b>
@@ -77,11 +106,31 @@ HELP_8 = """<b><u>ʟᴏᴏᴘ sᴛʀᴇᴀᴍ :</u></b>
 • /loop [1–10] : sᴇᴛs ʟᴏᴏᴘ ᴄᴏᴜɴᴛ.
 """
 
-HELP_9 = """<b><u>ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ :</u></b> [sᴜᴅᴏ ᴏɴʟʏ]
+HELP_9 = """<b><u>ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ :</u></b> [sᴜᴅᴏ / ᴏᴡɴᴇʀ ᴏɴʟʏ]
 
-• /logs : ɢᴇᴛs ʙᴏᴛ ʟᴏɢs.  
-• /logger [enable/disable] : ᴛᴏɢɢʟᴇs ᴀᴄᴛɪᴠɪᴛʏ ʟᴏɢɢɪɴɢ.  
-• /maintenance [enable/disable] : ᴇɴᴀʙʟᴇs ᴏʀ ᴅɪsᴀʙʟᴇs ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ᴍᴏᴅᴇ.
+• /logs — ɢᴇᴛ ʙᴏᴛ ʟᴏɢs ғɪʟᴇ
+  <i>eg:</i> <code>/logs</code>
+
+• /logger — ᴛᴏɢɢʟᴇ ᴀᴄᴛɪᴠɪᴛʏ ʟᴏɢɢɪɴɢ
+  <i>eg:</i> <code>/logger enable</code> | <code>/logger disable</code>
+
+• /maintenance — ᴛᴏɢɢʟᴇ ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ᴍᴏᴅᴇ (ᴅɪsᴀʙʟᴇs ᴀʟʟ ᴄᴍᴅs ғᴏʀ ᴜsᴇʀs)
+  <i>eg:</i> <code>/maintenance enable</code> | <code>/maintenance disable</code>
+
+• /restart — ʀᴇsᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ
+  <i>eg:</i> <code>/restart</code>
+
+• /update — ᴘᴜʟʟ ʟᴀᴛᴇsᴛ ᴄᴏᴅᴇ ᴀɴᴅ ʀᴇsᴛᴀʀᴛ
+  <i>eg:</i> <code>/update</code>
+
+• /addsudo — ᴀᴅᴅ ᴀ sᴜᴅᴏ ᴜsᴇʀ
+  <i>eg:</i> <code>/addsudo @username</code> | <code>/addsudo 123456789</code>
+
+• /delsudo — ʀᴇᴍᴏᴠᴇ sᴜᴅᴏ ᴜsᴇʀ
+  <i>eg:</i> <code>/delsudo @username</code>
+
+• /sudoers — ʟɪsᴛ ᴀʟʟ sᴜᴅᴏ ᴜsᴇʀs
+  <i>eg:</i> <code>/sudoers</code>
 """
 
 HELP_10 = """<b><u>ᴘɪɴɢ & sᴛᴀᴛs :</u></b>
@@ -94,11 +143,21 @@ HELP_10 = """<b><u>ᴘɪɴɢ & sᴛᴀᴛs :</u></b>
 
 HELP_11 = """<b><u>ᴩʟᴀʏ ᴄᴏᴍᴍᴀɴᴅs :</u></b>
 
-<b>v :</b> ᴠɪᴅᴇᴏ ᴘʟᴀʏ  
-<b>force :</b> ғᴏʀᴄᴇ ᴘʟᴀʏ  
+• /play — ᴘʟᴀʏ ᴀᴜᴅɪᴏ (song name or YouTube URL)
+  <i>eg:</i> <code>/play Arijit Singh Tum Hi Ho</code>
+  <i>eg:</i> <code>/play https://youtu.be/xxxxxx</code>
 
-• /play or /vplay : sᴛᴀʀᴛs ᴀᴜᴅɪᴏ/ᴠɪᴅᴇᴏ sᴛʀᴇᴀᴍɪɴɢ.  
-• /playforce or /vplayforce : ғᴏʀᴄᴇs ᴀ ɴᴇᴡ sᴛʀᴇᴀᴍ.
+• /vplay — ᴘʟᴀʏ ᴠɪᴅᴇᴏ ɪɴ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ (1080p HD)
+  <i>eg:</i> <code>/vplay Dil Bechara full song</code>
+
+• /playforce — ғᴏʀᴄᴇ ᴘʟᴀʏ (ᴄʟᴇᴀʀs ǫᴜᴇᴜᴇ & ᴘʟᴀʏs ɪᴍᴍᴇᴅɪᴀᴛᴇʟʏ)
+  <i>eg:</i> <code>/playforce Kesariya</code>
+
+• /vplayforce — ғᴏʀᴄᴇ ᴘʟᴀʏ ᴠɪᴅᴇᴏ
+  <i>eg:</i> <code>/vplayforce Pushpa movie songs</code>
+
+• /cplay / /cvplay — ᴘʟᴀʏ ɪɴ ᴄʜᴀɴɴᴇʟ ᴀᴜᴅɪᴏ/ᴠɪᴅᴇᴏ
+  <i>eg:</i> <code>/cplay Kesariya</code>
 """
 
 HELP_12 = """<b><u>sʜᴜғғʟᴇ ǫᴜᴇᴜᴇ :</u></b>
@@ -115,7 +174,13 @@ HELP_13 = """<b><u>sᴇᴇᴋ sᴛʀᴇᴀᴍ :</u></b>
 
 HELP_14 = """<b><u>sᴏɴɢ ᴅᴏᴡɴʟᴏᴀᴅ :</u></b>
 
-• /song [ɴᴀᴍᴇ/ʏᴛ ᴜʀʟ] : ᴅᴏᴡɴʟᴏᴀᴅs ᴀ sᴏɴɢ ɪɴ ᴍᴘ3 ᴏʀ ᴍᴘ4 ғᴏʀᴍᴀᴛ.
+• /song — ᴅᴏᴡɴʟᴏᴀᴅ sᴏɴɢ ᴀs HD MP3 ᴏʀ 1080p MP4
+  ↳ ᴜsᴇ ɪɴ <b>ʙᴏᴛ DM</b> ᴡɪᴛʜ sᴏɴɢ ɴᴀᴍᴇ ᴏʀ YT ʟɪɴᴋ.
+  <i>eg:</i> <code>/song Arijit Singh Tum Hi Ho</code>
+  <i>eg:</i> <code>/song https://youtu.be/xxxxxx</code>
+
+  ↳ ɪɴ ɢʀᴏᴜᴘ — ᴛᴀᴘ ᴛʜᴇ <b>⬇️ ᴛᴀᴘ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ sᴏɴɢ</b> ʙᴜᴛᴛᴏɴ ᴏɴ ᴛʜᴇ Nᴏᴡ Pʟᴀʏɪɴɢ ᴄᴀʀᴅ.
+  ↳ ʙᴏᴛ ᴡɪʟʟ sᴇɴᴅ 🎵 <b>Audio</b> ᴏʀ 🎬 <b>Video</b> ʙᴜᴛᴛᴏɴs — ᴄʜᴏᴏsᴇ ᴜᴘ ᴛᴏ 1080p ᴠɪᴅᴇᴏ.
 """
 
 HELP_15 = """<b><u>sᴘᴇᴇᴅ ᴄᴏᴍᴍᴀɴᴅs :</u></b> [ᴀᴅᴍɪɴ ᴏɴʟʏ]
@@ -198,18 +263,38 @@ HELP_21 = """⚡ <b><u>ǫᴜɪᴄᴋ ɢʀᴏᴜᴘ ɢᴀᴍᴇs :</u></b>
 
 HELP_22 = """⚔️ <b><u>ʙᴀɴ & ᴍᴏᴅᴇʀᴀᴛɪᴏɴ ᴄᴏᴍᴍᴀɴᴅs :</u></b>
 
-• /ban [ᴜsᴇʀ/ʀᴇᴘʟʏ] — ʙᴀɴs ᴀ ᴜsᴇʀ ғʀᴏᴍ ᴛʜᴇ ɢʀᴏᴜᴘ.
-• /unban [ᴜsᴇʀ/ʀᴇᴘʟʏ] — ᴜɴʙᴀɴs ᴀ ʙᴀɴɴᴇᴅ ᴜsᴇʀ.
-• /mute [ᴜsᴇʀ/ʀᴇᴘʟʏ] — ᴍᴜᴛᴇs ᴀ ᴜsᴇʀ (ɴᴏ ᴍᴇssᴀɢᴇs).
-• /unmute [ᴜsᴇʀ/ʀᴇᴘʟʏ] — ᴜɴᴍᴜᴛᴇs ᴀ ᴜsᴇʀ.
-• /tmute [ᴜsᴇʀ] [Xs/m/h/d] — ᴛᴇᴍᴘᴏʀᴀʀɪʟʏ ᴍᴜᴛᴇs ᴀ ᴜsᴇʀ.
-• /kick [ᴜsᴇʀ/ʀᴇᴘʟʏ] — ᴋɪᴄᴋs ᴀ ᴜsᴇʀ ᴏᴜᴛ ᴏғ ᴛʜᴇ ɢʀᴏᴜᴘ.
-• /promote [ᴜsᴇʀ/ʀᴇᴘʟʏ] — ᴘʀᴏᴍᴏᴛᴇs ᴀ ᴜsᴇʀ ᴀs ᴀᴅᴍɪɴ.
-• /demote [ᴜsᴇʀ/ʀᴇᴘʟʏ] — ᴅᴇᴍᴏᴛᴇs ᴀɴ ᴀᴅᴍɪɴ.
-• /warn [ᴜsᴇʀ/ʀᴇᴘʟʏ] — ɢɪᴠᴇs ᴀ ᴡᴀʀɴɪɴɢ (3 ᴡᴀʀɴs = ᴀᴜᴛᴏ-ʙᴀɴ).
-• /rmwarn [ᴜsᴇʀ/ʀᴇᴘʟʏ] — ʀᴇᴍᴏᴠᴇs ᴡᴀʀɴɪɴɢs.
-• /del — ᴅᴇʟᴇᴛᴇs ᴀ ʀᴇᴘʟɪᴇᴅ ᴍᴇssᴀɢᴇ.
-• /purge — ᴘᴜʀɢᴇs ᴍᴇssᴀɢᴇs ᴜᴘ ᴛᴏ ʀᴇᴘʟʏ.
+• /ban — ʙᴀɴ ᴀ ᴜsᴇʀ
+  <i>eg:</i> <code>/ban @username</code> | Reply → <code>/ban</code>
+
+• /unban — ᴜɴʙᴀɴ ᴀ ᴜsᴇʀ
+  <i>eg:</i> <code>/unban @username</code>
+
+• /mute — ᴍᴜᴛᴇ ᴀ ᴜsᴇʀ
+  <i>eg:</i> <code>/mute @username</code>
+
+• /unmute — ᴜɴᴍᴜᴛᴇ ᴀ ᴜsᴇʀ
+  <i>eg:</i> <code>/unmute @username</code>
+
+• /tmute — ᴛᴇᴍᴘ ᴍᴜᴛᴇ
+  <i>eg:</i> <code>/tmute @username 10m</code> | <code>/tmute @username 2h</code>
+
+• /kick — ᴋɪᴄᴋ ᴜsᴇʀ
+  <i>eg:</i> <code>/kick @username</code>
+
+• /warn — ᴡᴀʀɴ ᴜsᴇʀ (3 ᴡᴀʀɴs = ᴀᴜᴛᴏ-ʙᴀɴ)
+  <i>eg:</i> <code>/warn @username</code>
+
+• /rmwarn — ʀᴇᴍᴏᴠᴇ ᴡᴀʀɴɪɴɢs
+  <i>eg:</i> <code>/rmwarn @username</code>
+
+• /promote — ᴘʀᴏᴍᴏᴛᴇ ᴛᴏ ᴀᴅᴍɪɴ
+  <i>eg:</i> <code>/promote @username</code>
+
+• /demote — ᴅᴇᴍᴏᴛᴇ ᴀᴅᴍɪɴ
+  <i>eg:</i> <code>/demote @username</code>
+
+• /purge — ᴅᴇʟᴇᴛᴇ ᴍᴇssᴀɢᴇs ᴜᴘ ᴛᴏ ʀᴇᴘʟɪᴇᴅ
+  <i>eg:</i> Reply to oldest msg → <code>/purge</code>
 
 <i>ᴀʟʟ ᴄᴏᴍᴍᴀɴᴅs ʀᴇǫᴜɪʀᴇ ᴀᴅᴍɪɴ ʀɪɢʜᴛs.</i>
 """

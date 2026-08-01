@@ -106,7 +106,12 @@ class Call(PyTgCalls):
     ) -> types.MediaStream:
         # Always pass -threads 0 so ffmpeg uses all available cores for
         # decode/encode — reduces CPU bottleneck and streaming stutter.
-        base_flags = "-threads 0"
+        # For video streams: force yuv420p pixel format to prevent
+        # blue/green color artifacts caused by incompatible color spaces.
+        if video:
+            base_flags = "-threads 0 -vf scale=trunc(iw/2)*2:trunc(ih/2)*2 -pix_fmt yuv420p"
+        else:
+            base_flags = "-threads 0"
         combined = f"{base_flags} {ffmpeg}" if ffmpeg else base_flags
         return types.MediaStream(
             media_path=source,
