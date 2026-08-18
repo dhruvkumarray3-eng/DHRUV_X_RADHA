@@ -67,7 +67,7 @@
 </tr>
 </table>
 
-| 🤖 ChatBot (Groq AI) | Features |
+| 🤖 ChatBot (Groq + Gemini AI) | Features |
 |---|---|
 | Auto-reply | Turns on per-group with `/chatbot on` (admin only) |
 | User Profiles | Admins save user info: `/addprofile @user info` — bot remembers them |
@@ -117,6 +117,7 @@ Every music card shows these inline buttons:
 | `OWNER_ID` | ✅ | `6670240589` | Your Telegram user ID |
 | `GIT_TOKEN` | ⚙️ | — | GitHub token for `/update` auto-push |
 | `GROQ_API_KEY` | ⚙️ | — | Groq API key for AI chatbot |
+| `GEMINI_API_KEY` | ⚙️ | — | Gemini API key for AI fallback |
 | `UPSTREAM_REPO` | ⚙️ | This repo | GitHub repo URL for updates |
 | `UPSTREAM_BRANCH` | ⚙️ | `main` | Branch to pull updates from |
 | `DURATION_LIMIT` | ⚙️ | `17000` | Max song duration (minutes) |

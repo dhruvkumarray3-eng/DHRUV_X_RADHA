@@ -17,6 +17,7 @@ ffmpeg-python
 gitpython
 gpytranslate
 groq
+google-genai
 h2
 hachoir
 heroku3

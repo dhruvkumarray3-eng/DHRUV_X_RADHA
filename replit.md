@@ -9,7 +9,7 @@ A Telegram voice-chat music bot that streams YouTube, Spotify, Apple Music, and 
 - **PyTgCalls** — Telegram voice-chat streaming
 - **yt-dlp** — YouTube/audio downloading
 - **Motor / MongoDB** — async database
-- **Groq (LLaMA 3.3 70B)** — AI chatbot
+- **Groq (LLaMA 3.3 70B) + Gemini** — AI chatbot with provider fallback
 - **aiohttp** — keep-alive web server (port 8080)
 
 ## How to Run
@@ -38,6 +38,7 @@ All secrets are stored as Replit Secrets (never hardcoded):
 | `GIT_TOKEN` | GitHub personal access token (optional) |
 | `YOUTUBE_API_KEY` | YouTube Data API v3 key (optional) |
 | `GROQ_API_KEY` | Groq API key for AI chatbot (optional) |
+| `GEMINI_API_KEY` | Gemini API key for AI fallback (optional) |
 
 ## User Preferences
 

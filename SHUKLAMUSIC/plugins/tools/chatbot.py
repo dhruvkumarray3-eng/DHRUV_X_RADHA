@@ -1,5 +1,5 @@
 # -----------------------------------------------
-# 🔸 NOBITA X PRIME — AI ChatBot (Groq LLM + MongoDB keyword fallback)
+# 🔸 NOBITA X PRIME — AI ChatBot (Groq/Gemini LLM + MongoDB keyword fallback)
 # -----------------------------------------------
 import re
 import asyncio
@@ -8,7 +8,7 @@ from pyrogram.types import Message
 from SHUKLAMUSIC import app
 from SHUKLAMUSIC.core.mongo import mongodb
 from SHUKLAMUSIC.misc import SUDOERS
-from config import BANNED_USERS, OWNER_ID, GROQ_API_KEY
+from config import BANNED_USERS, GEMINI_API_KEY, OWNER_ID, GROQ_API_KEY
 
 chatbot_settings = mongodb.chatbot_settings
 chatbot_replies  = mongodb.chatbot_replies
@@ -27,9 +27,11 @@ _BOOK = e(6073117703965511893, "💐")
 _BELL = e(4956290155326473271, "🔔")
 
 _GROQ_MODEL = "llama-3.3-70b-versatile"
+_GEMINI_MODEL = "gemini-3.6-flash"
 
 # ── Groq client (lazy) ───────────────────────────────────────────────────────
 _groq_client = None
+_gemini_client = None
 
 def _get_groq():
     global _groq_client
@@ -40,6 +42,17 @@ def _get_groq():
         except Exception:
             pass
     return _groq_client
+
+
+def _get_gemini():
+    global _gemini_client
+    if _gemini_client is None and GEMINI_API_KEY:
+        try:
+            from google import genai
+            _gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+        except Exception:
+            pass
+    return _gemini_client
 
 
 # ── Build system prompt ───────────────────────────────────────────────────────
@@ -165,13 +178,43 @@ async def ask_groq(user_text: str, user_context: str = "", about_context: str = 
         return None
 
 
+async def ask_gemini(user_text: str, user_context: str = "", about_context: str = "") -> str | None:
+    client = _get_gemini()
+    if not client:
+        return None
+    try:
+        from google.genai import types
+
+        response = await client.aio.models.generate_content(
+            model=_GEMINI_MODEL,
+            contents=user_text,
+            config=types.GenerateContentConfig(
+                system_instruction=_build_system_prompt(user_context, about_context),
+                max_output_tokens=900,
+                temperature=0.9,
+            ),
+        )
+        return response.text.strip() if response.text else None
+    except Exception:
+        return None
+
+
+def _ai_mode() -> str:
+    if GROQ_API_KEY and GEMINI_API_KEY:
+        return f"🤖 <b>Groq + Gemini AI</b> (<code>{_GROQ_MODEL}</code> / <code>{_GEMINI_MODEL}</code>)"
+    if GROQ_API_KEY:
+        return f"🤖 <b>Groq AI</b> (<code>{_GROQ_MODEL}</code>)"
+    if GEMINI_API_KEY:
+        return f"✨ <b>Gemini AI</b> (<code>{_GEMINI_MODEL}</code>)"
+    return "📚 <b>Keyword mode</b>"
+
+
 # ── Design helpers ───────────────────────────────────────────────────────────
 def _on_msg():
-    mode = f"🤖 <b>Groq AI</b> (<code>{_GROQ_MODEL}</code>)" if GROQ_API_KEY else "📚 <b>Keyword mode</b>"
     return (
         f"╔══「 {_AI} <b>CHATBOT ACTIVATED</b> 」\n"
         f"║\n"
-        f"║  {_STAR} Mode  : {mode}\n"
+        f"║  {_STAR} Mode  : {_ai_mode()}\n"
         f"║  {_BELL} Status : <b>Online & Listening</b>\n"
         f"║\n"
         f"╚═══ ✨ <i>Ab group mein kuch bhi likho, main sunuunga! 😊</i>"
@@ -191,7 +234,7 @@ def _off_msg():
 CB_HELP = (
     f"╔══「 {_AI} <b>ChatBot — Help</b> 」\n"
     f"║\n"
-    f"║  {'🟢 Groq AI active' if GROQ_API_KEY else '🟡 Keyword-only mode'}\n"
+    f"║  {'🟢 ' + _ai_mode() if (GROQ_API_KEY or GEMINI_API_KEY) else '🟡 Keyword-only mode'}\n"
     f"║\n"
     f"║  <b>👤 Group Admin Commands:</b>\n"
     f"║  <code>/chatbot on</code>   — enable in this group\n"
@@ -639,8 +682,8 @@ async def chatbot_auto_reply(client, message: Message):
     if doc:
         return await message.reply_text(doc["reply"])
 
-    # 2️⃣ Groq AI
-    if GROQ_API_KEY:
+    # 2️⃣ AI providers (Groq first, Gemini fallback)
+    if GROQ_API_KEY or GEMINI_API_KEY:
         # Typing indicator — non-blocking
         try:
             await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
@@ -662,7 +705,9 @@ async def chatbot_auto_reply(client, message: Message):
         except Exception:
             pass
 
-        ai_reply = await ask_groq(txt, user_context, about_context)
+        ai_reply = await ask_groq(txt, user_context, about_context) if GROQ_API_KEY else None
+        if not ai_reply and GEMINI_API_KEY:
+            ai_reply = await ask_gemini(txt, user_context, about_context)
 
         if ai_reply:
             # Apply user's preferred font (only for ASCII-heavy replies without code)
