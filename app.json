@@ -14,31 +14,31 @@
   "env": {
     "API_ID": {
       "description": "Get this value from https://my.telegram.org",
-      "value": "29308061",
+      "value": "",
       "required": true
     },
     "API_HASH": {
       "description": "Get this value from https://my.telegram.org",
-      "value": "462de3dfc98fd938ef9c6ee31a72d099",
+      "value": "",
       "required": true
     },
     "BOT_TOKEN": {
-      "description": "A Bot's token from Botfather",
+      "description": "A Bot's token from BotFather",
       "value": "",
       "required": true
     },
     "MONGO_DB_URI": {
-      "description": "Get a mongodb url from https://cloud.mongodb.com.",
-      "value": "mongodb+srv://SHASHANK:STRANGER@shashank.uj7lold.mongodb.net/?retryWrites=true&w=majority",
+      "description": "Get a MongoDB URI from https://cloud.mongodb.com.",
+      "value": "",
       "required": true
     },
     "OWNER_ID": {
-      "description": "The user id of user whom you would like to add as OWNER.",
-      "value": "6762113050",
+      "description": "The Telegram user ID of the bot owner.",
+      "value": "",
       "required": true
     },
     "STRING_SESSION": {
-      "description": "A Pyrogram v2 String Session from @StringSesssionGeneratorRobot on Telegram.",
+      "description": "A Pyrogram v2 string session.",
       "value": "",
       "required": true
     },
@@ -48,24 +48,24 @@
       "required": false
     },
     "HEROKU_APP_NAME": {
-      "description": "Your heroku app name",
+      "description": "Your Heroku app name",
       "value": "",
       "required": false
     },
     "LOGGER_ID": {
-      "description": "Your Log Group ID, add your bot and promote as an admin with full rights!. Channel ki id mat daal dena bsdk.",
-      "value": "-1002018556839",
+      "description": "Your log group ID. Add the bot and promote it as an admin.",
+      "value": "",
       "required": true
     },
     "API_URL": {
-      "description": "Shruti API Base URL",
+      "description": "Shruti API base URL",
       "value": "https://api.shrutibots.site",
       "required": true
     },
     "API_KEY": {
-      "description": "Get this API Key from @SHRUTIAPIBOT",
+      "description": "API key for the configured external API",
       "value": "",
-      "required": true
+      "required": false
     }
   },
   "buildpacks": [

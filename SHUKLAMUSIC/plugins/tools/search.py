@@ -11,18 +11,99 @@
 #
 # ❤️ Made with dedication and love by ItzShukla
 # -----------------------------------------------
-from traceback import format_exc
-from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
-from search_engine_parser.core.engines.google import Search as GoogleSearch
-from search_engine_parser.core.engines.stackoverflow import \
-    Search as StackSearch
-from search_engine_parser.core.exceptions import NoResultsFound, NoResultsOrTrafficError
-from SHUKLAMUSIC import app
+from urllib.parse import quote_plus
+
+import httpx
+from bs4 import BeautifulSoup
 from pyrogram import filters
+from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
+from SHUKLAMUSIC import app
 
 
-gsearch = GoogleSearch()
-stsearch = StackSearch()
+class NoResultsFound(Exception):
+    """Raised when a search provider returns no usable results."""
+
+
+class NoResultsOrTrafficError(Exception):
+    """Raised when a search provider throttles or rejects the request."""
+
+
+class SearchResults(list[dict[str, str]]):
+    """Keep the legacy five-button layout safe for short result lists."""
+
+    def __getitem__(self, index):
+        if isinstance(index, int) and index >= len(self):
+            if not self:
+                raise IndexError(index)
+            return super().__getitem__(-1)
+        return super().__getitem__(index)
+
+
+async def google_search(query: str) -> SearchResults:
+    """Fetch public Google results without the unmaintained parser package."""
+    url = f"https://www.google.com/search?q={quote_plus(query)}"
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/131.0 Safari/537.36"
+        )
+    }
+    async with httpx.AsyncClient(
+        headers=headers, follow_redirects=True, timeout=15
+    ) as client:
+        response = await client.get(url)
+    if response.status_code in (429, 503):
+        raise NoResultsOrTrafficError
+    response.raise_for_status()
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    results = SearchResults()
+    seen_links: set[str] = set()
+    for heading in soup.select("h3"):
+        anchor = heading.find_parent("a")
+        if anchor is None:
+            continue
+        link = anchor.get("href", "")
+        title = heading.get_text(" ", strip=True)
+        if not link.startswith("http") or not title or link in seen_links:
+            continue
+        seen_links.add(link)
+        results.append({"titles": title, "links": link})
+        if len(results) == 5:
+            break
+    if not results:
+        raise NoResultsFound
+    return results
+
+
+async def stackoverflow_search(query: str) -> SearchResults:
+    """Use the official Stack Exchange API for Stack Overflow results."""
+    params = {
+        "order": "desc",
+        "sort": "relevance",
+        "intitle": query,
+        "site": "stackoverflow",
+        "pagesize": 5,
+    }
+    async with httpx.AsyncClient(timeout=15) as client:
+        response = await client.get(
+            "https://api.stackexchange.com/2.3/search/advanced",
+            params=params,
+        )
+    if response.status_code in (429, 503):
+        raise NoResultsOrTrafficError
+    response.raise_for_status()
+    results = SearchResults(
+        {
+            "titles": item["title"],
+            "links": item["link"],
+        }
+        for item in response.json().get("items", [])
+        if item.get("title") and item.get("link")
+    )
+    if not results:
+        raise NoResultsFound
+    return results
 
 
 def ikb(rows=None, back=False, todo="start_back"):
@@ -78,7 +159,7 @@ async def search_(app: app, msg: Message):
     to_del = await msg.reply_text("**sᴇᴀʀᴄʜɪɴɢ ᴏɴ ɢᴏᴏɢʟᴇ...**")
     query = split[1]
     try:
-        result = await gsearch.async_search(query)
+        result = await google_search(query)
         keyboard = ikb(
             [
                 [
@@ -147,7 +228,7 @@ async def stack_search_(app: app, msg: Message):
     to_del = await msg.reply_text("**sᴇᴀʀᴄʜɪɴɢ ᴏɴ ɢᴏᴏɢʟᴇ...**")
     query = split[1]
     try:
-        result = await stsearch.async_search(query)
+        result = await stackoverflow_search(query)
         keyboard = ikb(
             [
                 [

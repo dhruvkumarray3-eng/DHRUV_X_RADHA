@@ -49,7 +49,6 @@ pyyaml
 qrcode
 rapidfuzz
 requests
-search-engine-parser
 SpeechRecognition
 speedtest-cli
 spotipy
@@ -114,7 +113,6 @@ pyyaml
 qrcode
 rapidfuzz
 requests
-search-engine-parser
 SpeechRecognition
 speedtest-cli
 spotipy

@@ -6,18 +6,21 @@ set -e
 
 MSG="${1:-Auto update from Replit}"
 
-if [ -z "$GIT_TOKEN" ]; then
-  echo "❌ GIT_TOKEN not set. Add it to Replit Secrets."
+TOKEN="${GIT_TOKEN:-${GITHUB_PERSONAL_ACCESS_TOKEN:-${GITHUB_TOKEN:-}}}"
+
+if [ -z "$TOKEN" ]; then
+  echo "❌ No GitHub token found. Add GIT_TOKEN or GITHUB_PERSONAL_ACCESS_TOKEN to Replit Secrets."
   exit 1
 fi
 
-REPO_URL="https://${GIT_TOKEN}@github.com/dhruvkumarray3-eng/DHRUV_X_RADHA.git"
+REPO_URL="https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA.git"
+AUTH_HEADER=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
 
 git config user.email "bot@replit.com"
 git config user.name "SHUKLA BOT"
 
 git add -A
 git commit -m "$MSG" || echo "⚠ Nothing to commit"
-git push "$REPO_URL" HEAD:main
+git -c http.extraHeader="Authorization: Basic ${AUTH_HEADER}" push "$REPO_URL" HEAD:main
 
 echo "✅ Pushed to GitHub successfully!"

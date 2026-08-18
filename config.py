@@ -54,7 +54,11 @@ HEROKU_API_KEY = getenv("HEROKU_API_KEY")
 UPSTREAM_REPO = getenv("UPSTREAM_REPO", "https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA")
 MINIAPP_URL = getenv("MINIAPP_URL", "https://appmusucvitech--daredevildefaul.replit.app")
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
-GIT_TOKEN = getenv("GIT_TOKEN", None)
+GIT_TOKEN = (
+    getenv("GIT_TOKEN")
+    or getenv("GITHUB_PERSONAL_ACCESS_TOKEN")
+    or getenv("GITHUB_TOKEN")
+)
 
 # Support
 SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/xvilucifer")   # Updates channel
