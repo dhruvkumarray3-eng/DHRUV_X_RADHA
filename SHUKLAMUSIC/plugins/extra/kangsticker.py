@@ -11,12 +11,12 @@
 #
 # ❤️ Made with dedication and love by ItzShukla
 # -----------------------------------------------
-import imghdr
 import os
 import re
 from asyncio import gather
 from traceback import format_exc
 
+from PIL import Image, UnidentifiedImageError
 from pyrogram import filters
 from pyrogram.errors import (
     PackShortNameInvalid,
@@ -51,6 +51,16 @@ MAX_STICKERS = (
     120  # would be better if we could fetch this limit directly from telegram
 )
 SUPPORTED_TYPES = ["jpeg", "png", "webp"]
+
+
+def _detect_image_type(file_path: str) -> str | None:
+    """Return a Telegram-supported image type on Python versions without imghdr."""
+    try:
+        with Image.open(file_path) as image:
+            image_type = (image.format or "").lower()
+    except (OSError, UnidentifiedImageError):
+        return None
+    return image_type if image_type in SUPPORTED_TYPES else None
 
 
 def _pack_short_name(user_id: int, bot_username: str, pack_number: int = 0) -> str:
@@ -137,7 +147,7 @@ async def kang(client, message: Message):
                 return await msg.edit("File size too large.")
 
             temp_file_path = await app.download_media(doc)
-            image_type = imghdr.what(temp_file_path)
+            image_type = _detect_image_type(temp_file_path)
             if image_type not in SUPPORTED_TYPES:
                 return await msg.edit(
                     "Format not supported! ({})".format(image_type)

@@ -2,6 +2,7 @@
 # SHUKLAMUSIC / DHRUV X RADHA Music Bot
 # -----------------------------------------------
 import asyncio
+import errno
 import importlib
 import os
 from aiohttp import web
@@ -15,6 +16,7 @@ from SHUKLAMUSIC.plugins import ALL_MODULES
 from SHUKLAMUSIC.utils.database import get_banned_users, get_gbanned
 from SHUKLAMUSIC.plugins.tools.vclogger import initialize_vc_logger
 from SHUKLAMUSIC.core.commands import register_bot_commands
+from pyrogram.errors import FloodWait
 
 
 # ── Keep-alive web server ─────────────────────────────────────────────────────
@@ -33,7 +35,17 @@ async def start_keepalive():
     await runner.setup()
     port = int(os.environ.get("PORT", 8080))
     site = web.TCPSite(runner, "0.0.0.0", port)
-    await site.start()
+    try:
+        await site.start()
+    except OSError as error:
+        await runner.cleanup()
+        if error.errno != errno.EADDRINUSE:
+            raise
+        LOGGER("SHUKLAMUSIC").warning(
+            f"Keep-alive port {port} is already in use; "
+            "continuing without starting a second HTTP listener."
+        )
+        return
     LOGGER("SHUKLAMUSIC").info(f"Keep-alive server started on port {port}")
 
 
@@ -59,7 +71,16 @@ async def init():
             pass
     except:
         pass
-    await app.start()
+    try:
+        await app.start()
+    except FloodWait as error:
+        wait_seconds = int(getattr(error, "value", 0))
+        wait_minutes = max(1, (wait_seconds + 59) // 60)
+        LOGGER("SHUKLAMUSIC").warning(
+            "Telegram temporarily rate-limited bot authentication "
+            f"(retry after about {wait_minutes} minutes); shutting down cleanly."
+        )
+        return
     for all_module in ALL_MODULES:
         importlib.import_module("SHUKLAMUSIC.plugins" + all_module)
     LOGGER("SHUKLAMUSIC.plugins").info("All Features Loaded!")

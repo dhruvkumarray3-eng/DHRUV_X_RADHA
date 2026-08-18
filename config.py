@@ -87,13 +87,18 @@ TG_AUDIO_FILESIZE_LIMIT = int(getenv("TG_AUDIO_FILESIZE_LIMIT", "5242880000"))
 TG_VIDEO_FILESIZE_LIMIT = int(getenv("TG_VIDEO_FILESIZE_LIMIT", "5242880000"))
 
 # Session strings
-STRING1 = getenv("STRING_SESSION", None)
-STRING2 = getenv("STRING_SESSION2", None)
-STRING3 = getenv("STRING_SESSION3", None)
-STRING4 = getenv("STRING_SESSION4", None)
-STRING5 = getenv("STRING_SESSION5", None)
-STRING6 = getenv("STRING_SESSION6", None)
-STRING7 = getenv("STRING_SESSION7", None)
+def _clean_session(value: str | None) -> str | None:
+    """Normalize copied session strings without changing their payload."""
+    return re.sub(r"\s+", "", value) if value else None
+
+
+STRING1 = _clean_session(getenv("STRING_SESSION", None))
+STRING2 = _clean_session(getenv("STRING_SESSION2", None))
+STRING3 = _clean_session(getenv("STRING_SESSION3", None))
+STRING4 = _clean_session(getenv("STRING_SESSION4", None))
+STRING5 = _clean_session(getenv("STRING_SESSION5", None))
+STRING6 = _clean_session(getenv("STRING_SESSION6", None))
+STRING7 = _clean_session(getenv("STRING_SESSION7", None))
 
 # Miscellaneous
 BANNED_USERS = filters.user()

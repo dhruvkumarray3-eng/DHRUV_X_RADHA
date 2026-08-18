@@ -39,10 +39,6 @@ run = ["python3", "-m", "SHUKLAMUSIC"]
 [userenv.shared]
 UPSTREAM_BRANCH = "main"
 UPSTREAM_REPO = "https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA"
-API_ID = "38987335"
-LOGGER_ID = "-1004458016685"
-LOG_GROUP_ID = "-1004458016685"
-OWNER_ID = "8245258112"
 
 [[ports]]
 localPort = 8080
