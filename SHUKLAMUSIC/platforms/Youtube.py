@@ -10,6 +10,7 @@ import logging
 import os
 import re
 from typing import Union
+from urllib.parse import parse_qs, urlparse
 import yt_dlp
 import aiohttp as _aiohttp_module
 
@@ -34,10 +35,107 @@ def _iso_to_min(iso: str) -> str:
     return f"{mm}:{ss:02d}"
 
 
+def _youtube_video_id(value: str):
+    """Extract a YouTube video id from a URL or an already-normalized id."""
+    if not value:
+        return None
+    value = str(value).strip()
+    if re.fullmatch(r"[\w-]{11}", value):
+        return value
+    try:
+        parsed = urlparse(value)
+        host = (parsed.netloc or "").lower().split(":")[0]
+        if host == "youtu.be":
+            candidate = parsed.path.strip("/").split("/")[0]
+        elif host.endswith("youtube.com") or host.endswith("youtube-nocookie.com"):
+            candidate = parse_qs(parsed.query).get("v", [None])[0]
+            if not candidate:
+                parts = parsed.path.strip("/").split("/")
+                if len(parts) >= 2 and parts[0] in {"shorts", "live", "embed"}:
+                    candidate = parts[1]
+        else:
+            candidate = None
+        return candidate if candidate and re.fullmatch(r"[\w-]{11}", candidate) else None
+    except Exception:
+        return None
+
+
+async def _yt_api_video(video_id: str) -> list:
+    """Fetch direct video metadata without using the search endpoint."""
+    if not _YT_API_KEY:
+        return []
+    try:
+        async with _aiohttp_module.ClientSession() as session:
+            async with session.get(
+                f"{_YT_API_BASE}/videos",
+                params={
+                    "part": "snippet,contentDetails",
+                    "id": video_id,
+                    "key": _YT_API_KEY,
+                },
+                timeout=_aiohttp_module.ClientTimeout(total=10),
+            ) as resp:
+                if resp.status != 200:
+                    return []
+                data = await resp.json()
+        item = (data.get("items") or [None])[0]
+        if not item:
+            return []
+        snippet = item.get("snippet") or {}
+        duration = (item.get("contentDetails") or {}).get("duration", "PT0S")
+        thumb = (
+            snippet.get("thumbnails", {}).get("high", {}).get("url")
+            or snippet.get("thumbnails", {}).get("default", {}).get("url")
+            or f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg"
+        )
+        return [{
+            "title": snippet.get("title") or "Unknown",
+            "link": f"https://www.youtube.com/watch?v={video_id}",
+            "vidid": video_id,
+            "duration_min": _iso_to_min(duration),
+            "thumb": thumb,
+        }]
+    except Exception as exc:
+        _LOGGER.warning(f"[YT API video] failed for '{video_id}': {exc}")
+        return []
+
+
+async def _oembed_track(link: str):
+    """Return minimal metadata when YouTube search/extraction is temporarily blocked."""
+    video_id = _youtube_video_id(link)
+    if not video_id:
+        return None
+    watch_url = f"https://www.youtube.com/watch?v={video_id}"
+    try:
+        async with _aiohttp_module.ClientSession() as session:
+            async with session.get(
+                "https://www.youtube.com/oembed",
+                params={"url": watch_url, "format": "json"},
+                timeout=_aiohttp_module.ClientTimeout(total=10),
+            ) as resp:
+                if resp.status != 200:
+                    return None
+                data = await resp.json()
+        return {
+            "title": data.get("title") or "Unknown",
+            "link": watch_url,
+            "vidid": video_id,
+            "duration_min": "0:00",
+            "thumb": data.get("thumbnail_url")
+            or f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
+        }
+    except Exception as exc:
+        _LOGGER.warning(f"[YouTube oEmbed] failed for '{video_id}': {exc}")
+        return None
+
+
 async def _yt_api_search(query: str, max_results: int = 10) -> list:
     """Search via YouTube Data API v3. Returns list of track dicts."""
     if not _YT_API_KEY:
         return []
+    direct_id = _youtube_video_id(query)
+    if direct_id:
+        return await _yt_api_video(direct_id)
     try:
         async with _aiohttp_module.ClientSession() as session:
             async with session.get(
@@ -509,14 +607,30 @@ class YouTubeAPI:
             duration_sec = int(time_to_seconds(duration_min)) if duration_min else 0
             return r["title"], duration_min, duration_sec, r["thumb"], r["vidid"]
         # ── 2. Fallback: youtube-search-python ────────────────────────────────
-        results = VideosSearch(link, limit=1)
-        for result in (await results.next())["result"]:
-            title = result["title"]
-            duration_min = result["duration"]
-            thumbnail = result["thumbnails"][0]["url"].split("?")[0]
-            vidid = result["id"]
-            duration_sec = int(time_to_seconds(duration_min)) if duration_min else 0
-        return title, duration_min, duration_sec, thumbnail, vidid
+        try:
+            results = VideosSearch(link, limit=1)
+            result_list = (await results.next()).get("result") or []
+            if result_list:
+                result = result_list[0]
+                title = result["title"]
+                duration_min = result["duration"]
+                thumbnail = result["thumbnails"][0]["url"].split("?")[0]
+                vidid = result["id"]
+                duration_sec = int(time_to_seconds(duration_min)) if duration_min else 0
+                return title, duration_min, duration_sec, thumbnail, vidid
+        except Exception as exc:
+            _LOGGER.warning(f"[YouTube details] search fallback failed for '{link}': {exc}")
+
+        fallback = await _oembed_track(link)
+        if fallback:
+            return (
+                fallback["title"],
+                fallback["duration_min"],
+                0,
+                fallback["thumb"],
+                fallback["vidid"],
+            )
+        raise ValueError(f"No track details found for: {link}")
 
     async def title(self, link: str, videoid: Union[bool, str] = None):
         if videoid:
@@ -666,6 +780,12 @@ class YouTubeAPI:
         except Exception:
             pass
 
+        # Direct links can still be resolved through oEmbed when search extraction
+        # is temporarily blocked by YouTube.
+        fallback = await _oembed_track(link)
+        if fallback:
+            return fallback, fallback["vidid"]
+
         # ── 3. Last resort: yt-dlp ytsearch ──────────────────────────────────
         def _ytdlp_search():
             opts = _base_ydl_opts(skip_download=True, noplaylist=True)
@@ -685,7 +805,11 @@ class YouTubeAPI:
             return None, None
 
         loop = asyncio.get_event_loop()
-        track_details, vidid = await loop.run_in_executor(None, _ytdlp_search)
+        try:
+            track_details, vidid = await loop.run_in_executor(None, _ytdlp_search)
+        except Exception as exc:
+            _LOGGER.warning(f"[YouTube track] yt-dlp search failed for '{link}': {exc}")
+            track_details, vidid = None, None
         if track_details:
             return track_details, vidid
 
