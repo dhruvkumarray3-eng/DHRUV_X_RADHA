@@ -16,6 +16,7 @@ from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors import (
     ChatAdminRequired,
     InviteRequestSent,
+    PeerIdInvalid,
     UserAlreadyParticipant,
     UserNotParticipant,
 )
@@ -150,7 +151,7 @@ def PlayWrapper(command):
                             app.mention, userbot.id, userbot.name, userbot.username
                         ), reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text= "๏ 𝗨ɴʙᴀɴ 𝗔ssɪsᴛᴀɴᴛ ๏", callback_data=f"unban_assistant")]])
                     )
-            except UserNotParticipant:
+            except (UserNotParticipant, PeerIdInvalid):
                 myu = await message.reply_text(_["call_4"].format(app.mention))
                 joined = False
 
