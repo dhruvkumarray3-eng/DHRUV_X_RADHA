@@ -102,23 +102,4 @@ def private_panel(_):
             ),
         ],
     ]
-    # NOBITA MUSIC APP button — WebApp when URL configured, URL button otherwise
-    if config.MINIAPP_URL:
-        buttons.append([
-            InlineKeyboardButton(
-                text=_["S_B_10"],
-                web_app=WebAppInfo(url=config.MINIAPP_URL),
-                style=ButtonStyle.PRIMARY,
-                icon_custom_emoji_id=_E_DIAMOND,
-            )
-        ])
-    else:
-        buttons.append([
-            InlineKeyboardButton(
-                text=_["S_B_10"],
-                url=config.SUPPORT_CHANNEL,
-                style=ButtonStyle.PRIMARY,
-                icon_custom_emoji_id=_E_DIAMOND,
-            )
-        ])
     return buttons
