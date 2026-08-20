@@ -60,6 +60,19 @@ def _youtube_video_id(value: str):
         return None
 
 
+def _download_video_id(value: str):
+    """Return a safe YouTube ID for downloader/cache paths.
+
+    Downloaders receive both normalized IDs and user-supplied URLs.  Keeping
+    the URL out of filenames also makes youtu.be, /shorts/ and /live/ links
+    behave the same as regular watch URLs.
+    """
+    value = str(value or "").strip()
+    return _youtube_video_id(value) or (
+        value if re.fullmatch(r"[\w-]{3,}", value) else None
+    )
+
+
 async def _yt_api_video(video_id: str) -> list:
     """Fetch direct video metadata without using the search endpoint."""
     if not _YT_API_KEY:
@@ -365,7 +378,7 @@ def _cleanup_wav_cache(keep: int = 25) -> None:
 
 
 async def download_song(link: str) -> str:
-    video_id = link.split("v=")[-1].split("&")[0] if "v=" in link else link
+    video_id = _download_video_id(link)
     if not video_id or len(video_id) < 3:
         return None
 
@@ -489,7 +502,7 @@ async def download_song(link: str) -> str:
 
 
 async def download_video(link: str) -> str:
-    video_id = link.split("v=")[-1].split("&")[0] if "v=" in link else link
+    video_id = _download_video_id(link)
     if not video_id or len(video_id) < 3:
         return None
 
