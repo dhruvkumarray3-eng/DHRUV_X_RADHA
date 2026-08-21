@@ -19,6 +19,8 @@ from PIL import Image , ImageDraw
 from pyrogram import *
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram.enums import *
+from pyrogram.enums import ButtonStyle
+from pyrogram.enums import ButtonStyle
 
 from SHUKLAMUSIC import app as app
 from SHUKLAMUSIC.mongo.couples_db import _get_image, get_couple

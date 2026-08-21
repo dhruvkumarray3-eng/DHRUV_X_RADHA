@@ -33,7 +33,7 @@ opencv-python
 pickledb
 pillow
 psutil
-py-tgcalls>=2.2.0
+py-tgcalls==2.2.0
 py-yt-search
 pycountry
 pycryptodome

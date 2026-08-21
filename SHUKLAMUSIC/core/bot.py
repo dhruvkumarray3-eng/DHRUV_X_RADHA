@@ -12,13 +12,19 @@
 # ❤️ Made with dedication and love by ItzShukla
 # -----------------------------------------------
 
+import asyncio
 import sys
 
 # Optional uvloop
 if sys.platform != "win32":
     try:
         import uvloop
-        uvloop.install()
+        if not isinstance(asyncio.get_event_loop_policy(), uvloop.EventLoopPolicy):
+            uvloop.install()
+        try:
+            asyncio.get_event_loop()
+        except RuntimeError:
+            asyncio.set_event_loop(uvloop.new_event_loop())
         print("✓ uvloop enabled")
     except ImportError:
         print("⚠ uvloop not installed, using default asyncio loop")
@@ -64,16 +70,16 @@ class SHUKLA(Client):
             )
 
         except (errors.ChannelInvalid, errors.PeerIdInvalid):
-            LOGGER(__name__).error(
-                "Bot cannot access LOGGER_ID. Add the bot to the log group/channel."
+            LOGGER(__name__).warning(
+                "Bot cannot access LOGGER_ID; startup notifications are disabled. "
+                "Add the bot to the log group/channel to enable them."
             )
-            raise SystemExit(1)
 
         except Exception as ex:
-            LOGGER(__name__).error(
-                f"Failed to access LOGGER_ID: {type(ex).__name__}: {ex}"
+            LOGGER(__name__).warning(
+                f"Could not send startup notification to LOGGER_ID: "
+                f"{type(ex).__name__}: {ex}"
             )
-            raise SystemExit(1)
 
         try:
             member = await self.get_chat_member(
@@ -85,16 +91,15 @@ class SHUKLA(Client):
                 ChatMemberStatus.ADMINISTRATOR,
                 ChatMemberStatus.OWNER,
             ):
-                LOGGER(__name__).error(
-                    "Promote the bot as admin in LOGGER_ID."
+                LOGGER(__name__).warning(
+                    "Bot is not an admin in LOGGER_ID; logger checks are skipped."
                 )
-                raise SystemExit(1)
 
         except Exception as ex:
-            LOGGER(__name__).error(
-                f"Failed checking admin status: {type(ex).__name__}: {ex}"
+            LOGGER(__name__).warning(
+                f"Could not verify LOGGER_ID admin status: "
+                f"{type(ex).__name__}: {ex}"
             )
-            raise SystemExit(1)
 
         LOGGER(__name__).info(
             f"Music Bot Started Successfully as {self.name}"
