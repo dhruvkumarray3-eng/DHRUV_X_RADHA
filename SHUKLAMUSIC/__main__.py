@@ -112,4 +112,7 @@ async def init():
 
 
 if __name__ == "__main__":
-    asyncio.run(init())
+    # The package bootstrap creates the uvloop required by Pyrogram before
+    # imports. Reuse that same loop so Pyrogram dispatcher shutdown stays on
+    # the loop where it was created.
+    asyncio.get_event_loop().run_until_complete(init())
