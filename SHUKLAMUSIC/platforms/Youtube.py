@@ -73,6 +73,21 @@ def _download_video_id(value: str):
     )
 
 
+def _is_media_response(content_type: str, media_type: str) -> bool:
+    """Accept providers that label streamed media as generic binary data.
+
+    ShrutiAPI has returned both a specific media type and
+    ``application/octet-stream`` over time. Rejecting the latter makes valid
+    VPlay downloads fail before the response is even written to disk.
+    """
+    normalized = (content_type or "").split(";", 1)[0].strip().lower()
+    return normalized.startswith(f"{media_type}/") or normalized in {
+        "application/octet-stream",
+        "binary/octet-stream",
+        "",
+    }
+
+
 async def _yt_api_video(video_id: str) -> list:
     """Fetch direct video metadata without using the search endpoint."""
     if not _YT_API_KEY:
@@ -409,7 +424,7 @@ async def download_song(link: str) -> str:
                                 break
                             # Reject non-audio responses (e.g. rate-limit JSON)
                             content_type = resp.content_type or ""
-                            if not content_type.startswith("audio/"):
+                            if not _is_media_response(content_type, "audio"):
                                 _LOGGER.warning(
                                     f"[download_song] downloader API returned {content_type}"
                                 )
@@ -511,7 +526,7 @@ async def download_video(link: str) -> str:
     if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
         return file_path
 
-    yt_url = f"https://www.youtube.com/watch?v={video_id}" if "youtube" not in link else link
+    yt_url = f"https://www.youtube.com/watch?v={video_id}"
     downloaded = False
 
     # ── 1. Try ShrutiAPI when configured ──
@@ -530,7 +545,7 @@ async def download_video(link: str) -> str:
                     else:
                         # Reject non-video responses (e.g. rate-limit JSON)
                         content_type = resp.content_type or ""
-                        if content_type.startswith("video/"):
+                        if _is_media_response(content_type, "video"):
                             tmp_dl = file_path + ".dl"
                             with open(tmp_dl, "wb") as f:
                                 async for chunk in resp.content.iter_chunked(131072):
@@ -565,8 +580,6 @@ async def download_video(link: str) -> str:
                 "--extractor-args", "youtube:player_client=tv_embedded,mweb,android",
                 "--no-check-certificate",
                 "--geo-bypass",
-                # Force yuv420p — prevents blue/green color artifacts in VC streams
-                "--postprocessor-args", "ffmpeg:-pix_fmt yuv420p -vf scale=trunc(iw/2)*2:trunc(ih/2)*2",
             ]
             _cookies = _cookies_file()
             if _cookies:
