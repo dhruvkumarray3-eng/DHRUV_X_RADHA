@@ -644,10 +644,13 @@ class Call(PyTgCalls):
             @client.on_update()
             async def _update_handler(_, update: types.Update, _client=client):
                 if isinstance(update, types.StreamEnded):
-                    if update.stream_type in [
-                        types.StreamEnded.Type.AUDIO,
-                        types.StreamEnded.Type.VIDEO,
-                    ]:
+                    # A video track can end/report independently while the
+                    # audio track is still playing. Treating that event as a
+                    # full stream end makes VPlay leave the VC (often before
+                    # the queue item has even been written). Audio is the
+                    # authoritative end event because every music stream
+                    # requires an audio track.
+                    if update.stream_type == types.StreamEnded.Type.AUDIO:
                         await self.change_stream(_client, update.chat_id)
                 elif isinstance(update, types.ChatUpdate):
                     if update.status in [
