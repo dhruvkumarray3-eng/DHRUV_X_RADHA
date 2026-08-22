@@ -71,6 +71,20 @@ def private_panel(_):
                 icon_custom_emoji_id=_E_SPARK
             )
         ],
+    ]
+    if config.MINIAPP_URL:
+        buttons.append(
+            [
+                InlineKeyboardButton(
+                    text="🎵 ɴᴏʙɪᴛᴀ ᴍᴜsɪᴄ ᴀᴘᴘ",
+                    web_app=WebAppInfo(url=config.MINIAPP_URL),
+                    style=ButtonStyle.PRIMARY,
+                    icon_custom_emoji_id=_E_DIAMOND,
+                )
+            ]
+        )
+    buttons.extend(
+        [
         [
             InlineKeyboardButton(
                 text=_["S_B_6"],
@@ -101,5 +115,6 @@ def private_panel(_):
                 icon_custom_emoji_id=_E_CROWN
             ),
         ],
-    ]
+        ]
+    )
     return buttons
