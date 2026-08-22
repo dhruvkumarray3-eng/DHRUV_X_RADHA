@@ -29,37 +29,42 @@ except ImportError:
 
 from SHUKLAMUSIC.core.bot import SHUKLA
 
-# Newer Pyrogram builds do not expose the presentation-only ButtonStyle and
-# custom emoji arguments used by this bot's keyboard helpers.
+# Keep the presentation styles and custom button icons when the installed
+# Pyrogram build supports them. Older builds need those optional fields
+# removed, otherwise constructing a keyboard raises a TypeError.
+import inspect
 import pyrogram.enums as _pyrogram_enums
 import pyrogram.errors as _pyrogram_errors
 from pyrogram.types import InlineKeyboardButton as _InlineKeyboardButton
 
 
-class _ButtonStyle:
-    PRIMARY = None
-    SECONDARY = None
-    SUCCESS = None
-    DANGER = None
-
-
 if not hasattr(_pyrogram_enums, "ButtonStyle"):
+    class _ButtonStyle:
+        PRIMARY = None
+        SECONDARY = None
+        SUCCESS = None
+        DANGER = None
+
     _pyrogram_enums.ButtonStyle = _ButtonStyle
 if not hasattr(_pyrogram_errors, "GroupcallForbidden"):
     _pyrogram_errors.GroupcallForbidden = _pyrogram_errors.GroupCallInvalid
 if not hasattr(_pyrogram_errors, "GroupcallInvalid"):
     _pyrogram_errors.GroupcallInvalid = _pyrogram_errors.GroupCallInvalid
 
-_button_init = _InlineKeyboardButton.__init__
+_button_parameters = inspect.signature(_InlineKeyboardButton).parameters
+_unsupported_button_fields = {
+    field for field in ("style", "icon_custom_emoji_id")
+    if field not in _button_parameters
+}
+if _unsupported_button_fields:
+    _button_init = _InlineKeyboardButton.__init__
 
+    def _compatible_button_init(self, *args, **kwargs):
+        for field in _unsupported_button_fields:
+            kwargs.pop(field, None)
+        return _button_init(self, *args, **kwargs)
 
-def _compatible_button_init(self, *args, **kwargs):
-    kwargs.pop("style", None)
-    kwargs.pop("icon_custom_emoji_id", None)
-    return _button_init(self, *args, **kwargs)
-
-
-_InlineKeyboardButton.__init__ = _compatible_button_init
+    _InlineKeyboardButton.__init__ = _compatible_button_init
 from SHUKLAMUSIC.core.dir import dirr
 from SHUKLAMUSIC.core.git import git
 from SHUKLAMUSIC.core.userbot import Userbot
