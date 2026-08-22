@@ -39,6 +39,9 @@ run = ["python3", "-m", "SHUKLAMUSIC"]
 [userenv.shared]
 UPSTREAM_BRANCH = "main"
 UPSTREAM_REPO = "https://github.com/dhruvkumarray3-eng/DHRUV_X_RADHA"
+LOGGER_ID = "-1004293344213"
+LOG_GROUP_ID = "-1004293344213"
+MINIAPP_URL = "https://subdued-flawed-virtualmemory--reyatigude571.replit.app"
 
 [[ports]]
 localPort = 8080
