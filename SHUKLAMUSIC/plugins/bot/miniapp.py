@@ -11,10 +11,9 @@ from pyrogram import filters
 from pyrogram.types import Message
 
 from SHUKLAMUSIC import app
-from config import BANNED_USERS
+from config import BANNED_USERS, SHRUTI_API_KEY
 
 _API_URL = "https://api01.shrutibots.site"
-_API_KEY = "ShrutiBots2knm7tCsnIVesZt50Lwb"
 _POWERED = (
     "✦ ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href='https://t.me/II_NOBITA_X_PRIME_II'>"
     "𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a>"
@@ -68,7 +67,7 @@ async def _shruti_download(vidid: str, out_file: str, tmp_file: str) -> bool:
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"{_API_URL}/download",
-                params={"url": vidid, "type": "audio", "api_key": _API_KEY},
+                params={"url": vidid, "type": "audio", "api_key": SHRUTI_API_KEY},
                 timeout=aiohttp.ClientTimeout(total=120),
             ) as resp:
                 if resp.status != 200:

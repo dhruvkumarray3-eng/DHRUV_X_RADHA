@@ -118,6 +118,7 @@ Every music card shows these inline buttons:
 | `GIT_TOKEN` | ⚙️ | — | GitHub token for `/update` auto-push |
 | `GROQ_API_KEY` | ⚙️ | — | Groq API key for AI chatbot |
 | `GEMINI_API_KEY` | ⚙️ | — | Gemini API key for AI fallback |
+| `SHRUTI_API_KEY` | ⚙️ | — | ShrutiAPI key for Mini App media downloads |
 | `UPSTREAM_REPO` | ⚙️ | This repo | GitHub repo URL for updates |
 | `UPSTREAM_BRANCH` | ⚙️ | `main` | Branch to pull updates from |
 | `DURATION_LIMIT` | ⚙️ | `17000` | Max song duration (minutes) |

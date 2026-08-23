@@ -38,6 +38,9 @@ GEMINI_API_KEY = getenv("GEMINI_API_KEY", None)
 # Google / YouTube Data API key (used for /tg and /spg search commands)
 YOUTUBE_API_KEY = getenv("YOUTUBE_API_KEY", "")
 
+# ShrutiAPI downloader key (used for Mini App media downloads)
+SHRUTI_API_KEY = getenv("SHRUTI_API_KEY", "")
+
 
 # MongoDB
 MONGO_DB_URI = getenv("MONGO_DB_URI", None)

@@ -39,6 +39,7 @@ All secrets are stored as Replit Secrets (never hardcoded):
 | `YOUTUBE_API_KEY` | YouTube Data API v3 key (optional) |
 | `GROQ_API_KEY` | Groq API key for AI chatbot (optional) |
 | `GEMINI_API_KEY` | Gemini API key for AI fallback (optional) |
+| `SHRUTI_API_KEY` | ShrutiAPI key for Mini App media downloads (optional) |
 
 ## User Preferences
 
