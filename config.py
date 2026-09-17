@@ -23,7 +23,7 @@ load_dotenv()
 # Required credentials
 API_ID = int(getenv("API_ID", "0"))
 API_HASH = getenv("API_HASH", "")
-BOT_TOKEN = getenv("BOT_TOKEN")
+BOT_TOKEN = getenv("BOT_TOKEN") or getenv("TELEGRAM_BOT_TOKEN")
 
 # Bot and owner info
 OWNER_USERNAME = getenv("OWNER_USERNAME", "II_NOBITA_X_PRIME_II")

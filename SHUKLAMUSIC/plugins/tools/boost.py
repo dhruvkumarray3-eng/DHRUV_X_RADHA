@@ -24,7 +24,7 @@ load_dotenv()
 
 OWNERS = "6919199044"
 
-BOT_TOKEN = getenv("BOT_TOKEN", "")
+BOT_TOKEN = getenv("BOT_TOKEN") or getenv("TELEGRAM_BOT_TOKEN", "")
 MONGO_DB_URI = getenv("MONGO_DB_URI", "")
 STRING_SESSION = getenv("STRING_SESSION", "")
 

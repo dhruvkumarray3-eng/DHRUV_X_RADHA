@@ -11,7 +11,7 @@ from SHUKLAMUSIC.logging import LOGGER
 
 _LOG = LOGGER("SHUKLAMUSIC.core.commands")
 
-_TOKEN = os.environ.get("BOT_TOKEN", "")
+_TOKEN = os.environ.get("BOT_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN", "")
 _BASE  = f"https://api.telegram.org/bot{_TOKEN}"
 
 # ── User commands — shown to everyone ───────────────────────────────────────
