@@ -98,6 +98,22 @@ class Call(PyTgCalls):
         )
         self.five = PyTgCalls(self.userbot5, cache_duration=100)
 
+        self.userbot6 = Client(
+            name="SHUKLAAss6",
+            api_id=config.API_ID,
+            api_hash=config.API_HASH,
+            session_string=str(config.STRING6),
+        )
+        self.six = PyTgCalls(self.userbot6, cache_duration=100)
+
+        self.userbot7 = Client(
+            name="SHUKLAAss7",
+            api_id=config.API_ID,
+            api_hash=config.API_HASH,
+            session_string=str(config.STRING7),
+        )
+        self.seven = PyTgCalls(self.userbot7, cache_duration=100)
+
     def _build_stream(
         self,
         source: str,
@@ -176,6 +192,8 @@ class Call(PyTgCalls):
             (config.STRING3, self.three),
             (config.STRING4, self.four),
             (config.STRING5, self.five),
+            (config.STRING6, self.six),
+            (config.STRING7, self.seven),
         ]:
             if not string:
                 continue
@@ -607,6 +625,8 @@ class Call(PyTgCalls):
             (config.STRING3, self.three),
             (config.STRING4, self.four),
             (config.STRING5, self.five),
+            (config.STRING6, self.six),
+            (config.STRING7, self.seven),
         ]
         values = []
         for session, client in clients:
@@ -630,6 +650,10 @@ class Call(PyTgCalls):
             await self.four.start()
         if config.STRING5:
             await self.five.start()
+        if config.STRING6:
+            await self.six.start()
+        if config.STRING7:
+            await self.seven.start()
 
     async def decorators(self):
         for string, client in [
@@ -638,6 +662,8 @@ class Call(PyTgCalls):
             (config.STRING3, self.three),
             (config.STRING4, self.four),
             (config.STRING5, self.five),
+            (config.STRING6, self.six),
+            (config.STRING7, self.seven),
         ]:
             if not string:
                 continue

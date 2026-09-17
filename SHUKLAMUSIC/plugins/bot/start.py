@@ -48,27 +48,46 @@ from SHUKLAMUSIC.utils.formatters import get_readable_time
 from SHUKLAMUSIC.utils.inline import help_pannel, private_panel, start_panel
 from config import BANNED_USERS
 from strings import get_string
-from SHUKLAMUSIC.utils.branding import BRAND_NAME, BRAND_LINK
+from SHUKLAMUSIC.utils.branding import BRAND_NAME, BRAND_LINK, POWERED_BY
 
 # ================================
 #        DATABASE SETUP
 # ================================
 welcome_db = db.welcome_config 
 
-YUMI_PICS = [
-    "https://files.catbox.moe/ky6ln3.jpg",
-    "https://files.catbox.moe/booqz5.jpg",
-    "https://files.catbox.moe/qlq89x.jpg",
-    "https://files.catbox.moe/ifgkkl.jpg",
-    "https://files.catbox.moe/qm6b0n.jpg",
-    "https://files.catbox.moe/ap3m1t.png",
-    "https://files.catbox.moe/0k863e.png",
-    "https://files.catbox.moe/vp5hg5.png",
-]
+YUMI_PICS = config.START_MEDIA
+_START_MEDIA_INDEX = {}
 
 GREET = [
-    "💞", "🥂", "🔍", "🧪", "🥂", "⚡️", "🔥",
+    "💞", "🥂", "🔍", "🧪", "🥂", "⚡️", "🚀",
 ]
+
+
+def _next_start_media(user_id):
+    """Return the next configured start asset for this user in a stable cycle."""
+    key = user_id or 0
+    index = _START_MEDIA_INDEX.get(key, 0)
+    media = YUMI_PICS[index % len(YUMI_PICS)]
+    _START_MEDIA_INDEX[key] = index + 1
+    return media
+
+
+async def _reply_start_media(message, *, caption, reply_markup, user_id=None, has_spoiler=True):
+    media = _next_start_media(user_id or getattr(message.from_user, "id", None))
+    if media.lower().endswith((".mp4", ".m4v", ".mov")):
+        return await message.reply_video(
+            media,
+            caption=caption,
+            reply_markup=reply_markup,
+            has_spoiler=has_spoiler,
+            supports_streaming=True,
+        )
+    return await message.reply_photo(
+        media,
+        has_spoiler=has_spoiler,
+        caption=caption,
+        reply_markup=reply_markup,
+    )
 
 async def delete_sticker_after_delay(message, delay):
     await asyncio.sleep(delay)
@@ -135,9 +154,19 @@ async def reset_welcome_msg(client, message):
 # Helper to get welcome text
 async def get_welcome_caption(msg_type, default_text, user, bot, chat=None):
     data = await welcome_db.find_one({"_id": msg_type})
+
+    def apply_branding(text):
+        if not text:
+            return text
+        text = text.replace("https://t.me/II_NOBITA_X_PRIME_II", BRAND_LINK)
+        text = text.replace(
+            "𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥",
+            BRAND_NAME,
+        )
+        return text
     
     if data and "message" in data:
-        text = data["message"]
+        text = apply_branding(data["message"])
         # Replace Placeholders
         text = text.replace("{name}", user.first_name)
         text = text.replace("{mention}", user.mention)
@@ -147,7 +176,7 @@ async def get_welcome_caption(msg_type, default_text, user, bot, chat=None):
             text = text.replace("{chat_name}", chat.title)
         return text
     
-    return default_text
+    return apply_branding(default_text)
 
 # ================================
 #        START COMMAND (DM)
@@ -168,7 +197,7 @@ async def start_pm(client, message: Message, _):
     try:
         # Step 1 — Send premium emojis splash
         emoji_splash = await message.reply_text(
-            '🤩  🤩'
+            '😎  🚀'
         )
         await asyncio.sleep(0.5)
         await emoji_splash.delete()
@@ -190,9 +219,9 @@ async def start_pm(client, message: Message, _):
         await asyncio.sleep(0.3)
         await loading_1.edit_text("𝔑𝔬𝔟𝔦𝔱𝔞 𝔛 𝔓𝔯𝔦𝔪𝔢 ♪")
         await asyncio.sleep(0.3)
-        await loading_1.edit_text("<b>ɴᴏʙɪᴛᴀ x ᴘʀɪᴍᴇ ✨</b>")
+        await loading_1.edit_text("<b>ᴅ ε ν ι ʟ !! X alfa 🚀</b>")
         await asyncio.sleep(0.3)
-        await loading_1.edit_text("<b>sᴛᴀʀᴛᴇᴅ!✨</b>")
+        await loading_1.edit_text("<b>sᴛᴀʀᴛᴇᴅ!🚀</b>")
         await asyncio.sleep(0.3)
         await loading_1.delete()
     except Exception:
@@ -226,9 +255,8 @@ async def start_pm(client, message: Message, _):
             )
         elif name[0:4] == "help":
             keyboard = help_pannel(_)
-            await message.reply_photo(
-                random.choice(YUMI_PICS),
-                has_spoiler=True,
+            await _reply_start_media(
+                message,
                 caption=_["help_1"].format(config.SUPPORT_CHAT),
                 reply_markup=keyboard,
             )
@@ -343,7 +371,7 @@ async def start_pm(client, message: Message, _):
                 parts   = name[3:].rsplit("_", 1)
                 vidid   = parts[0]
                 dl_type = parts[1] if len(parts) == 2 else "a"
-                powered = "✦ ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href='https://t.me/II_NOBITA_X_PRIME_II'>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a>"
+                powered = f"✦ {POWERED_BY} — <a href='{BRAND_LINK}'>@II_OFF_TG_GOD_II</a>"
                 yt_url  = f"https://www.youtube.com/watch?v={vidid}"
 
                 if dl_type == "v":
@@ -393,14 +421,13 @@ async def start_pm(client, message: Message, _):
             await client.get_me()
         )
 
-        await message.reply_photo(
-            random.choice(YUMI_PICS),
-            has_spoiler=True,
+        await _reply_start_media(
+            message,
             caption=final_caption,
             reply_markup=InlineKeyboardMarkup(out),
         )
         
-        if await is_on_off(2):
+        if await is_on_off(2) and config.LOGGER_ID:
             await app.send_message(
                 chat_id=config.LOGGER_ID,
                 text=f"❖ {message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n<b>๏ ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>๏ ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
@@ -450,8 +477,8 @@ async def start_gp(client, message: Message, _):
         message.chat
     )
 
-    await message.reply_photo(
-        random.choice(YUMI_PICS),
+    await _reply_start_media(
+        message,
         caption=final_caption,
         reply_markup=InlineKeyboardMarkup(out),
     )
@@ -496,8 +523,8 @@ async def welcome(client, message: Message):
                         ],
                     ])
                     try:
-                        await message.reply_photo(
-                            random.choice(YUMI_PICS),
+                        await _reply_start_media(
+                            message,
                             caption=_["start_channel_1"].format(message.chat.title),
                             reply_markup=channel_buttons,
                         )
@@ -585,11 +612,11 @@ async def welcome(client, message: Message):
                     message.chat
                 )
 
-                await message.reply_photo(
-                    random.choice(YUMI_PICS),
-                    has_spoiler=True,
+                await _reply_start_media(
+                    message,
                     caption=final_caption,
                     reply_markup=InlineKeyboardMarkup(out),
+                    user_id=member.id,
                 )
                 await add_served_chat(message.chat.id)
 

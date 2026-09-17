@@ -8,15 +8,15 @@ import os
 
 import aiohttp
 from pyrogram import filters
-from pyrogram.types import Message
+from pyrogram.types import CallbackQuery, Message
 
 from SHUKLAMUSIC import app
 from config import BANNED_USERS, SHRUTI_API_KEY
+from SHUKLAMUSIC.utils.branding import BRAND_LINK, POWERED_BY
 
 _API_URL = "https://api01.shrutibots.site"
 _POWERED = (
-    "✦ ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href='https://t.me/II_NOBITA_X_PRIME_II'>"
-    "𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 𝐗 𝚸 𝐑 𝐈 𝐌 𝐄❤️‍🔥</a>"
+    f"✦ {POWERED_BY} — <a href='{BRAND_LINK}'>@II_OFF_TG_GOD_II</a>"
 )
 
 
@@ -176,6 +176,11 @@ async def _download_and_send(chat_id: int, vidid: str, status_msg):
 
 # ── Filter: fires only when a message has web_app_data ──
 _has_web_app_data = filters.create(lambda _, __, m: bool(getattr(m, "web_app_data", None)))
+
+
+@app.on_callback_query(filters.regex("^mini_app_soon$") & ~BANNED_USERS)
+async def mini_app_coming_soon(client, callback: CallbackQuery):
+    await callback.answer("🎵 sᴏᴏɴ ᴄᴏᴍɪɴɢ 🔜", show_alert=True)
 
 
 @app.on_message(_has_web_app_data & filters.private & ~BANNED_USERS)

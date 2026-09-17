@@ -12,7 +12,7 @@
 # ❤️ Made with dedication and love by ItzShukla
 # -----------------------------------------------
 
-from pyrogram.types import InlineKeyboardButton, WebAppInfo
+from pyrogram.types import InlineKeyboardButton
 
 import config
 from pyrogram.enums import ButtonStyle
@@ -20,7 +20,7 @@ from SHUKLAMUSIC import app
 
 # ── Premium emoji IDs (Emoji_fan37_by_TgEmodziBot pack) ──
 _E_SPARK   = 4958489311726011319   # ✨
-_E_STAR    = 4958714479681471536   # ⭐️
+_E_STAR    = 4958714479681471536   # replaced in visible animation
 _E_CROWN   = 4956420911310832630   # 👑
 _E_SUPPORT = 4956475826762679249   # 💬
 _E_BULB    = 4958665796227171144   # 💡
@@ -72,17 +72,16 @@ def private_panel(_):
             )
         ],
     ]
-    if config.MINIAPP_URL:
-        buttons.append(
-            [
-                InlineKeyboardButton(
-                    text="🎵 ɴᴏʙɪᴛᴀ ᴍᴜsɪᴄ ᴀᴘᴘ",
-                    web_app=WebAppInfo(url=config.MINIAPP_URL),
-                    style=ButtonStyle.PRIMARY,
-                    icon_custom_emoji_id=_E_DIAMOND,
-                )
-            ]
-        )
+    buttons.append(
+        [
+            InlineKeyboardButton(
+                text="🎵 ᴍɪɴɪ ᴀᴘᴘ",
+                callback_data="mini_app_soon",
+                style=ButtonStyle.PRIMARY,
+                icon_custom_emoji_id=_E_DIAMOND,
+            )
+        ]
+    )
     buttons.extend(
         [
         [

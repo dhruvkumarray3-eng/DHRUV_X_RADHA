@@ -33,6 +33,7 @@ from SHUKLAMUSIC.utils.decorators.language import language, languageCB
 from SHUKLAMUSIC.utils.errors import capture_err, capture_callback_err
 from SHUKLAMUSIC.utils.formatters import time_to_seconds
 from SHUKLAMUSIC.utils.inline.song import song_markup
+from SHUKLAMUSIC.utils.branding import BRAND_LINK, POWERED_BY
 
 SONG_COMMAND = ["song"]
 
@@ -193,7 +194,7 @@ async def song_download_cb(client, cq, lang):
             await app.send_audio(
                 chat_id=cq.message.chat.id,
                 audio=file_path,
-                caption=f"🎵 <b>{title}</b>\n\n© ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href=https://t.me/II_NOBITA_X_PRIME_II>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>",
+                caption=f"🎵 <b>{title}</b>\n\n© {POWERED_BY} — <a href='{BRAND_LINK}'>@II_OFF_TG_GOD_II</a>",
                 title=title,
                 performer=uploader,
                 thumb=thumb,
@@ -218,7 +219,7 @@ async def song_download_cb(client, cq, lang):
                 video=file_path,
                 has_spoiler=True,
                 duration=duration_sec,
-                caption=f"🎬 <b>{title}</b>\n\n© ᴘᴏᴡᴇʀᴇᴅ ʙʏ » <a href=https://t.me/II_NOBITA_X_PRIME_II>𝚴 𝐎 𝐁 𝚰 𝐓 𝚲 ❤️‍🔥</a>",
+                caption=f"🎬 <b>{title}</b>\n\n© {POWERED_BY} — <a href='{BRAND_LINK}'>@II_OFF_TG_GOD_II</a>",
                 thumb=thumb,
                 supports_streaming=True,
                 reply_to_message_id=cq.message.id,

@@ -21,18 +21,18 @@ from pyrogram import filters
 load_dotenv()
 
 # Required credentials
-API_ID = int(getenv("API_ID", "0"))
-API_HASH = getenv("API_HASH", "")
+API_ID = int(getenv("API_ID") or getenv("TELEGRAM_API_ID") or "0")
+API_HASH = getenv("API_HASH") or getenv("TELEGRAM_API_HASH", "")
 BOT_TOKEN = getenv("BOT_TOKEN") or getenv("TELEGRAM_BOT_TOKEN")
 
 # Bot and owner info
-OWNER_USERNAME = getenv("OWNER_USERNAME", "II_NOBITA_X_PRIME_II")
+OWNER_USERNAME = getenv("OWNER_USERNAME", "II_OFF_TG_GOD_II")
 BOT_USERNAME = getenv("BOT_USERNAME", "RADHA_MUSIC_GMS_op_bot")
 BOT_NAME = getenv("BOT_NAME", "NOBITA X PRIME")
 ASSUSERNAME = getenv("ASSUSERNAME", "")
 
 # AI Chatbot
-GROQ_API_KEY = getenv("GROQ_API_KEY", None)
+GROQ_API_KEY = getenv("GROQ_API_KEY") or getenv("GROW_API_KEY")
 GEMINI_API_KEY = getenv("GEMINI_API_KEY", None)
 
 # Google / YouTube Data API key (used for /tg and /spg search commands)
@@ -65,8 +65,12 @@ GIT_TOKEN = (
 )
 
 # Support
-SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/xvilucifer")   # Updates channel
-SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/fragmentiic")         # Support group
+SUPPORT_CHANNEL = getenv(
+    "SUPPORT_CHANNEL", "https://t.me/II_Invisible_network_II"
+)  # Network button
+SUPPORT_CHAT = getenv(
+    "SUPPORT_CHAT", "https://t.me/II_Invisible_Hubs_II"
+)  # My home button
 
 # Assistant settings
 AUTO_LEAVING_ASSISTANT = getenv("AUTO_LEAVING_ASSISTANT", "True")
@@ -122,22 +126,23 @@ SUPPORT_GROUP = getenv("SUPPORT_GROUP", SUPPORT_CHAT)
 # Image URLs
 SHASHANK_IMG = getenv("SHASHANK_IMG", "https://files.catbox.moe/ky6ln3.jpg").split(",") if "," in getenv("SHASHANK_IMG", "") else [getenv("SHASHANK_IMG", "https://files.catbox.moe/ky6ln3.jpg")]
 
-# Rotating start photos (used by start command and home callbacks)
-START_PICS = [
-    "https://files.catbox.moe/ky6ln3.jpg",
-    "https://files.catbox.moe/booqz5.jpg",
-    "https://files.catbox.moe/qlq89x.jpg",
-    "https://files.catbox.moe/ifgkkl.jpg",
-    "https://files.catbox.moe/qm6b0n.jpg",
-    "https://files.catbox.moe/ap3m1t.png",
-    "https://files.catbox.moe/0k863e.png",
-    "https://files.catbox.moe/vp5hg5.png",
+# Rotating start media (used by the /start command)
+START_MEDIA = [
+    "https://files.catbox.moe/xsghmf.jpg",
+    "https://files.catbox.moe/ggza0a.jpg",
+    "https://files.catbox.moe/4gyln0.jpg",
+    "https://files.catbox.moe/c5b50w.jpg",
+    "https://files.catbox.moe/nvx4g6.jpg",
+    "https://files.catbox.moe/anxzbv.mp4",
+    "https://files.catbox.moe/0j1ni8.mp4",
 ]
+# Existing help/reload handlers send photo messages only.
+START_PICS = START_MEDIA[:5]
 
-PING_VIDEO_URL = getenv("PING_VIDEO_URL", "https://files.catbox.moe/lltsdr.mp4")
+PING_VIDEO_URL = getenv("PING_VIDEO_URL", "https://files.catbox.moe/bdqzje.mp4")
 
-START_IMG_URL = getenv("START_IMG_URL", "https://files.catbox.moe/ky6ln3.jpg")
-PING_IMG_URL = getenv("PING_IMG_URL", "https://files.catbox.moe/vp5hg5.png")
+START_IMG_URL = getenv("START_IMG_URL", START_MEDIA[0])
+PING_IMG_URL = getenv("PING_IMG_URL", "https://files.catbox.moe/bdqzje.mp4")
 PLAYLIST_IMG_URL = getenv("PLAYLIST_IMG_URL", "https://files.catbox.moe/booqz5.jpg")
 STATS_IMG_URL = getenv("STATS_IMG_URL", "https://files.catbox.moe/qlq89x.jpg")
 TELEGRAM_AUDIO_URL = getenv("TELEGRAM_AUDIO_URL", "https://files.catbox.moe/ifgkkl.jpg")
